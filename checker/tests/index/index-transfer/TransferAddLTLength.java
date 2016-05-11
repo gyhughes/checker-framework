@@ -13,7 +13,7 @@ class TransferAddLTLength {
 	
 	// This error: can be suppressed
 	//:: error: (assignment.type.incompatible)
-	@LTLength("arr") int i = 2;
+	@LTLength("arr") int i = -10;
 	
 	void addIndexFor(@IndexFor("arr") int v) {
 		// Show result is of type Unknown
@@ -52,11 +52,10 @@ class TransferAddLTLength {
 	}
 	
 	void add0() {
-
 		// Show result is of type LTLength
-				@LTLength("arr") int lTLength1 = 0 + i;
-				//:: error: (assignment.type.incompatible)
-				@IndexOrLow("arr") int indexOrLow = 0 + i;
+		@LTLength("arr") int lTLength1 = 0 + i;
+		//:: error: (assignment.type.incompatible)
+		@IndexOrLow("arr") int indexOrLow = 0 + i;
 	}
 	
 	void addLTLength(@LTLength("arr") int v) {
