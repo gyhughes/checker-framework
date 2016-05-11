@@ -50,7 +50,7 @@ class TransferAddIndexOrLow {
 	}
 	
 	void add0() {
-		// Show result is of type IndexOrHigh
+		// Show result is of type IndexOrLow
 		@IndexOrLow("arr") int indexOrLow = 0 + i;
         //:: error: (assignment.type.incompatible)
         @IndexFor("arr") int indexFor = 0 + i;

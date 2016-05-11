@@ -31,31 +31,27 @@ class TransferSubIndexOrLow {
 		@LTLength("arr") int lTLength = i - v;
 	}
 	
+	// TODO: Is this comment redundnant?
 	// not valid ie a.length - -1 !< length
-	void subIndexOrHigh(@IndexOrHigh("arr") int v,  @LTLength("arr") int lTLength1, @LTLength("arr") int lTLength2) {
-		
-		int result = v - i;
-		
+	void subIndexOrHigh(@IndexOrHigh("arr") int v) {
 		// Show result is of type LTLength
+		@LTLength("arr") int lTLength1 = i - v;
 		//:: error: (assignment.type.incompatible)
-		lTLength1 = result;
-		result = lTLength2;
+		@IndexOrLow("arr") int indexOrLow = i - v;		
 	}
 	
 	void sub1() {
 		// Show result is of type LTLength
-				@LTLength("arr") int lTLength1 = i - 1;
-				//:: error: (assignment.type.incompatible)
-				@IndexOrLow("arr") int indexOrLow = i - 1;
+		@LTLength("arr") int lTLength1 = i - 1;
+		//:: error: (assignment.type.incompatible)
+		@IndexOrLow("arr") int indexOrLow = i - 1;		
 	}
 	
-	void sub0(@IndexOrLow("arr") int indexOrLow1, @IndexOrLow("arr") int indexOrLow2) {
-
-		int result = i - 0;
-		
+	void sub0() {
 		// Show result is of type IndexOrLow
-		indexOrLow1 = result;
-		result = indexOrLow2;
+		@IndexOrLow("arr") int indexOrLow = i - 0;
+        //:: error: (assignment.type.incompatible)
+        @IndexFor("arr") int indexFor = i - 0;
 	}
 	
 	void subLTLength(@LTLength("arr") int v) {
@@ -66,15 +62,14 @@ class TransferSubIndexOrLow {
 		//:: error: (assignment.type.incompatible)
 		@LTLength("arr") int lTLength = i - v;
 	}
+	
+	// TODO: Is this comment redundant?
 	// not valid NN could be larger that length
-	void subNonNegative(@NonNegative int v, @LTLength("arr") int lTLength1, @LTLength("arr") int lTLength2) {
-		
-		int result = v - i;
-		
-		// Show result is of type Unknown
+	void subNonNegative(@NonNegative int v) {
+		// Show result is of type LTLength
+		@LTLength("arr") int lTLength1 = i - v;
 		//:: error: (assignment.type.incompatible)
-		lTLength1 = result;
-		result = lTLength2;
+		@IndexOrLow("arr") int indexOrLow = i - v;		
 	}
 
 	void subUnknown(@Unknown int v) {
@@ -85,12 +80,14 @@ class TransferSubIndexOrLow {
 		//:: error: (assignment.type.incompatible)
 		@LTLength("arr") int lTLength = i - v;
 	}
+	
+	// TODO: Redundant comment?
 	// Not valid, IndexFor - IndexOrLow is unknown
-	void subIndexForB(@IndexFor("arrB") int v,  @LTLength("arr") int lTLength1, @LTLength("arr") int lTLength2) {
+	void subIndexForB(@IndexFor("arrB") int v) {
 		// Show result is of type LTLength
-				lTLength1 = i - v;
-				//:: error: (assignment.type.incompatible)
-				@IndexOrLow("arr") int indexOrLow = i - v;
+		@LTLength("arr") int lTLength1 = i - v;
+		//:: error: (assignment.type.incompatible)
+		@IndexOrLow("arr") int indexOrLow = i - v;		
 	}
 	
 	void subIndexOrLowB(@IndexOrLow("arrB") int v) {
@@ -102,11 +99,11 @@ class TransferSubIndexOrLow {
 		@LTLength("arr") int lTLength = i - v;
 	}
 
-	void subIndexOrHighB(@IndexOrHigh("arrB") int v,  @LTLength("arr") int lTLength1, @LTLength("arr") int lTLength2) {
+	void subIndexOrHighB(@IndexOrHigh("arrB") int v) {
 		// Show result is of type LTLength
-				lTLength1 = i - v;
-				//:: error: (assignment.type.incompatible)
-				@IndexOrLow("arr") int indexOrLow = i - v;
+		@LTLength("arr") int lTLength1 = i - v;
+		//:: error: (assignment.type.incompatible)
+		@IndexOrLow("arr") int indexOrLow = i - v;		
 	}
 
 	void subLTLengthB(@LTLength("arrB") int v) {
