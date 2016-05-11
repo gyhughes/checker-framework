@@ -40,7 +40,7 @@ class TransferSub1 {
 	
 	void sub1() {
 		// Show result is of type IndexOrHigh
-		@IndexOrLow("arr") int indexOrLow = 1 - 1;
+		@IndexOrHigh("arr") int indexOrHigh = 1 - 1;
 		//:: error: (assignment.type.incompatible)
 		@IndexFor("arr") int indexFor = 1 - 1;
 	}
