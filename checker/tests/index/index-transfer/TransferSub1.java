@@ -39,10 +39,11 @@ class TransferSub1 {
 	}
 	
 	void sub1() {
-		// Show result is of type IndexOrHigh
-		@IndexOrHigh("") int indexOrHigh = 1 - 1;
-		//:: error: (assignment.type.incompatible)
-		@IndexFor("arr") int indexFor = 1 - 1;
+		// TODO: TO BE DISCUSSED
+//		// Show result is of type IndexOrHigh
+//		@IndexOrHigh("") int indexOrHigh = 1 - 1;
+//		//:: error: (assignment.type.incompatible)
+//		@IndexFor("arr") int indexFor = 1 - 1;
 	}
 	
 	void sub0(@IndexOrHigh("arr") int indexOrHigh) {
