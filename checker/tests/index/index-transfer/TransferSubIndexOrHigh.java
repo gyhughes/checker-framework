@@ -43,7 +43,7 @@ class TransferSubIndexOrHigh {
 	}
 	
 	void sub1() {
-		// Show result is of type IndexOrHigh
+		// Show result is of type IndexOrLow
 		@IndexOrLow("arr") int indexOrLow = i - 1;
 		//:: error: (assignment.type.incompatible)
 		@IndexFor("arr") int indexFor = i - 1;
