@@ -222,14 +222,14 @@ class DataFlowIndexFor {
 			//:: error: (assignment.type.incompatible)
 			indexForResult = i;
 		} else {
-			// Show result is of type IndexForResult
+			// Show result is of type IndexFor
 			indexForResult = i;
 		}
 		i = indexOrLowReset;
 		indexOrLowResult = indexOrLowReset;
 		indexForResult = indexForReset;
 		if (i == indexOrHighComparison) {
-			// Show result is of type IndexForResult
+			// Show result is of type IndexFor
 			indexForResult = i;
 		} else {
 			// Show result is of type IndexOrLow
@@ -382,5 +382,324 @@ class DataFlowIndexFor {
 		}
 	}
 	
+	void compareLTLength(@LTLength("arr") int LTLengthComparison, @IndexOrLow("arr") int indexOrLowReset, @IndexFor("arr") int indexForReset) {
+		@IndexFor("arr") int indexForResult;
+		@IndexOrLow("arr") int indexOrLowResult;
+		if (i < LTLengthComparison) {
+			// Show result is of type IndexOrLow
+			indexOrLowResult = i;
+			//:: error: (assignment.type.incompatible)
+			indexForResult = i;
+		} else {
+			// Show result is of type IndexOrLow
+			indexOrLowResult = i;
+			//:: error: (assignment.type.incompatible)
+			indexForResult = i;
+		}
+		i = indexOrLowReset;
+		indexOrLowResult = indexOrLowReset;
+		indexForResult = indexForReset;
+		if (i <= LTLengthComparison) {
+			// Show result is of type IndexOrLow
+			indexOrLowResult = i;
+			//:: error: (assignment.type.incompatible)
+			indexForResult = i;
+		} else {
+			// Show result is of type IndexOrLow
+			indexOrLowResult = i;
+			//:: error: (assignment.type.incompatible)
+			indexForResult = i;
+		}
+		i = indexOrLowReset;
+		indexOrLowResult = indexOrLowReset;
+		indexForResult = indexForReset;
+		if (i > LTLengthComparison) {
+			// Show result is of type IndexOrLow
+			indexOrLowResult = i;
+			//:: error: (assignment.type.incompatible)
+			indexForResult = i;
+		} else {
+			// Show result is of type IndexOrLow
+			indexOrLowResult = i;
+			//:: error: (assignment.type.incompatible)
+			indexForResult = i;
+		}
+		i = indexOrLowReset;
+		indexOrLowResult = indexOrLowReset;
+		indexForResult = indexForReset;
+		if (i >= LTLengthComparison) {
+			// Show result is of type IndexOrLow
+			indexOrLowResult = i;
+			//:: error: (assignment.type.incompatible)
+			indexForResult = i;
+		} else {
+			// Show result is of type IndexOrLow
+			indexOrLowResult = i;
+			//:: error: (assignment.type.incompatible)
+			indexForResult = i;
+		}
+		i = indexOrLowReset;
+		indexOrLowResult = indexOrLowReset;
+		indexForResult = indexForReset;
+		if (i != LTLengthComparison) {
+			// Show result is of type IndexOrLow
+			indexOrLowResult = i;
+			//:: error: (assignment.type.incompatible)
+			indexForResult = i;
+		} else {
+			// Show result is of type IndexOrLow
+			indexOrLowResult = i;
+			//:: error: (assignment.type.incompatible)
+			indexForResult = i;
+		}
+		i = indexOrLowReset;
+		indexOrLowResult = indexOrLowReset;
+		indexForResult = indexForReset;
+		if (i == LTLengthComparison) {
+			// Show result is of type IndexOrLow
+			indexOrLowResult = i;
+			//:: error: (assignment.type.incompatible)
+			indexForResult = i;
+		} else {
+			// Show result is of type IndexOrLow
+			indexOrLowResult = i;
+			//:: error: (assignment.type.incompatible)
+			indexForResult = i;
+		}
+	}
+	
+	void compareNonNegative(@NonNegative int nonNegativeComparison, @IndexFor("arr") int indexForReset, @IndexOrLow("arr") int indexOrLowReset) {
+		@IndexOrLow("arr") int indexOrLowResult;
+		@IndexFor("arr") int indexForResult;
+		if (i < nonNegativeComparison) {
+			// Show result is of type IndexOrLow
+			indexOrLowResult = i;
+	        //:: error: (assignment.type.incompatible)
+	        indexForResult = i;
+		} else {
+			// Show result is of type IndexFor
+			indexForResult = i;
+		}
+		i = indexOrLowReset;
+		indexOrLowResult = indexOrLowReset;
+		indexForResult = indexForReset;
+		if (i <= nonNegativeComparison) {
+			// Show result is of type IndexOrLow
+			indexOrLowResult = i;
+			//:: error: (assignment.type.incompatible)
+			indexForResult = i;
+		} else {
+			// Show result is of type IndexFor
+			indexForResult = i;
+		}
+		i = indexOrLowReset;
+		indexOrLowResult = indexOrLowReset;
+		indexForResult = indexForReset;
+		if (i > nonNegativeComparison) {
+			// Show result is of type IndexFor
+			indexForResult = i;
+		} else {
+			// Show result is of type IndexOrLow
+			indexOrLowResult = i;
+			//:: error: (assignment.type.incompatible)
+			indexForResult = i;
+		}
+		i = indexOrLowReset;
+		indexOrLowResult = indexOrLowReset;
+		indexForResult = indexForReset;
+		if (i >= nonNegativeComparison) {
+			// Show result is of type IndexFor
+			indexForResult = i;
+		} else {
+			// Show result is of type IndexOrLow
+			indexOrLowResult = i;
+			//:: error: (assignment.type.incompatible)
+			indexForResult = i;
+		}
+		i = indexOrLowReset;
+		indexOrLowResult = indexOrLowReset;
+		indexForResult = indexForReset;
+		if (i != nonNegativeComparison) {
+			// Show result is of type IndexOrLow
+			indexOrLowResult = i;
+			//:: error: (assignment.type.incompatible)
+			indexForResult = i;
+		} else {
+			// Show result is of type IndexFor
+			indexForResult = i;
+		}
+		i = indexOrLowReset;
+		indexOrLowResult = indexOrLowReset;
+		indexForResult = indexForReset;
+		if (i == nonNegativeComparison) {
+			// Show result is of type IndexFor
+			indexForResult = i;
+		} else {
+			// Show result is of type IndexOrLow
+			indexOrLowResult = i;
+			//:: error: (assignment.type.incompatible)
+			indexForResult = i;
+		}
+	}
+	
+	void compareUnknown(@Unknown int unknownComparison, @IndexOrLow("arr") int indexOrLowReset, @IndexFor("arr") int indexForReset) {
+		@IndexFor("arr") int indexForResult;
+		@IndexOrLow("arr") int indexOrLowResult;
+		if (i < unknownComparison) {
+			// Show result is of type IndexOrLow
+			indexOrLowResult = i;
+			//:: error: (assignment.type.incompatible)
+			indexForResult = i;
+		} else {
+			// Show result is of type IndexOrLow
+			indexOrLowResult = i;
+			//:: error: (assignment.type.incompatible)
+			indexForResult = i;
+		}
+		i = indexOrLowReset;
+		indexOrLowResult = indexOrLowReset;
+		indexForResult = indexForReset;
+		if (i <= unknownComparison) {
+			// Show result is of type IndexOrLow
+			indexOrLowResult = i;
+			//:: error: (assignment.type.incompatible)
+			indexForResult = i;
+		} else {
+			// Show result is of type IndexOrLow
+			indexOrLowResult = i;
+			//:: error: (assignment.type.incompatible)
+			indexForResult = i;
+		}
+		i = indexOrLowReset;
+		indexOrLowResult = indexOrLowReset;
+		indexForResult = indexForReset;
+		if (i > unknownComparison) {
+			// Show result is of type IndexOrLow
+			indexOrLowResult = i;
+			//:: error: (assignment.type.incompatible)
+			indexForResult = i;
+		} else {
+			// Show result is of type IndexOrLow
+			indexOrLowResult = i;
+			//:: error: (assignment.type.incompatible)
+			indexForResult = i;
+		}
+		i = indexOrLowReset;
+		indexOrLowResult = indexOrLowReset;
+		indexForResult = indexForReset;
+		if (i >= unknownComparison) {
+			// Show result is of type IndexOrLow
+			indexOrLowResult = i;
+			//:: error: (assignment.type.incompatible)
+			indexForResult = i;
+		} else {
+			// Show result is of type IndexOrLow
+			indexOrLowResult = i;
+			//:: error: (assignment.type.incompatible)
+			indexForResult = i;
+		}
+		i = indexOrLowReset;
+		indexOrLowResult = indexOrLowReset;
+		indexForResult = indexForReset;
+		if (i != unknownComparison) {
+			// Show result is of type IndexOrLow
+			indexOrLowResult = i;
+			//:: error: (assignment.type.incompatible)
+			indexForResult = i;
+		} else {
+			// Show result is of type IndexOrLow
+			indexOrLowResult = i;
+			//:: error: (assignment.type.incompatible)
+			indexForResult = i;
+		}
+		i = indexOrLowReset;
+		indexOrLowResult = indexOrLowReset;
+		indexForResult = indexForReset;
+		if (i == unknownComparison) {
+			// Show result is of type IndexOrLow
+			indexOrLowResult = i;
+			//:: error: (assignment.type.incompatible)
+			indexForResult = i;
+		} else {
+			// Show result is of type IndexOrLow
+			indexOrLowResult = i;
+			//:: error: (assignment.type.incompatible)
+			indexForResult = i;
+		}
+	}
+	
+	void compareIndexForB(@IndexFor("arrB") int indexForBComparison, @IndexFor("arr") int indexForReset, @IndexOrLow("arr") int indexOrLowReset) {
+		@IndexOrLow("arr") int indexOrLowResult;
+		@IndexFor("arr") int indexForResult;
+		if (i < indexForBComparison) {
+			// Show result is of type IndexOrLow
+			indexOrLowResult = i;
+	        //:: error: (assignment.type.incompatible)
+	        indexForResult = i;
+		} else {
+			// Show result is of type IndexFor
+			indexForResult = i;
+		}
+		i = indexOrLowReset;
+		indexOrLowResult = indexOrLowReset;
+		indexForResult = indexForReset;
+		if (i <= indexForBComparison) {
+			// Show result is of type IndexOrLow
+			indexOrLowResult = i;
+			//:: error: (assignment.type.incompatible)
+			indexForResult = i;
+		} else {
+			// Show result is of type IndexFor
+			indexForResult = i;
+		}
+		i = indexOrLowReset;
+		indexOrLowResult = indexOrLowReset;
+		indexForResult = indexForReset;
+		if (i > indexForBComparison) {
+			// Show result is of type IndexFor
+			indexForResult = i;
+		} else {
+			// Show result is of type IndexOrLow
+			indexOrLowResult = i;
+			//:: error: (assignment.type.incompatible)
+			indexForResult = i;
+		}
+		i = indexOrLowReset;
+		indexOrLowResult = indexOrLowReset;
+		indexForResult = indexForReset;
+		if (i >= indexForBComparison) {
+			// Show result is of type IndexFor
+			indexForResult = i;
+		} else {
+			// Show result is of type IndexOrLow
+			indexOrLowResult = i;
+			//:: error: (assignment.type.incompatible)
+			indexForResult = i;
+		}
+		i = indexOrLowReset;
+		indexOrLowResult = indexOrLowReset;
+		indexForResult = indexForReset;
+		if (i != indexForBComparison) {
+			// Show result is of type IndexOrLow
+			indexOrLowResult = i;
+			//:: error: (assignment.type.incompatible)
+			indexForResult = i;
+		} else {
+			// Show result is of type IndexFor
+			indexForResult = i;
+		}
+		i = indexOrLowReset;
+		indexOrLowResult = indexOrLowReset;
+		indexForResult = indexForReset;
+		if (i == indexForBComparison) {
+			// Show result is of type IndexFor
+			indexForResult = i;
+		} else {
+			// Show result is of type IndexOrLow
+			indexOrLowResult = i;
+			//:: error: (assignment.type.incompatible)
+			indexForResult = i;
+		}
+	}
 	
 }
