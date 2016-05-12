@@ -195,8 +195,41 @@ public class IndexTransfer extends CFAbstractTransfer<CFValue, CFStore, IndexTra
 		}
 		return newResult;
 	}
-
 	
+//	// make IndexorLow(a) == indexOrHigh(a) -> IndexFor(a)
+//	@Override
+//	public TransferResult<CFValue, CFStore> visitEqualTo(EqualToNode node, TransferInput<CFValue, CFStore> in){
+//		TransferResult<CFValue, CFStore> result = super.visitEqualTo(node, in);
+//		Node left = node.getLeftOperand();
+//		Node right = node.getRightOperand();
+//		Receiver leftRec = FlowExpressions.internalReprOf(analysis.getTypeFactory(), left);
+//		Receiver rightRec = FlowExpressions.internalReprOf(analysis.getTypeFactory(), right);
+//		AnnotatedTypeMirror leftType = atypeFactory.getAnnotatedType(left.getTree());
+//		AnnotatedTypeMirror rightType = atypeFactory.getAnnotatedType(right.getTree());
+//		CFStore thenStore = result.getRegularStore();
+//		CFStore elseStore = thenStore.copy();
+//		ConditionalTransferResult<CFValue, CFStore> newResult =
+//				new ConditionalTransferResult<>(result.getResultValue(), thenStore, elseStore);
+//		// do both directions because == is commutative
+//		checkIOLandIOH(leftRec, rightRec, leftType, rightType, thenStore);
+//		checkIOLandIOH(leftRec, rightRec, rightType, leftType, thenStore);
+//		return newResult;
+//	}
+//
+//	
+//	private void checkIOLandIOH(Receiver leftRec, Receiver rightRec, AnnotatedTypeMirror leftType, AnnotatedTypeMirror rightType, CFStore thenStore) {
+//		if (leftType.hasAnnotation(IndexOrLow.class) && rightType.hasAnnotation(IndexOrHigh.class)) {
+//			String leftName = getValue(leftType.getAnnotation(IndexOrLow.class));
+//			String rightName = getValue(rightType.getAnnotation(IndexOrHigh.class));
+//			if (leftName.equals(rightName)) {
+//				// add to both left and right operands
+//				thenStore.insertValue(leftRec, atypeFactory.createIndexForAnnotation(leftName));
+//				thenStore.insertValue(rightRec, atypeFactory.createIndexForAnnotation(leftName));
+//
+//			}
+//		}		
+//	}
+
 	//********************************************************************************//
 	// these are methods for LessThan Nodes once left operand Annotation is known  //
 	//********************************************************************************//
@@ -310,10 +343,7 @@ public class IndexTransfer extends CFAbstractTransfer<CFValue, CFStore, IndexTra
 				boolean NN = rightType.hasAnnotation(NonNegative.class);
 				boolean IOH = rightType.hasAnnotation(IndexOrHigh.class);
 				if (InF || NN || IOH) {
-					String aValue = getValue(anno);
-					if (name.equalsIgnoreCase(aValue)) {
-						thenStore.insertValue(rec, atypeFactory.createIndexForAnnotation(name));
-					}
+					thenStore.insertValue(rec, atypeFactory.createIndexForAnnotation(name));
 				}
 			}
 		}
