@@ -600,14 +600,10 @@
 
     <target name="jtreg-tests" depends="-def-jtreg,jar,build-tests"
             description="Run jtreg tests">
-<<<<<<< HEAD
-    	<!--As of version 4.2-b02, a NullPointerException is thrown without making this dir-->
-    	<mkdir dir="${build}/jtreg/all/report/html"/>
 
-=======
         <!--As of version 4.2-b02, a NullPointerException is thrown without making this dir-->
         <mkdir dir="${build}/jtreg/all/report/html"/>
->>>>>>> parent of 3f710c2... Revert "Merge branch 'master' of https://github.com/typetools/checker-framework"
+
         <jtreg-tool2 name="all" tests="."/>
     </target>
 
