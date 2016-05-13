@@ -54,8 +54,8 @@ public class TypeArgInferenceUtil {
     /**
      * Takes an expression tree that must be either a MethodInovcationTree or a NewClassTree (constructor invocation)
      * and returns the arguments to its formal parameters.  An IllegalArgumentException will be thrown if it is neither
-     * @param expression A MethodInvocationTree or a NewClassTree
-     * @return The list of arguments to Expression
+     * @param expression a MethodInvocationTree or a NewClassTree
+     * @return the list of arguments to Expression
      */
     public static List<? extends ExpressionTree> expressionToArgTrees(final ExpressionTree expression) {
         final List<? extends ExpressionTree> argTrees;
@@ -159,7 +159,7 @@ public class TypeArgInferenceUtil {
 
             final AnnotatedTypeMirror paramType = method.getParameterTypes().get(treeIndex);
 
-            //Examples like this:
+            // Examples like this:
             // <T> T outMethod()
             // <U> void inMethod(U u);
             // inMethod(outMethod())
@@ -284,7 +284,7 @@ public class TypeArgInferenceUtil {
             typeVars.add(annotatedTypeVar.getUnderlyingType());
         }
 
-        //note NULL values creep in because the underlying visitor uses them in various places
+        // note NULL values creep in because the underlying visitor uses them in various places
         final Boolean result = type.accept(new TypeVariableFinder(), typeVars);
         return result != null && result;
     }
@@ -311,8 +311,9 @@ public class TypeArgInferenceUtil {
 
         @Override
         protected Boolean scan(Iterable<? extends AnnotatedTypeMirror> types, List<TypeVariable> typeVars) {
-            if (types == null)
+            if (types == null) {
                 return false;
+            }
             Boolean result = false;
             Boolean first = true;
             for (AnnotatedTypeMirror type : types) {
@@ -351,8 +352,8 @@ public class TypeArgInferenceUtil {
      */
     private final static TypeVariableSubstitutor substitutor = new TypeVariableSubstitutor();
 
-    //Substituter requires an input map that the substitute methods build.  We just reuse the same map rather than
-    //recreate it each time.
+    // Substituter requires an input map that the substitute methods build.  We just reuse the same map rather than
+    // recreate it each time.
     private final static Map<TypeVariable, AnnotatedTypeMirror> substituteMap = new HashMap<>(5);
 
     /**
