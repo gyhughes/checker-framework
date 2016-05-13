@@ -217,57 +217,35 @@ public class IndexTransfer extends CFAbstractTransfer<CFValue, CFStore, IndexTra
 		for (AnnotationMirror anno: rightType.getAnnotations()) {
 			thenStore.insertValue(leftRec, anno);
 		}
-		checkIOLandNN(leftRec, rightRec, leftType, rightType, thenStore);
-		checkIOLandNN(leftRec, rightRec, rightType, leftType, thenStore);
-		checkIOLandIOH(leftRec, rightRec, leftType, rightType, thenStore);
-		checkIOLandIOH(leftRec, rightRec, rightType, leftType, thenStore);
-		checkIOLandInF(leftRec, rightRec, leftType, rightType, thenStore);
-		checkIOLandInF(leftRec, rightRec, rightType, leftType, thenStore);
+		if (leftType.hasAnnotation(IndexOrLow.class)) {
+			IOLEqual(leftRec, rightRec, leftType, rightType, thenStore);
+		}
+		if (rightType.hasAnnotation(IndexOrLow.class)) {
+			IOLEqual(leftRec, rightRec, rightType, leftType, thenStore);
+		}
 		return newResult;
 	}
 
 	//********************************************************************************//
-	// these are methods for equalsTo Nodes based on each sides types				//
+	// these are methods for equalsTo Nodes once left hand annotation is known		//
 	//********************************************************************************//
-	private void checkIOLandInF(Receiver leftRec, Receiver rightRec, AnnotatedTypeMirror rightType,
-			AnnotatedTypeMirror leftType, CFStore thenStore) {
-		if (leftType.hasAnnotation(IndexOrLow.class) && rightType.hasAnnotation(IndexFor.class)) {
-			String Name = getValue(leftType.getAnnotation(IndexOrLow.class));
-			// add to both left and right operands
-			String leftName = getValue(leftType.getAnnotation(IndexOrLow.class));
-			String rightName = getValue(rightType.getAnnotation(IndexFor.class));
+	private void IOLEqual(Receiver leftRec, Receiver rightRec, AnnotatedTypeMirror leftType,
+			AnnotatedTypeMirror rightType, CFStore thenStore) {
+		String leftName = getValue(leftType.getAnnotation(IndexOrLow.class));
+		boolean InF = rightType.hasAnnotation(IndexFor.class);
+		boolean IOH = rightType.hasAnnotation(IndexOrHigh.class);
+		boolean NN = rightType.hasAnnotation(NonNegative.class);
+		if (IOH || NN || InF) {
+			// they are both a valid index for just IOL array
 			thenStore.insertValue(leftRec, atypeFactory.createIndexForAnnotation(leftName));
 			thenStore.insertValue(rightRec, atypeFactory.createIndexForAnnotation(leftName));
-			thenStore.insertValue(leftRec, atypeFactory.createIndexForAnnotation(rightName));
-			thenStore.insertValue(rightRec, atypeFactory.createIndexForAnnotation(rightName));
-		}
-
-	}
-
-	private void checkIOLandNN(Receiver leftRec, Receiver rightRec, AnnotatedTypeMirror rightType,
-			AnnotatedTypeMirror leftType, CFStore thenStore) {
-		if (leftType.hasAnnotation(IndexOrLow.class) && rightType.hasAnnotation(NonNegative.class)) {
-			String leftName = getValue(leftType.getAnnotation(IndexOrLow.class));
-			// both valid for the array
-			thenStore.insertValue(leftRec, atypeFactory.createIndexForAnnotation(leftName));
-			thenStore.insertValue(rightRec, atypeFactory.createIndexForAnnotation(leftName));
-		}
-
-	}
-
-	private void checkIOLandIOH(Receiver leftRec, Receiver rightRec, AnnotatedTypeMirror leftType, AnnotatedTypeMirror rightType, CFStore thenStore) {
-		if (leftType.hasAnnotation(IndexOrLow.class) && rightType.hasAnnotation(IndexOrHigh.class)) {
-			String leftName = getValue(leftType.getAnnotation(IndexOrLow.class));
-			String rightName = getValue(rightType.getAnnotation(IndexOrHigh.class));
-			if (leftName.equals(rightName)) {
-				// they are both a valid index for both arrays
-				thenStore.insertValue(leftRec, atypeFactory.createIndexForAnnotation(leftName));
-				thenStore.insertValue(rightRec, atypeFactory.createIndexForAnnotation(leftName));
+			if (InF) {
+				// add to both left and right operands
+				String rightName = getValue(rightType.getAnnotation(IndexFor.class));
 				thenStore.insertValue(leftRec, atypeFactory.createIndexForAnnotation(rightName));
 				thenStore.insertValue(rightRec, atypeFactory.createIndexForAnnotation(rightName));
-
 			}
-		}		
+		}
 	}
 
 	//********************************************************************************//
