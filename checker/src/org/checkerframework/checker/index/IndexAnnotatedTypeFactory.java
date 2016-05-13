@@ -134,6 +134,7 @@ extends GenericAnnotatedTypeFactory<CFValue, CFStore, IndexTransfer, IndexAnalys
 
 		// do addition between types
 		public void visitPlus(ExpressionTree leftExpr, ExpressionTree rightExpr, AnnotatedTypeMirror type, boolean first) {
+			type.clearAnnotations();
 			IndexQualifierHierarchy hierarchy = (IndexQualifierHierarchy) qualHierarchy;
 			AnnotatedTypeMirror left = getAnnotatedType(leftExpr);
 			AnnotatedTypeMirror right = getAnnotatedType(rightExpr);
@@ -146,38 +147,33 @@ extends GenericAnnotatedTypeFactory<CFValue, CFStore, IndexTransfer, IndexAnalys
 				}
 			}
 
-			for (AnnotationMirror anno: left.getAnnotations()) {
+
 				// if the right side is a literal we do some special stuff(specifically for 1 an d0)
 				if (rightExpr.getKind() == Tree.Kind.INT_LITERAL) {
 					int val = (int)((LiteralTree)rightExpr).getValue();
 					if (val == 1) {
-						if (hierarchy.isSubtypeRelaxed(anno, IndexOrLow)) {
-							type.removeAnnotation(anno);
-							String value = IndexVisitor.getIndexValue(anno, getValueMethod(anno));
+						if (left.hasAnnotation(IndexOrLow.class) || left.hasAnnotation(IndexFor.class)) {
+							String value = IndexTransfer.getValue(left.getAnnotationInHierarchy(IndexOrLow));
 							type.addAnnotation(createIndexOrHighAnnotation(value));						
 						}
-						else if (hierarchy.isSubtypeRelaxed(anno, NonNegative)) {
-							type.removeAnnotation(anno);
+						else if (left.hasAnnotation(NonNegative.class) || left.hasAnnotation(IndexOrHigh.class)) {
 							type.addAnnotation(createNonNegAnnotation());
-						}
-						else {
-							type.removeAnnotation(anno);
 						}
 						return;
 					}
 					// if we are adding 0 change nothing
 					else if (val == 0) {
-						type.addAnnotation(anno);
+						type.addAnnotation(left.getAnnotationInHierarchy(IndexFor));
 						return;
 					}
 				}
 				// anything a subtype of nonneg + subtype nonneg = nonnegative
 				if (right.hasAnnotationRelaxed(IndexFor) || right.hasAnnotationRelaxed(IndexOrHigh) || right.hasAnnotation(NonNegative)) {
-					if (hierarchy.isSubtypeRelaxed(anno, NonNegative)) {
+					if (left.hasAnnotation(NonNegative.class) || left.hasAnnotation(IndexOrHigh.class)|| left.hasAnnotation(IndexFor.class)) {
 						type.addAnnotation(createNonNegAnnotation());
 					}
 				}
-			}
+
 		}
 
 
@@ -221,6 +217,7 @@ extends GenericAnnotatedTypeFactory<CFValue, CFStore, IndexTransfer, IndexAnalys
 		// make increments and decrements work properly
 		@Override
 		public Void visitUnary(UnaryTree tree,  AnnotatedTypeMirror type) {
+			type.clearAnnotations();
 			switch(tree.getKind()) {
 			case PREFIX_INCREMENT:
 				preInc(tree, type);
@@ -228,6 +225,8 @@ extends GenericAnnotatedTypeFactory<CFValue, CFStore, IndexTransfer, IndexAnalys
 			case PREFIX_DECREMENT:
 				preDec(tree, type);
 				break;
+			case POSTFIX_INCREMENT:
+				postInc(tree, type);
 			default:
 				break;
 			}
@@ -235,6 +234,17 @@ extends GenericAnnotatedTypeFactory<CFValue, CFStore, IndexTransfer, IndexAnalys
 				type.addAnnotation(createUnknownAnnotation());
 			}
 			return super.visitUnary(tree, type);
+		}
+
+		private void postInc(UnaryTree tree, AnnotatedTypeMirror type) {
+			AnnotatedTypeMirror left = getAnnotatedType(tree.getExpression());
+			if (left.hasAnnotation(IndexOrLow.class) || left.hasAnnotation(IndexFor.class)) {
+				String value = IndexTransfer.getValue(left.getAnnotationInHierarchy(IndexOrLow));
+				type.addAnnotation(createIndexOrHighAnnotation(value));						
+			}
+			else if (left.hasAnnotation(NonNegative.class) || left.hasAnnotation(IndexOrHigh.class)) {
+				type.addAnnotation(createNonNegAnnotation());
+			}
 		}
 
 		private void preInc(UnaryTree tree, AnnotatedTypeMirror type) {
