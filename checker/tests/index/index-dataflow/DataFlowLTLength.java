@@ -11,7 +11,7 @@ class DataFlowLTLength {
 	int[] arr = new int[5];
 	int[] arrB = new int[5];
 	
-	//:: error: (assignment.type.incompatible)
+//	//:: error: (assignment.type.incompatible)
 //	@LTLength"arr") int i = 2;
 //	
 //	void compareIndexFor(@IndexFor("arr") int indexForComparison, @IndexFor("arr") int indexForReset, @LTLength("arr") int lTLengthReset, @IndexOrLow("arr") int indexOrLowReset) {
@@ -706,4 +706,4 @@ class DataFlowLTLength {
 //		}
 //	}
 //	
-//}
+}
