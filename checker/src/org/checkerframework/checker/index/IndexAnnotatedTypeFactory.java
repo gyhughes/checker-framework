@@ -134,7 +134,6 @@ extends GenericAnnotatedTypeFactory<CFValue, CFStore, IndexTransfer, IndexAnalys
 
 		// do addition between types
 		public void visitPlus(ExpressionTree leftExpr, ExpressionTree rightExpr, AnnotatedTypeMirror type, boolean first) {
-			type.clearAnnotations();
 			IndexQualifierHierarchy hierarchy = (IndexQualifierHierarchy) qualHierarchy;
 			AnnotatedTypeMirror left = getAnnotatedType(leftExpr);
 			AnnotatedTypeMirror right = getAnnotatedType(rightExpr);
@@ -217,7 +216,6 @@ extends GenericAnnotatedTypeFactory<CFValue, CFStore, IndexTransfer, IndexAnalys
 		// make increments and decrements work properly
 		@Override
 		public Void visitUnary(UnaryTree tree,  AnnotatedTypeMirror type) {
-			type.clearAnnotations();
 			switch(tree.getKind()) {
 			case PREFIX_INCREMENT:
 				preInc(tree, type);

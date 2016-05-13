@@ -22,7 +22,7 @@ import com.sun.source.tree.Tree;
 
 public class IndexTransfer extends CFAbstractTransfer<CFValue, CFStore, IndexTransfer> {
 	protected IndexAnalysis analysis;
-	protected IndexAnnotatedTypeFactory atypeFactory;
+	protected static IndexAnnotatedTypeFactory atypeFactory;
 
 	public IndexTransfer(IndexAnalysis analysis) {
 		super(analysis);
@@ -164,13 +164,12 @@ public class IndexTransfer extends CFAbstractTransfer<CFValue, CFStore, IndexTra
 		CFStore elseStore = thenStore.copy();
 		ConditionalTransferResult<CFValue, CFStore> newResult =
 				new ConditionalTransferResult<>(result.getResultValue(), thenStore, elseStore);
-
-		if (leftType.hasAnnotation(Unknown.class)) {
-			UnknownLessThan(rec, right, thenStore);
-		}
 		if (leftType.hasAnnotation(IndexOrHigh.class) || leftType.hasAnnotation(NonNegative.class)) {
 			IndexOrHighLessThan(rec, right, thenStore);
+		} else if (leftType.hasAnnotation(Unknown.class)) {
+			UnknownLessThan(rec, right, thenStore);
 		}
+
 		return newResult;
 	}
 
@@ -258,6 +257,7 @@ public class IndexTransfer extends CFAbstractTransfer<CFValue, CFStore, IndexTra
 		boolean IOL = rightType.hasAnnotation(IndexOrLow.class);
 		boolean LTL = rightType.hasAnnotation(LTLength.class);
 		if (IOH || InF || IOL || LTL) {
+			thenStore.clearValue(rec);
 			String aValue = getValue(rightType.getAnnotationInHierarchy(atypeFactory.IndexFor));
 			AnnotationMirror anno = atypeFactory.createLTLengthAnnotation(aValue);
 			thenStore.insertValue(rec, anno);
@@ -265,15 +265,14 @@ public class IndexTransfer extends CFAbstractTransfer<CFValue, CFStore, IndexTra
 	}
 	private void IndexOrHighLessThan(Receiver rec, Node right, CFStore thenStore) {
 		AnnotatedTypeMirror rightType = atypeFactory.getAnnotatedType(right.getTree());
-		for (AnnotationMirror anno: rightType.getAnnotations()) {
-			boolean IOH = AnnotationUtils.areSameIgnoringValues(anno, atypeFactory.IndexOrHigh);
-			boolean InF = AnnotationUtils.areSameIgnoringValues(anno, atypeFactory.IndexFor);
-			boolean IOL = AnnotationUtils.areSameIgnoringValues(anno, atypeFactory.IndexOrLow);
-			boolean LTL = AnnotationUtils.areSameIgnoringValues(anno, atypeFactory.LTLength);
-			if (IOH || InF || IOL || LTL) {
-				String name = getValue(anno);
-				thenStore.insertValue(rec, atypeFactory.createIndexForAnnotation(name));
-			}
+		boolean IOH = rightType.hasAnnotation(IndexOrHigh.class);
+		boolean InF = rightType.hasAnnotation(IndexFor.class);
+		boolean IOL = rightType.hasAnnotation(IndexOrLow.class);
+		boolean LTL = rightType.hasAnnotation(LTLength.class);
+		if (IOH || InF || IOL || LTL) {
+			thenStore.clearValue(rec);
+			String name = getValue(rightType.getAnnotationInHierarchy(atypeFactory.IndexOrHigh));
+			thenStore.insertValue(rec, atypeFactory.createIndexForAnnotation(name));
 		}
 
 	}
@@ -367,7 +366,7 @@ public class IndexTransfer extends CFAbstractTransfer<CFValue, CFStore, IndexTra
 	}
 
 	// uses a helper method in the visitor and the factory to get the value of the annotation
-	public String getValue(AnnotationMirror anno) {
+	public static String getValue(AnnotationMirror anno) {
 		return IndexVisitor.getIndexValue(anno, atypeFactory.getValueMethod(anno));
 	}
 }
