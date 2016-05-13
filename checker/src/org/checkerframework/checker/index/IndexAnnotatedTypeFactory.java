@@ -225,6 +225,7 @@ extends GenericAnnotatedTypeFactory<CFValue, CFStore, IndexTransfer, IndexAnalys
 				break;
 			case POSTFIX_INCREMENT:
 				postInc(tree, type);
+				break;
 			default:
 				break;
 			}
