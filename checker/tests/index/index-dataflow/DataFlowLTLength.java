@@ -254,8 +254,9 @@ class DataFlowLTLength {
 		indexOrLowResult = indexOrLowReset;
 		indexForResult = indexForReset;
 		if (i == indexOrHighComparison) {
+			// NOT YET IMPLEMENTED
 			// Show result is of type IndexFor
-			indexForResult = i;
+			// indexForResult = i;
 		} else {
 			// Show result is of type LTLength
 	        lTLengthResult = i;
@@ -509,7 +510,7 @@ class DataFlowLTLength {
 			// Show result is of type IndexFor
 			indexForResult = i;
 		}*/
-		i = indexOrLowReset;
+		i = lTLengthReset;
 		lTLengthResult = lTLengthReset;
 		indexOrLowResult = indexOrLowReset;
 		indexForResult = indexForReset;
@@ -522,7 +523,7 @@ class DataFlowLTLength {
 			// Show result is of type IndexFor
 			indexForResult = i;
 		}*/
-		i = indexOrLowReset;
+		i = lTLengthReset;
 		lTLengthResult = lTLengthReset;
 		indexOrLowResult = indexOrLowReset;
 		indexForResult = indexForReset;
@@ -535,7 +536,7 @@ class DataFlowLTLength {
 			//:: error: (assignment.type.incompatible)
 			indexOrLowResult = i;
 		}
-		i = indexOrLowReset;
+		i = lTLengthReset;
 		lTLengthResult = lTLengthReset;
 		indexOrLowResult = indexOrLowReset;
 		indexForResult = indexForReset;
@@ -548,7 +549,7 @@ class DataFlowLTLength {
 			//:: error: (assignment.type.incompatible)
 			indexOrLowResult = i;
 		}
-		i = indexOrLowReset;
+		i = lTLengthReset;
 		lTLengthResult = lTLengthReset;
 		indexOrLowResult = indexOrLowReset;
 		indexForResult = indexForReset;
@@ -561,13 +562,14 @@ class DataFlowLTLength {
 			// Show result is of type IndexFor
 			indexForResult = i;
 		}*/
-		i = indexOrLowReset;
+		i = lTLengthReset;
 		lTLengthResult = lTLengthReset;
 		indexOrLowResult = indexOrLowReset;
 		indexForResult = indexForReset;
 		if (i == nonNegativeComparison) {
+			// NOT YET IMPLEMENTED
 			// Show result is of type IndexFor
-			indexForResult = i;
+			// indexForResult = i;
 		} else {
 			// Show result is of type LTLength
 	        lTLengthResult = i;
