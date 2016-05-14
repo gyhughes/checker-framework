@@ -263,6 +263,7 @@ class DataFlowLTLength {
 			indexOrLowResult = i;
 		}
 	}
+
 //	
 //	void compareNegative1(@IndexFor("arr") int indexForReset, @IndexOrLow("arr") int indexOrLowReset) {
 //		@IndexFor("arr") int indexForResult;
