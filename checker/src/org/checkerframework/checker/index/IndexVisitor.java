@@ -4,7 +4,7 @@ import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.AnnotationMirror;
 import javax.lang.model.element.ExecutableElement;
 
-import org.checkerframework.checker.index.qual.IndexFor;
+import org.checkerframework.checker.index.qual.*;
 import org.checkerframework.common.basetype.BaseTypeChecker;
 import org.checkerframework.common.basetype.BaseTypeVisitor;
 import org.checkerframework.framework.source.Result;
@@ -39,7 +39,12 @@ public class IndexVisitor extends BaseTypeVisitor<IndexAnnotatedTypeFactory> {
 		AnnotatedTypeMirror indexType = atypeFactory.getAnnotatedType(index);
 		// warn if not Index for
 		if (!indexType.hasAnnotation(IndexFor.class)) {
-			checker.report(Result.warning("Potentially unsafe array access: only use @IndexFor as index. Found: " + indexType.toString()), index);
+			String message = "Potentially unsafe array access: only use @IndexFor as index. Found: " + indexType.toString();
+			if (indexType.hasAnnotation(NonNegative.class)) {
+				checker.report(Result.warning(message + " which could be to high"), index);
+			} else {
+				checker.report(Result.warning(message), index);
+			}
 		}
 		// warn if it is IndexFor nut not the right array
 		else if (!(getIndexValue(indexType.getAnnotation(IndexFor.class), IndexValueElement).equals(name))) {
