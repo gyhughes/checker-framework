@@ -21,7 +21,7 @@ public class IndexDemo {
 	private static void numOcc(int[] arr, int num) {
 		int count = 0;
 		for (int i = 0; i < arr.length; i++) {
-			if(arr[i] == num) {
+			if (arr[i] == num) {
 				count++;
 			}
 		}
@@ -31,7 +31,7 @@ public class IndexDemo {
 
 	private static void lastOcc(int[] arr, int num) {
 		for (int i = arr.length - 1; i > -1; i++) {
-			if(arr[i] == num) {
+			if (arr[i] == num) {
 				System.out.println("Last Occurence of" + num + " is at " + i);
 				return;
 			}
@@ -40,7 +40,7 @@ public class IndexDemo {
 
 	private static void firstocc(int[] arr, int num) {
 		for (int i = 0; i <= arr.length; i++) {
-			if(arr[i] == num) {
+			if (arr[i] == num) {
 				System.out.println("First Occurence of " + num + " is at " + i);
 				return;
 			}
