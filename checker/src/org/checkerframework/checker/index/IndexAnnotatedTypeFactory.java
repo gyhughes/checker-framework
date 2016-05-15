@@ -96,15 +96,15 @@ extends GenericAnnotatedTypeFactory<CFValue, CFStore, IndexTransfer, IndexAnalys
 			if (!type.isAnnotatedInHierarchy(AnnotationUtils.fromClass(elements, NonNegative.class))) {
 				if (tree.getKind() == Tree.Kind.INT_LITERAL) {
 					int val = (int) tree.getValue();
-					if (val > 0) {
+					if (val >= 0) {
 						type.addAnnotation(createNonNegAnnotation());
 					}
 					else if (val == -1) {
 						type.addAnnotation(createIndexOrLowAnnotation(""));
 					}
-					else if (val == 0) {
-						type.addAnnotation(createIndexOrHighAnnotation(""));
-					}
+//					else if (val == 0) {
+//						type.addAnnotation(createIndexOrHighAnnotation(""));
+//					}
 				}
 			}
 			return super.visitLiteral(tree, type);

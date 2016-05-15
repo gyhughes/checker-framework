@@ -38,8 +38,10 @@ class TransferAdd0 {
 	}
 	
 	void add0() {
+		//:: error: (assignment.type.incompatible)
+		@IndexOrHigh("") int IOH = 0;
 		// Show result is of type IndexOrHigh
-		@IndexOrHigh("") int indexOrHigh = 0 + 0;
+		@IndexOrHigh("") int indexOrHigh = IOH + 0;
 		//:: error: (assignment.type.incompatible)
 		@IndexFor("") int indexFor = 0 + 0;
 	}

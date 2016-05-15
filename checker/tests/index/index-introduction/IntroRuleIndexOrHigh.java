@@ -6,13 +6,11 @@ class IntroRuleIndexOrHigh {
 	
 	void foo() {
 		@IndexOrHigh("arr") int v1 = arr.length;
-		@IndexOrHigh("") int v2 = 0;
+		//@IndexOrHigh("") int v2 = 0;
 		
 		// prove super indexfor
 		//:: error:(assignment.type.incompatible)
 		@IndexFor("arr") int IoF = v1;
-		//:: error:(assignment.type.incompatible)
-		@IndexFor("") int a = v2;
 	}
 	
 	void foo2() {

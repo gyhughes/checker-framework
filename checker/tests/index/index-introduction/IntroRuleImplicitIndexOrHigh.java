@@ -8,15 +8,11 @@ class IntroRuleImplicitIndexOrHigh {
 	
 	void foo() {
 		int[] arrB = new int[5];
-		int v1 = 0;
 		int v2 = arr.length;
 		
 		// Idea: prove type of variable v by assigning it to a variable of type t and assigning a variable of type t to v
 		@IndexOrHigh("arr") int indexOrHigh1 = arr.length;
-		@IndexOrHigh("arr") int indexOrHigh2 = arr.length;
-		
-		@IndexOrHigh("") int m = v1;
-		
+
 		@IndexOrHigh("arrB") int indexOrHigh3 = arrB.length;
 		
 		// Prove type of v1,v2 is subtype of IndexOrHigh
@@ -24,8 +20,7 @@ class IntroRuleImplicitIndexOrHigh {
 		indexOrHigh1 = v2;
 		
 		// prove that v isnt a subtype of indexorHigh
-		//:: error:(assignment.type.incompatible)
-		@IndexFor("") int l = v1;
+
 		//:: error:(assignment.type.incompatible)
 		@IndexFor("arr") int r = v2;
 		
