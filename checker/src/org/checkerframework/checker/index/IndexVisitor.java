@@ -16,9 +16,9 @@ import com.sun.source.tree.ArrayAccessTree;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MethodInvocationTree;
 
-
-
-
+//**************************************************************************//
+//a visitor that enforces the type rules for our system
+//**************************************************************************//
 public class IndexVisitor extends BaseTypeVisitor<IndexAnnotatedTypeFactory> {
 	
 	protected final ExecutableElement IndexValueElement;
@@ -31,7 +31,8 @@ public class IndexVisitor extends BaseTypeVisitor<IndexAnnotatedTypeFactory> {
 		IndexValueElement = TreeUtils.getMethod("org.checkerframework.checker.index.qual.IndexFor", "value", 0, env);
 		ListGet = TreeUtils.getMethod("java.util.List", "get", 1, env);
 	}
-	
+	// visit an array access
+	// if we arent using an IndexFor the right array, give a warning
 	@Override
 	public Void visitArrayAccess(ArrayAccessTree tree, Void type) {
 		ExpressionTree index = tree.getIndex();
@@ -52,6 +53,9 @@ public class IndexVisitor extends BaseTypeVisitor<IndexAnnotatedTypeFactory> {
 		}
 		return super.visitArrayAccess(tree, type);
 	}
+	
+	// visits method invocations
+	// if you try a list.get(i) it warns if i isnt indexfor(list)
 	@Override
 	public Void visitMethodInvocation(MethodInvocationTree tree, Void type) {
 		String name = tree.getMethodSelect().toString();
