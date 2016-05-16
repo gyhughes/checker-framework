@@ -14,6 +14,8 @@ import org.checkerframework.framework.flow.CFValue;
 import org.checkerframework.framework.type.AnnotatedTypeMirror;
 import org.checkerframework.javacutil.Pair;
 
+// subclasses the base analysis to use our Transfers instead of the deafaults
+
 public class IndexAnalysis extends CFAbstractAnalysis<CFValue, CFStore, IndexTransfer> {
 
 	public IndexAnalysis(BaseTypeChecker checker,
@@ -22,11 +24,14 @@ public class IndexAnalysis extends CFAbstractAnalysis<CFValue, CFStore, IndexTra
 		super(checker, factory, fieldValues);
 	}
 	
+	//overrides the superclass method to return our transfers
 	@Override
 	public IndexTransfer createTransferFunction() {
 		return new IndexTransfer(this);
 	}
-	
+	  //**************************************************************//
+	 // these methods are just Overridden so that they can use "this"//
+	//**************************************************************//
 	@Override
 	public @Nullable CFValue createAbstractValue(AnnotatedTypeMirror type) {
 		return defaultCreateAbstractValue(this, type);
