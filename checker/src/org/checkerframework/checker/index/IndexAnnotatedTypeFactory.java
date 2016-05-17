@@ -9,7 +9,13 @@ import javax.lang.model.element.AnnotationMirror;
 import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.VariableElement;
 
-import org.checkerframework.checker.index.qual.*;
+import org.checkerframework.checker.index.qual.IndexBottom;
+import org.checkerframework.checker.index.qual.IndexFor;
+import org.checkerframework.checker.index.qual.IndexOrHigh;
+import org.checkerframework.checker.index.qual.IndexOrLow;
+import org.checkerframework.checker.index.qual.LTLength;
+import org.checkerframework.checker.index.qual.NonNegative;
+import org.checkerframework.checker.index.qual.Unknown;
 import org.checkerframework.common.basetype.BaseTypeChecker;
 import org.checkerframework.framework.flow.CFStore;
 import org.checkerframework.framework.flow.CFValue;
@@ -31,11 +37,12 @@ import org.checkerframework.javacutil.TreeUtils;
 import com.sun.source.tree.BinaryTree;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.LiteralTree;
-import com.sun.source.tree.MemberReferenceTree;
-import com.sun.source.tree.MemberSelectTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.UnaryTree;
 
+//*************************************************************//
+// Defines the hierarchy and intro rules for the index checker //
+//*************************************************************//
 public class IndexAnnotatedTypeFactory
 extends GenericAnnotatedTypeFactory<CFValue, CFStore, IndexTransfer, IndexAnalysis> {
 
@@ -49,7 +56,6 @@ extends GenericAnnotatedTypeFactory<CFValue, CFStore, IndexTransfer, IndexAnalys
 	protected final AnnotationMirror Unknown;
 
 	// methods to get values
-	protected final ExecutableElement IndexForValueElement;
 	protected final ProcessingEnvironment env;
 
 	public IndexAnnotatedTypeFactory(BaseTypeChecker checker) {
@@ -63,14 +69,8 @@ extends GenericAnnotatedTypeFactory<CFValue, CFStore, IndexTransfer, IndexAnalys
 		Unknown = AnnotationUtils.fromClass(elements, Unknown.class);
 
 		env = checker.getProcessingEnvironment();
-		IndexForValueElement = TreeUtils.getMethod("org.checkerframework.checker.index.qual.IndexFor", "value", 0, env);
 		this.postInit();
 	}
-
-	//	// uses the qualhierarchy to share subtype information
-	//	public boolean isSubtype(AnnotationMirror rhs, AnnotationMirror lhs) {
-	//		return qualHierarchy.isSubtype((rhs), (lhs));
-	//	}
 
 	@Override
 	public TreeAnnotator createTreeAnnotator() {
@@ -102,13 +102,11 @@ extends GenericAnnotatedTypeFactory<CFValue, CFStore, IndexTransfer, IndexAnalys
 					else if (val == -1) {
 						type.addAnnotation(createIndexOrLowAnnotation(""));
 					}
-//					else if (val == 0) {
-//						type.addAnnotation(createIndexOrHighAnnotation(""));
-//					}
 				}
 			}
 			return super.visitLiteral(tree, type);
 		}
+		
 		//*****************************************************************//
 		// these are the methods that handle Binary operations (+- etc.)    //
 		//*****************************************************************//
@@ -134,7 +132,6 @@ extends GenericAnnotatedTypeFactory<CFValue, CFStore, IndexTransfer, IndexAnalys
 
 		// do addition between types
 		public void visitPlus(ExpressionTree leftExpr, ExpressionTree rightExpr, AnnotatedTypeMirror type, boolean first) {
-			IndexQualifierHierarchy hierarchy = (IndexQualifierHierarchy) qualHierarchy;
 			AnnotatedTypeMirror left = getAnnotatedType(leftExpr);
 			AnnotatedTypeMirror right = getAnnotatedType(rightExpr);
 			// if left is literal 1/0 swap sides because we can handle that.
@@ -224,18 +221,24 @@ extends GenericAnnotatedTypeFactory<CFValue, CFStore, IndexTransfer, IndexAnalys
 				preDec(tree, type);
 				break;
 			case POSTFIX_INCREMENT:
-				postInc(tree, type);
+				// works same as preIncrement so use that
+				preInc(tree, type);
 				break;
 			default:
 				break;
 			}
+			// if we removed all the annotations, give it unknown
 			if (!type.isAnnotatedInHierarchy(IndexFor)) {
 				type.addAnnotation(createUnknownAnnotation());
 			}
 			return super.visitUnary(tree, type);
 		}
-
-		private void postInc(UnaryTree tree, AnnotatedTypeMirror type) {
+		
+		// if we increment by one do a transfer
+		// IndexOrLow || IndexFor -> IndexOrHigh
+		// NonNeg || IndexOrHigh -> NonNeg
+		// else -> Unknown
+		private void preInc(UnaryTree tree, AnnotatedTypeMirror type) {
 			AnnotatedTypeMirror left = getAnnotatedType(tree.getExpression());
 			if (left.hasAnnotation(IndexOrLow.class) || left.hasAnnotation(IndexFor.class)) {
 				String value = IndexTransfer.getValue(left.getAnnotationInHierarchy(IndexOrLow));
@@ -245,30 +248,20 @@ extends GenericAnnotatedTypeFactory<CFValue, CFStore, IndexTransfer, IndexAnalys
 				type.addAnnotation(createNonNegAnnotation());
 			}
 		}
-
-		private void preInc(UnaryTree tree, AnnotatedTypeMirror type) {
-			AnnotatedTypeMirror  ATM = getAnnotatedType(tree.getExpression());
-			for (AnnotationMirror anno: ATM.getAnnotations()) {
-				if (qualHierarchy.isSubtype(anno, IndexOrLow)) {
-					String value = IndexVisitor.getIndexValue(anno, getValueMethod(anno));
-					type.addAnnotation(createIndexOrHighAnnotation(value));						
-				}
-				else if (qualHierarchy.isSubtype(anno, NonNegative)) {
-					type.addAnnotation(createNonNegAnnotation());
-				}
-			}
-		}
+		
+		// transfers for decrement
+		// IndexOrHigh or IndexFor -> IndexOrLow
+		// LTLength or IndexOrLow -> LTLength
+		// NonNeg or Unknown -> Unknown
 		private void preDec(UnaryTree tree, AnnotatedTypeMirror type) {
 			AnnotatedTypeMirror  ATM = getAnnotatedType(tree.getExpression());
-			for (AnnotationMirror anno: ATM.getAnnotations()) {
-				if (qualHierarchy.isSubtype(anno, IndexOrHigh)) {
-					String value = IndexVisitor.getIndexValue(anno, getValueMethod(anno));
-					type.addAnnotation(createIndexOrLowAnnotation(value));						
-				}
-				else if (qualHierarchy.isSubtype(anno, NonNegative)) {
-					String value = IndexVisitor.getIndexValue(anno, getValueMethod(anno));
-					type.addAnnotation(createLTLengthAnnotation(value));
-				}
+			if (ATM.hasAnnotation(IndexOrHigh.class) || ATM.hasAnnotation(IndexFor.class)) {
+				String value = IndexTransfer.getValue(ATM.getAnnotationInHierarchy(IndexFor));
+				type.addAnnotation(createIndexOrLowAnnotation(value));						
+			}
+			else if (ATM.hasAnnotation(LTLength.class) || ATM.hasAnnotation(IndexOrLow.class)) {
+				String value = IndexTransfer.getValue(ATM.getAnnotationInHierarchy(IndexFor));
+				type.addAnnotation(createLTLengthAnnotation(value));
 			}
 		}
 	}
@@ -292,8 +285,6 @@ extends GenericAnnotatedTypeFactory<CFValue, CFStore, IndexTransfer, IndexAnalys
 			super(f, bottom);
 		}
 
-		//values don't matter for our subtyping so use defaults when comparing.
-		//  is there a better way to do this?
 		@Override
 		public boolean isSubtype(AnnotationMirror rhs, AnnotationMirror lhs) {
 			boolean rightNonNeg = AnnotationUtils.areSameIgnoringValues(rhs, NonNegative);

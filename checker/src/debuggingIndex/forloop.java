@@ -1,4 +1,4 @@
-package deduggingIndex;
+package debuggingIndex;
 public class forloop {
 
 	public static void main() {
