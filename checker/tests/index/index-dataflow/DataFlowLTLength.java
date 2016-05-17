@@ -277,7 +277,7 @@ class DataFlowLTLength {
 		} /*else {
 			// Show result is of type IndexOrLow
 			indexOrLowResult = i;
-			//:: error: (assignment.type.incompatible)
+			 :: error: (assignment.type.incompatible) 
 			indexForResult = i;
 		}*/
 		i = lTLengthReset;
@@ -311,8 +311,6 @@ class DataFlowLTLength {
 		indexOrLowResult = indexOrLowReset;
 		indexForResult = indexForReset;
 		if (i >= -1) {
-			// Show result is of type IndexOrLow
-			indexOrLowResult = i;
 			//:: error: (assignment.type.incompatible)
 			indexForResult = i;	
 		} else {

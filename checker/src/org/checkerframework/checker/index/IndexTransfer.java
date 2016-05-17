@@ -206,27 +206,22 @@ public class IndexTransfer extends CFAbstractTransfer<CFValue, CFStore, IndexTra
 		ConditionalTransferResult<CFValue, CFStore> newResult =
 				new ConditionalTransferResult<>(result.getResultValue(), thenStore, elseStore);
 		// do both directions because == is commutative
-		for (AnnotationMirror anno: leftType.getAnnotations()) {
-			thenStore.insertValue(rightRec, anno);
-		}
-		for (AnnotationMirror anno: rightType.getAnnotations()) {
-			thenStore.insertValue(leftRec, anno);
-		}
-		if (leftType.hasAnnotation(IndexOrLow.class)) {
+		if (leftType.hasAnnotation(IndexOrLow.class) || leftType.hasAnnotation(LTLength.class)) {
 			IOLEqual(leftRec, rightRec, leftType, rightType, thenStore);
 		}
-		if (rightType.hasAnnotation(IndexOrLow.class)) {
+		if (rightType.hasAnnotation(IndexOrLow.class) || rightType.hasAnnotation(LTLength.class)) {
 			IOLEqual(leftRec, rightRec, rightType, leftType, thenStore);
 		}
 		return newResult;
 	}
+
 
 	//********************************************************************************//
 	// these are methods for equalsTo Nodes once left hand annotation is known		//
 	//********************************************************************************//
 	private void IOLEqual(Receiver leftRec, Receiver rightRec, AnnotatedTypeMirror leftType,
 			AnnotatedTypeMirror rightType, CFStore thenStore) {
-		String leftName = getValue(leftType.getAnnotation(IndexOrLow.class));
+		String leftName = getValue(leftType.getAnnotationInHierarchy(atypeFactory.IndexFor));
 		boolean InF = rightType.hasAnnotation(IndexFor.class);
 		boolean IOH = rightType.hasAnnotation(IndexOrHigh.class);
 		boolean NN = rightType.hasAnnotation(NonNegative.class);
@@ -240,6 +235,10 @@ public class IndexTransfer extends CFAbstractTransfer<CFValue, CFStore, IndexTra
 				thenStore.insertValue(leftRec, atypeFactory.createIndexForAnnotation(rightName));
 				thenStore.insertValue(rightRec, atypeFactory.createIndexForAnnotation(rightName));
 			}
+		}
+		if (rightType.hasAnnotation(IndexOrLow.class)) {
+			thenStore.insertValue(leftRec, atypeFactory.createIndexOrLowAnnotation(leftName));
+			thenStore.insertValue(rightRec, atypeFactory.createIndexOrLowAnnotation(leftName));
 		}
 	}
 
