@@ -1,4 +1,4 @@
-This is a fork of the checker framework repository for developement of an IndexChecker.
+This is a fork of the checker framework repository for developement of an IndexChecker that checks for legal array/list accesses.
 
 If you wish to use the Checker Framework in general, see file README.txt.
 
