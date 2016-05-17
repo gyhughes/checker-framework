@@ -206,10 +206,10 @@ public class IndexTransfer extends CFAbstractTransfer<CFValue, CFStore, IndexTra
 		ConditionalTransferResult<CFValue, CFStore> newResult =
 				new ConditionalTransferResult<>(result.getResultValue(), thenStore, elseStore);
 		// do both directions because == is commutative
-		if (leftType.hasAnnotation(IndexOrLow.class) || leftType.hasAnnotation(LTLength.class)) {
+		if (leftType.hasAnnotation(IndexOrLow.class) || leftType.hasAnnotation(LTLength.class) || leftType.hasAnnotation(IndexFor.class)) {
 			IOLEqual(leftRec, rightRec, leftType, rightType, thenStore);
 		}
-		if (rightType.hasAnnotation(IndexOrLow.class) || rightType.hasAnnotation(LTLength.class)) {
+		if (rightType.hasAnnotation(IndexOrLow.class) || rightType.hasAnnotation(LTLength.class) || rightType.hasAnnotation(IndexFor.class)) {
 			IOLEqual(leftRec, rightRec, rightType, leftType, thenStore);
 		}
 		return newResult;
@@ -302,6 +302,9 @@ public class IndexTransfer extends CFAbstractTransfer<CFValue, CFStore, IndexTra
 		boolean InF = rightType.hasAnnotation(IndexFor.class);
 		if (IOL || InF || NN || IOH) {
 			thenStore.insertValue(rec, atypeFactory.createIndexForAnnotation(name));
+		}
+		else if (rightType.hasAnnotation(IndexOrLow.class) && orEqual) {
+			thenStore.insertValue(rec, atypeFactory.createIndexOrLowAnnotation(name));
 		}
 	}
 
