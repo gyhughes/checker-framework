@@ -99,9 +99,6 @@ extends GenericAnnotatedTypeFactory<CFValue, CFStore, IndexTransfer, IndexAnalys
 					if (val >= 0) {
 						type.addAnnotation(createNonNegAnnotation());
 					}
-					else if (val == -1) {
-						type.addAnnotation(createIndexOrLowAnnotation("*"));
-					}
 				}
 			}
 			return super.visitLiteral(tree, type);

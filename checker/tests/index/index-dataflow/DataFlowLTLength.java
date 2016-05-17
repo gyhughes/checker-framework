@@ -334,21 +334,6 @@ class DataFlowLTLength {
 			//:: error: (assignment.type.incompatible)
 			indexOrLowResult = i;
 		}
-		i = lTLengthReset;
-		lTLengthResult = lTLengthReset;
-		indexOrLowResult = indexOrLowReset;
-		indexForResult = indexForReset;
-		if (i == -1) {
-			// Show result is of type IndexOrLow
-			indexOrLowResult = i;
-			//:: error: (assignment.type.incompatible)
-			indexForResult = i;	
-		} else {
-			// Show result is of type LTLength
-	        lTLengthResult = i;
-			//:: error: (assignment.type.incompatible)
-			indexOrLowResult = i;
-		}
 	}
 	
 	void compareALength(@IndexFor("arr") int indexForReset, @IndexOrLow("arr") int indexOrLowReset, @LTLength("arr") int lTLengthReset) {
