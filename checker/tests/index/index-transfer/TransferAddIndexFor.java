@@ -56,7 +56,7 @@ class TransferAddIndexFor {
 	
 	void unaryPlus() {
 		int aux = i;
-		aux++; 
+		aux++;
 		// Show result is of type IndexOrHigh
 		@IndexOrHigh("arr") int indexOrHigh = aux;
 		//:: error: (assignment.type.incompatible)

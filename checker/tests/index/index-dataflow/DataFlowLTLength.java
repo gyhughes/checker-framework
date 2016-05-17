@@ -274,7 +274,7 @@ class DataFlowLTLength {
 	        lTLengthResult = i;
 			//:: error: (assignment.type.incompatible)
 			indexOrLowResult = i;
-		} /*else { 
+		} /*else {
 			// Show result is of type IndexOrLow
 			indexOrLowResult = i;
 			//:: error: (assignment.type.incompatible)
