@@ -42,11 +42,20 @@ class TransferAddIndexOrLow {
 		@LTLength("arr") int lTLength = v + i;
 	}
 	
-	void add1(@IndexOrHigh("arr") int indexOrHigh1, @IndexOrHigh("arr") int indexOrHigh2) {
+	void add1() {
 		// Show result is of type IndexOrHigh
-				@IndexOrHigh("arr") int indexOrHigh = 1 + i;
-				//:: error: (assignment.type.incompatible)
-				@IndexFor("arr") int indexFor = 1 + i;
+		@IndexOrHigh("arr") int indexOrHigh = 1 + i;
+		//:: error: (assignment.type.incompatible)
+		@IndexFor("arr") int indexFor = 1 + i;
+	}
+	
+	void unaryPlus() {
+		int aux = i;
+		aux++;
+		// Show result is of type IndexOrHigh
+		@IndexOrHigh("arr") int indexOrHigh = aux;
+		//:: error: (assignment.type.incompatible)
+		@IndexFor("arr") int indexFor = aux;
 	}
 	
 	void add0() {

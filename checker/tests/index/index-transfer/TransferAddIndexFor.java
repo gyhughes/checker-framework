@@ -45,6 +45,15 @@ class TransferAddIndexFor {
 		@IndexFor("arr") int indexFor = 1 + i;
 	}
 	
+	void unaryPlus() {
+		int aux = i;
+		aux++; 
+		// Show result is of type IndexOrHigh
+		@IndexOrHigh("arr") int indexOrHigh = aux;
+		//:: error: (assignment.type.incompatible)
+		@IndexFor("arr") int indexFor = aux;
+	}
+	
 	void add0() {
 		// Show result is of type IndexFor
 		@IndexFor("arr") int IndexFor = 0 + i;

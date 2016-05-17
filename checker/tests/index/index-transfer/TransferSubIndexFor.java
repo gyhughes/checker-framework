@@ -46,6 +46,14 @@ class TransferSubIndexFor {
 		@IndexFor("arr") int indexFor = i - 1;
 	}
 	
+	void unaryMinus() {
+		int aux = i;
+		aux--;
+		@IndexOrLow("arr") int indexOrLow = aux;
+		//:: error: (assignment.type.incompatible)
+		@IndexFor("arr") int indexFor = aux;
+	}
+	
 	void sub0() {
 		@IndexFor("arr") int indexFor = i - 0;
 	}
