@@ -254,9 +254,8 @@ class DataFlowLTLength {
 		indexOrLowResult = indexOrLowReset;
 		indexForResult = indexForReset;
 		if (i == indexOrHighComparison) {
-			// NOT YET IMPLEMENTED
 			// Show result is of type IndexFor
-			// indexForResult = i;
+			indexForResult = i;
 		} else {
 			// Show result is of type LTLength
 	        lTLengthResult = i;
@@ -265,236 +264,261 @@ class DataFlowLTLength {
 		}
 	}
 
-//	
-//	void compareNegative1(@IndexFor("arr") int indexForReset, @IndexOrLow("arr") int indexOrLowReset) {
-//		@IndexFor("arr") int indexForResult;
-//		@IndexOrLow("arr") int indexOrLowResult;
-//		if (i < -1) {
-//			// impossible
-//		} else {
-//			// Show result is of type IndexOrLow
-//			indexOrLowResult = i;
-//			//:: error: (assignment.type.incompatible)
-//			indexForResult = i;
-//		}
-//		i = indexOrLowReset;
-//		indexOrLowResult = indexOrLowReset;
-//		indexForResult = indexForReset;
-//		if (i <= -1) {
-//			// Show result is of type IndexOrLow
-//			indexOrLowResult = i;
-//			//:: error: (assignment.type.incompatible)
-//			indexForResult = i;	
-//		} /*else {
-//			// Show result is of type IndexFor
-//			indexForResult = i;
-//		}*/
-//		i = indexOrLowReset;
-//		indexOrLowResult = indexOrLowReset;
-//		indexForResult = indexForReset;
-//		if (i > -1) {
-//			// Show result is of type IndexFor
-//			indexForResult = i;
-//		} else {
-//			// Show result is of type IndexOrLow
-//			indexOrLowResult = i;
-//			//:: error: (assignment.type.incompatible)
-//			indexForResult = i;			
-//		}
-//		i = indexOrLowReset;
-//		indexOrLowResult = indexOrLowReset;
-//		indexForResult = indexForReset;
-//		if (i >= -1) {
-//			// Show result is of type IndexOrLow
-//			indexOrLowResult = i;
-//			//:: error: (assignment.type.incompatible)
-//			indexForResult = i;	
-//		} else {
-//			// impossible
-//		}
-//		i = indexOrLowReset;
-//		indexOrLowResult = indexOrLowReset;
-//		indexForResult = indexForReset;
-//		if (i != -1) {
-//			// Show result is of type IndexFor
-//			indexForResult = i;
-//		} else {
-//			// Show result is of type IndexOrLow
-//			indexOrLowResult = i;
-//			//:: error: (assignment.type.incompatible)
-//			indexForResult = i;	
-//		}
-//		i = indexOrLowReset;
-//		indexOrLowResult = indexOrLowReset;
-//		indexForResult = indexForReset;
-//		if (i == -1) {
-//			// Show result is of type IndexOrLow
-//			indexOrLowResult = i;
-//			//:: error: (assignment.type.incompatible)
-//			indexForResult = i;	
-//		} /*else {
-//			// Show result is of type IndexFor
-//			indexForResult = i;
-//		}*/
-//	}
-//	
-//	void compareALength(@IndexFor("arr") int indexForReset, @LTLength("arr") int lTLengthReset;) {
-//		@IndexFor("arr") int indexForResult;
-//		@LTLength("arr") int lTLengthResult;
-//		if (i < arr.length) {
-//			// Show result is of type IndexOrLow
-//			lTLengthResult = i;
-//			//:: error: (assignment.type.incompatible)
-//			indexForResult = i;	
-//		} else {
-//			// impossible
-//		}
-//		i = indexOrLowReset;
-//		lTLengthResult = indexOrLowReset;
-//		indexForResult = indexForReset;
-//		if (i <= arr.length) {
-//			// Show result is of type IndexOrLow
-//			lTLengthResult = i;
-//			//:: error: (assignment.type.incompatible)
-//			indexForResult = i;	
-//		} else {
-//			// impossible
-//		}
-//		i = indexOrLowReset;
-//		lTLengthResult = indexOrLowReset;
-//		indexForResult = indexForReset;
-//		if (i > arr.length) {
-//			// impossible
-//		} else {
-//			// Show result is of type IndexOrLow
-//			lTLengthResult = i;
-//			//:: error: (assignment.type.incompatible)
-//			indexForResult = i;	
-//		}
-//		i = indexOrLowReset;
-//		lTLengthResult = indexOrLowReset;
-//		indexForResult = indexForReset;
-//		if (i >= arr.length) {
-//			// index
-//		} else {
-//			// Show result is of type IndexOrLow
-//			lTLengthResult = i;
-//			//:: error: (assignment.type.incompatible)
-//			indexForResult = i;	
-//		}
-//		i = indexOrLowReset;
-//		lTLengthResult = indexOrLowReset;
-//		indexForResult = indexForReset;
-//		if (i != arr.length) {
-//			// Show result is of type IndexOrLow
-//			lTLengthResult = i;
-//			//:: error: (assignment.type.incompatible)
-//			indexForResult = i;	
-//		} else {
-//			// Show result is of type IndexOrLow
-//			lTLengthResult = i;
-//			//:: error: (assignment.type.incompatible)
-//			indexForResult = i;	
-//		}
-//		i = indexOrLowReset;
-//		lTLengthResult = indexOrLowReset;
-//		indexForResult = indexForReset;
-//		if (i == arr.length) {
-//			// impossible
-//		} else {
-//			// Show result is of type IndexOrLow
-//			lTLengthResult = i;
-//			//:: error: (assignment.type.incompatible)
-//			indexForResult = i;	
-//		}
-//	}
-//	
-//	void compareLTLength(@LTLength("arr") int LTLengthComparison, @LTLength("arr") int lTLengthReset;, @IndexFor("arr") int indexForReset) {
-//		@IndexFor("arr") int indexForResult;
-//		@LTLength("arr") int lTLengthResult;
-//		if (i < LTLengthComparison) {
-//			// Show result is of type IndexOrLow
-//			lTLengthResult = i;
-//			//:: error: (assignment.type.incompatible)
-//			indexForResult = i;
-//		} else {
-//			// Show result is of type IndexOrLow
-//			lTLengthResult = i;
-//			//:: error: (assignment.type.incompatible)
-//			indexForResult = i;
-//		}
-//		i = indexOrLowReset;
-//		lTLengthResult = indexOrLowReset;
-//		indexForResult = indexForReset;
-//		if (i <= LTLengthComparison) {
-//			// Show result is of type IndexOrLow
-//			lTLengthResult = i;
-//			//:: error: (assignment.type.incompatible)
-//			indexForResult = i;
-//		} else {
-//			// Show result is of type IndexOrLow
-//			lTLengthResult = i;
-//			//:: error: (assignment.type.incompatible)
-//			indexForResult = i;
-//		}
-//		i = indexOrLowReset;
-//		lTLengthResult = indexOrLowReset;
-//		indexForResult = indexForReset;
-//		if (i > LTLengthComparison) {
-//			// Show result is of type IndexOrLow
-//			lTLengthResult = i;
-//			//:: error: (assignment.type.incompatible)
-//			indexForResult = i;
-//		} else {
-//			// Show result is of type IndexOrLow
-//			lTLengthResult = i;
-//			//:: error: (assignment.type.incompatible)
-//			indexForResult = i;
-//		}
-//		i = indexOrLowReset;
-//		lTLengthResult = indexOrLowReset;
-//		indexForResult = indexForReset;
-//		if (i >= LTLengthComparison) {
-//			// Show result is of type IndexOrLow
-//			lTLengthResult = i;
-//			//:: error: (assignment.type.incompatible)
-//			indexForResult = i;
-//		} else {
-//			// Show result is of type IndexOrLow
-//			lTLengthResult = i;
-//			//:: error: (assignment.type.incompatible)
-//			indexForResult = i;
-//		}
-//		i = indexOrLowReset;
-//		lTLengthResult = indexOrLowReset;
-//		indexForResult = indexForReset;
-//		if (i != LTLengthComparison) {
-//			// Show result is of type IndexOrLow
-//			lTLengthResult = i;
-//			//:: error: (assignment.type.incompatible)
-//			indexForResult = i;
-//		} else {
-//			// Show result is of type IndexOrLow
-//			lTLengthResult = i;
-//			//:: error: (assignment.type.incompatible)
-//			indexForResult = i;
-//		}
-//		i = indexOrLowReset;
-//		lTLengthResult = indexOrLowReset;
-//		indexForResult = indexForReset;
-//		if (i == LTLengthComparison) {
-//			// Show result is of type IndexOrLow
-//			lTLengthResult = i;
-//			//:: error: (assignment.type.incompatible)
-//			indexForResult = i;
-//		} else {
-//			// Show result is of type IndexOrLow
-//			lTLengthResult = i;
-//			//:: error: (assignment.type.incompatible)
-//			indexForResult = i;
-//		}
-//	}
-//	
+	
+	void compareNegative1(@IndexFor("arr") int indexForReset, @IndexOrLow("arr") int indexOrLowReset, @LTLength("arr") int lTLengthReset) {
+		@LTLength("arr") int lTLengthResult;
+		@IndexOrLow("arr") int indexOrLowResult;
+		@IndexFor("arr") int indexForResult;
+		if (i < -1) {
+			// Show result is of type LTLength
+	        lTLengthResult = i;
+			//:: error: (assignment.type.incompatible)
+			indexOrLowResult = i;
+		} /*else { 
+			// Show result is of type IndexOrLow
+			indexOrLowResult = i;
+			//:: error: (assignment.type.incompatible)
+			indexForResult = i;
+		}*/
+		i = lTLengthReset;
+		lTLengthResult = lTLengthReset;
+		indexOrLowResult = indexOrLowReset;
+		indexForResult = indexForReset;
+		if (i <= -1) {
+			// Show result is of type LTLength
+	        lTLengthResult = i;
+			//:: error: (assignment.type.incompatible)
+			indexOrLowResult = i;
+		} /*else {
+			// Show result is of type IndexFor
+			indexForResult = i;
+		}*/
+		i = lTLengthReset;
+		lTLengthResult = lTLengthReset;
+		indexOrLowResult = indexOrLowReset;
+		indexForResult = indexForReset;
+		if (i > -1) {
+			// Show result is of type IndexFor
+			indexForResult = i;
+		} else {
+			// Show result is of type LTLength
+	        lTLengthResult = i;
+			//:: error: (assignment.type.incompatible)
+			indexOrLowResult = i;
+		}
+		i = lTLengthReset;
+		lTLengthResult = lTLengthReset;
+		indexOrLowResult = indexOrLowReset;
+		indexForResult = indexForReset;
+		if (i >= -1) {
+			// Show result is of type IndexOrLow
+			indexOrLowResult = i;
+			//:: error: (assignment.type.incompatible)
+			indexForResult = i;	
+		} else {
+			// Show result is of type LTLength
+	        lTLengthResult = i;
+			//:: error: (assignment.type.incompatible)
+			indexOrLowResult = i;
+		}
+		i = lTLengthReset;
+		lTLengthResult = lTLengthReset;
+		indexOrLowResult = indexOrLowReset;
+		indexForResult = indexForReset;
+		if (i != -1) {
+			// Show result is of type LTLength
+	        lTLengthResult = i;
+			//:: error: (assignment.type.incompatible)
+			indexOrLowResult = i;
+		} else {
+			// Show result is of type LTLength
+	        lTLengthResult = i;
+			//:: error: (assignment.type.incompatible)
+			indexOrLowResult = i;
+		}
+		i = lTLengthReset;
+		lTLengthResult = lTLengthReset;
+		indexOrLowResult = indexOrLowReset;
+		indexForResult = indexForReset;
+		if (i == -1) {
+			// Show result is of type IndexOrLow
+			indexOrLowResult = i;
+			//:: error: (assignment.type.incompatible)
+			indexForResult = i;	
+		} else {
+			// Show result is of type LTLength
+	        lTLengthResult = i;
+			//:: error: (assignment.type.incompatible)
+			indexOrLowResult = i;
+		}
+	}
+	
+	void compareALength(@IndexFor("arr") int indexForReset, @IndexOrLow("arr") int indexOrLowReset, @LTLength("arr") int lTLengthReset) {
+		@LTLength("arr") int lTLengthResult;
+		@IndexOrLow("arr") int indexOrLowResult;
+		@IndexFor("arr") int indexForResult;
+		if (i < arr.length) {
+			// Show result is of type LTLength
+	        lTLengthResult = i;
+			//:: error: (assignment.type.incompatible)
+			indexOrLowResult = i;
+		} else {
+			// impossible
+		}
+		i = lTLengthReset;
+		lTLengthResult = lTLengthReset;
+		indexOrLowResult = indexOrLowReset;
+		indexForResult = indexForReset;
+		if (i <= arr.length) {
+			// Show result is of type LTLength
+	        lTLengthResult = i;
+			//:: error: (assignment.type.incompatible)
+			indexOrLowResult = i;
+		} else {
+			// impossible
+		}
+		i = lTLengthReset;
+		lTLengthResult = lTLengthReset;
+		indexOrLowResult = indexOrLowReset;
+		indexForResult = indexForReset;
+		if (i > arr.length) {
+			// impossible
+		} else {
+			// Show result is of type LTLength
+	        lTLengthResult = i;
+			//:: error: (assignment.type.incompatible)
+			indexOrLowResult = i;
+		}
+		i = lTLengthReset;
+		lTLengthResult = lTLengthReset;
+		indexOrLowResult = indexOrLowReset;
+		indexForResult = indexForReset;
+		if (i >= arr.length) {
+			// impossible
+		} else {
+			// Show result is of type LTLength
+	        lTLengthResult = i;
+			//:: error: (assignment.type.incompatible)
+			indexOrLowResult = i;
+		}
+		i = lTLengthReset;
+		lTLengthResult = lTLengthReset;
+		indexOrLowResult = indexOrLowReset;
+		indexForResult = indexForReset;
+		if (i != arr.length) {
+			// Show result is of type LTLength
+	        lTLengthResult = i;
+			//:: error: (assignment.type.incompatible)
+			indexOrLowResult = i;
+		} else {
+			// impossible
+		}
+		i = lTLengthReset;
+		lTLengthResult = lTLengthReset;
+		indexOrLowResult = indexOrLowReset;
+		indexForResult = indexForReset;
+		if (i == arr.length) {
+			// impossible
+		} else {
+			// Show result is of type LTLength
+	        lTLengthResult = i;
+			//:: error: (assignment.type.incompatible)
+			indexOrLowResult = i;
+		}
+	}
+	
+	void compareLTLength(@LTLength("arr") int LTLengthComparison, @LTLength("arr") int lTLengthReset, @IndexFor("arr") int indexForReset, @IndexOrLow("arr") int indexOrLowReset) {
+		@LTLength("arr") int lTLengthResult;
+		@IndexOrLow("arr") int indexOrLowResult;
+		@IndexFor("arr") int indexForResult;
+		if (i < LTLengthComparison) {
+			// Show result is of type LTLength
+	        lTLengthResult = i;
+			//:: error: (assignment.type.incompatible)
+			indexOrLowResult = i;
+		} else {
+			// Show result is of type LTLength
+	        lTLengthResult = i;
+			//:: error: (assignment.type.incompatible)
+			indexOrLowResult = i;
+		}
+		i = lTLengthReset;
+		lTLengthResult = lTLengthReset;
+		indexOrLowResult = indexOrLowReset;
+		indexForResult = indexForReset;
+		if (i <= LTLengthComparison) {
+			// Show result is of type LTLength
+	        lTLengthResult = i;
+			//:: error: (assignment.type.incompatible)
+			indexOrLowResult = i;
+		} else {
+			// Show result is of type LTLength
+	        lTLengthResult = i;
+			//:: error: (assignment.type.incompatible)
+			indexOrLowResult = i;
+		}
+		i = lTLengthReset;
+		lTLengthResult = lTLengthReset;
+		indexOrLowResult = indexOrLowReset;
+		indexForResult = indexForReset;
+		if (i > LTLengthComparison) {
+			// Show result is of type LTLength
+	        lTLengthResult = i;
+			//:: error: (assignment.type.incompatible)
+			indexOrLowResult = i;
+		} else {
+			// Show result is of type LTLength
+	        lTLengthResult = i;
+			//:: error: (assignment.type.incompatible)
+			indexOrLowResult = i;
+		}
+		i = lTLengthReset;
+		lTLengthResult = lTLengthReset;
+		indexOrLowResult = indexOrLowReset;
+		indexForResult = indexForReset;
+		if (i >= LTLengthComparison) {
+			// Show result is of type LTLength
+	        lTLengthResult = i;
+			//:: error: (assignment.type.incompatible)
+			indexOrLowResult = i;
+		} else {
+			// Show result is of type LTLength
+	        lTLengthResult = i;
+			//:: error: (assignment.type.incompatible)
+			indexOrLowResult = i;
+		}
+		i = lTLengthReset;
+		lTLengthResult = lTLengthReset;
+		indexOrLowResult = indexOrLowReset;
+		indexForResult = indexForReset;
+		if (i != LTLengthComparison) {
+			// Show result is of type LTLength
+	        lTLengthResult = i;
+			//:: error: (assignment.type.incompatible)
+			indexOrLowResult = i;
+		} else {
+			// Show result is of type LTLength
+	        lTLengthResult = i;
+			//:: error: (assignment.type.incompatible)
+			indexOrLowResult = i;
+		}
+		i = lTLengthReset;
+		lTLengthResult = lTLengthReset;
+		indexOrLowResult = indexOrLowReset;
+		indexForResult = indexForReset;
+		if (i == LTLengthComparison) {
+			// Show result is of type LTLength
+	        lTLengthResult = i;
+			//:: error: (assignment.type.incompatible)
+			indexOrLowResult = i;
+		} else {
+			// Show result is of type LTLength
+	        lTLengthResult = i;
+			//:: error: (assignment.type.incompatible)
+			indexOrLowResult = i;
+		}
+	}
+	
 	void compareNonNegative(@NonNegative int nonNegativeComparison, @IndexFor("arr") int indexForReset, @LTLength("arr") int lTLengthReset, @IndexOrLow("arr") int indexOrLowReset) {
 		
 		@LTLength("arr") int lTLengthResult;
@@ -567,9 +591,8 @@ class DataFlowLTLength {
 		indexOrLowResult = indexOrLowReset;
 		indexForResult = indexForReset;
 		if (i == nonNegativeComparison) {
-			// NOT YET IMPLEMENTED
 			// Show result is of type IndexFor
-			// indexForResult = i;
+			indexForResult = i;
 		} else {
 			// Show result is of type LTLength
 	        lTLengthResult = i;
@@ -577,165 +600,177 @@ class DataFlowLTLength {
 			indexOrLowResult = i;
 		}
 	}
-//	
-//	void compareUnknown(@Unknown int unknownComparison, @LTLength("arr") int lTLengthReset;, @IndexFor("arr") int indexForReset) {
-//		@IndexFor("arr") int indexForResult;
-//		@LTLength("arr") int lTLengthResult;
-//		if (i < unknownComparison) {
-//			// Show result is of type IndexOrLow
-//			lTLengthResult = i;
-//			//:: error: (assignment.type.incompatible)
-//			indexForResult = i;
-//		} else {
-//			// Show result is of type IndexOrLow
-//			lTLengthResult = i;
-//			//:: error: (assignment.type.incompatible)
-//			indexForResult = i;
-//		}
-//		i = indexOrLowReset;
-//		lTLengthResult = indexOrLowReset;
-//		indexForResult = indexForReset;
-//		if (i <= unknownComparison) {
-//			// Show result is of type IndexOrLow
-//			lTLengthResult = i;
-//			//:: error: (assignment.type.incompatible)
-//			indexForResult = i;
-//		} else {
-//			// Show result is of type IndexOrLow
-//			lTLengthResult = i;
-//			//:: error: (assignment.type.incompatible)
-//			indexForResult = i;
-//		}
-//		i = indexOrLowReset;
-//		lTLengthResult = indexOrLowReset;
-//		indexForResult = indexForReset;
-//		if (i > unknownComparison) {
-//			// Show result is of type IndexOrLow
-//			lTLengthResult = i;
-//			//:: error: (assignment.type.incompatible)
-//			indexForResult = i;
-//		} else {
-//			// Show result is of type IndexOrLow
-//			lTLengthResult = i;
-//			//:: error: (assignment.type.incompatible)
-//			indexForResult = i;
-//		}
-//		i = indexOrLowReset;
-//		lTLengthResult = indexOrLowReset;
-//		indexForResult = indexForReset;
-//		if (i >= unknownComparison) {
-//			// Show result is of type IndexOrLow
-//			lTLengthResult = i;
-//			//:: error: (assignment.type.incompatible)
-//			indexForResult = i;
-//		} else {
-//			// Show result is of type IndexOrLow
-//			lTLengthResult = i;
-//			//:: error: (assignment.type.incompatible)
-//			indexForResult = i;
-//		}
-//		i = indexOrLowReset;
-//		lTLengthResult = indexOrLowReset;
-//		indexForResult = indexForReset;
-//		if (i != unknownComparison) {
-//			// Show result is of type IndexOrLow
-//			lTLengthResult = i;
-//			//:: error: (assignment.type.incompatible)
-//			indexForResult = i;
-//		} else {
-//			// Show result is of type IndexOrLow
-//			lTLengthResult = i;
-//			//:: error: (assignment.type.incompatible)
-//			indexForResult = i;
-//		}
-//		i = indexOrLowReset;
-//		lTLengthResult = indexOrLowReset;
-//		indexForResult = indexForReset;
-//		if (i == unknownComparison) {
-//			// Show result is of type IndexOrLow
-//			lTLengthResult = i;
-//			//:: error: (assignment.type.incompatible)
-//			indexForResult = i;
-//		} else {
-//			// Show result is of type IndexOrLow
-//			lTLengthResult = i;
-//			//:: error: (assignment.type.incompatible)
-//			indexForResult = i;
-//		}
-//	}
-//	
-//	void compareIndexForB(@IndexFor("arrB") int indexForBComparison, @IndexFor("arr") int indexForReset, @LTLength("arr") int lTLengthReset;) {
-//		@LTLength("arr") int lTLengthResult;
-//		@IndexFor("arr") int indexForResult;
-//		if (i < indexForBComparison) {
-//			// Show result is of type IndexOrLow
-//			lTLengthResult = i;
-//	        //:: error: (assignment.type.incompatible)
-//	        indexForResult = i;
-//		} /*else {
-//			// Show result is of type IndexFor
-//			indexForResult = i;
-//		}*/
-//		i = indexOrLowReset;
-//		lTLengthResult = indexOrLowReset;
-//		indexForResult = indexForReset;
-//		if (i <= indexForBComparison) {
-//			// Show result is of type IndexOrLow
-//			lTLengthResult = i;
-//			//:: error: (assignment.type.incompatible)
-//			indexForResult = i;
-//		} /*else {
-//			// Show result is of type IndexFor
-//			indexForResult = i;
-//		}*/
-//		i = indexOrLowReset;
-//		lTLengthResult = indexOrLowReset;
-//		indexForResult = indexForReset;
-//		if (i > indexForBComparison) {
-//			// Show result is of type IndexFor
-//			indexForResult = i;
-//		} else {
-//			// Show result is of type IndexOrLow
-//			lTLengthResult = i;
-//			//:: error: (assignment.type.incompatible)
-//			indexForResult = i;
-//		}
-//		i = indexOrLowReset;
-//		lTLengthResult = indexOrLowReset;
-//		indexForResult = indexForReset;
-//		if (i >= indexForBComparison) {
-//			// Show result is of type IndexFor
-//			indexForResult = i;
-//		} else {
-//			// Show result is of type IndexOrLow
-//			lTLengthResult = i;
-//			//:: error: (assignment.type.incompatible)
-//			indexForResult = i;
-//		}
-//		i = indexOrLowReset;
-//		lTLengthResult = indexOrLowReset;
-//		indexForResult = indexForReset;
-//		if (i != indexForBComparison) {
-//			// Show result is of type IndexOrLow
-//			lTLengthResult = i;
-//			//:: error: (assignment.type.incompatible)
-//			indexForResult = i;
-//		} /*else {
-//			// Show result is of type IndexFor
-//			indexForResult = i;
-//		}*/
-//		i = indexOrLowReset;
-//		lTLengthResult = indexOrLowReset;
-//		indexForResult = indexForReset;
-//		if (i == indexForBComparison) {
-//			// Show result is of type IndexFor
-//			indexForResult = i;
-//		} else {
-//			// Show result is of type IndexOrLow
-//			lTLengthResult = i;
-//			//:: error: (assignment.type.incompatible)
-//			indexForResult = i;
-//		}
-//	}
-//	
+	
+	void compareUnknown(@Unknown int unknownComparison, @IndexFor("arr") int indexForReset, @LTLength("arr") int lTLengthReset, @IndexOrLow("arr") int indexOrLowReset) {
+	@LTLength("arr") int lTLengthResult;
+	@IndexOrLow("arr") int indexOrLowResult;
+	@IndexFor("arr") int indexForResult;
+		if (i < unknownComparison) {
+			// Show result is of type LTLength
+	        lTLengthResult = i;
+			//:: error: (assignment.type.incompatible)
+			indexOrLowResult = i;
+		} else {
+			// Show result is of type LTLength
+	        lTLengthResult = i;
+			//:: error: (assignment.type.incompatible)
+			indexOrLowResult = i;
+		}
+		i = lTLengthReset;
+		lTLengthResult = lTLengthReset;
+		indexOrLowResult = indexOrLowReset;
+		indexForResult = indexForReset;
+		if (i <= unknownComparison) {
+			// Show result is of type LTLength
+	        lTLengthResult = i;
+			//:: error: (assignment.type.incompatible)
+			indexOrLowResult = i;
+		} else {
+			// Show result is of type LTLength
+	        lTLengthResult = i;
+			//:: error: (assignment.type.incompatible)
+			indexOrLowResult = i;
+		}
+		i = lTLengthReset;
+		lTLengthResult = lTLengthReset;
+		indexOrLowResult = indexOrLowReset;
+		indexForResult = indexForReset;
+		if (i > unknownComparison) {
+			// Show result is of type LTLength
+	        lTLengthResult = i;
+			//:: error: (assignment.type.incompatible)
+			indexOrLowResult = i;
+		} else {
+			// Show result is of type LTLength
+	        lTLengthResult = i;
+			//:: error: (assignment.type.incompatible)
+			indexOrLowResult = i;
+		}
+		i = lTLengthReset;
+		lTLengthResult = lTLengthReset;
+		indexOrLowResult = indexOrLowReset;
+		indexForResult = indexForReset;
+		if (i >= unknownComparison) {
+			// Show result is of type LTLength
+	        lTLengthResult = i;
+			//:: error: (assignment.type.incompatible)
+			indexOrLowResult = i;
+		} else {
+			// Show result is of type LTLength
+	        lTLengthResult = i;
+			//:: error: (assignment.type.incompatible)
+			indexOrLowResult = i;
+		}
+		i = lTLengthReset;
+		lTLengthResult = lTLengthReset;
+		indexOrLowResult = indexOrLowReset;
+		indexForResult = indexForReset;
+		if (i != unknownComparison) {
+			// Show result is of type LTLength
+	        lTLengthResult = i;
+			//:: error: (assignment.type.incompatible)
+			indexOrLowResult = i;
+		} else {
+			// Show result is of type LTLength
+	        lTLengthResult = i;
+			//:: error: (assignment.type.incompatible)
+			indexOrLowResult = i;
+		}
+		i = lTLengthReset;
+		lTLengthResult = lTLengthReset;
+		indexOrLowResult = indexOrLowReset;
+		indexForResult = indexForReset;
+		if (i == unknownComparison) {
+			// Show result is of type LTLength
+	        lTLengthResult = i;
+			//:: error: (assignment.type.incompatible)
+			indexOrLowResult = i;
+		} else {
+			// Show result is of type LTLength
+	        lTLengthResult = i;
+			//:: error: (assignment.type.incompatible)
+			indexOrLowResult = i;
+		}
+	}
+	
+	void compareIndexForB(@IndexFor("arrB") int indexForBComparison,  @IndexFor("arr") int indexForReset, @LTLength("arr") int lTLengthReset, @IndexOrLow("arr") int indexOrLowReset) {
+		@LTLength("arr") int lTLengthResult;
+		@IndexFor("arr") int indexForResult;
+		@IndexOrLow("arr") int indexOrLowResult;
+		if (i < indexForBComparison) {
+			// Show result is of type LTLength
+	        lTLengthResult = i;
+			//:: error: (assignment.type.incompatible)
+			indexOrLowResult = i;
+		} /*else {
+			// Show result is of type IndexFor
+			indexForResult = i;
+		}*/
+		i = lTLengthReset;
+		lTLengthResult = lTLengthReset;
+		indexOrLowResult = indexOrLowReset;
+		indexForResult = indexForReset;
+		if (i <= indexForBComparison) {
+			// Show result is of type LTLength
+	        lTLengthResult = i;
+			//:: error: (assignment.type.incompatible)
+			indexOrLowResult = i;
+		} /*else {
+			// Show result is of type IndexFor
+			indexForResult = i;
+		}*/
+		i = lTLengthReset;
+		lTLengthResult = lTLengthReset;
+		indexOrLowResult = indexOrLowReset;
+		indexForResult = indexForReset;
+		if (i > indexForBComparison) {
+			// Show result is of type IndexFor
+			indexForResult = i;
+		} else {
+			// Show result is of type LTLength
+	        lTLengthResult = i;
+			//:: error: (assignment.type.incompatible)
+			indexOrLowResult = i;
+		}
+		i = lTLengthReset;
+		lTLengthResult = lTLengthReset;
+		indexOrLowResult = indexOrLowReset;
+		indexForResult = indexForReset;
+		if (i >= indexForBComparison) {
+			// Show result is of type IndexFor
+			indexForResult = i;
+		} else {
+			// Show result is of type LTLength
+	        lTLengthResult = i;
+			//:: error: (assignment.type.incompatible)
+			indexOrLowResult = i;
+		}
+		i = lTLengthReset;
+		lTLengthResult = lTLengthReset;
+		indexOrLowResult = indexOrLowReset;
+		indexForResult = indexForReset;
+		if (i != indexForBComparison) {
+			// Show result is of type LTLength
+	        lTLengthResult = i;
+			//:: error: (assignment.type.incompatible)
+			indexOrLowResult = i;
+		} /*else {
+			// Show result is of type IndexFor
+			indexForResult = i;
+		}*/
+		i = lTLengthReset;
+		lTLengthResult = lTLengthReset;
+		indexOrLowResult = indexOrLowReset;
+		indexForResult = indexForReset;
+		if (i == indexForBComparison) {
+			// Show result is of type IndexFor
+			indexForResult = i;
+		} else {
+			// Show result is of type LTLength
+	        lTLengthResult = i;
+			//:: error: (assignment.type.incompatible)
+			indexOrLowResult = i;
+		}
+	}
+	
 }
