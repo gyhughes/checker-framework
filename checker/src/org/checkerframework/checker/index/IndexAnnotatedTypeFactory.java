@@ -100,7 +100,7 @@ extends GenericAnnotatedTypeFactory<CFValue, CFStore, IndexTransfer, IndexAnalys
 						type.addAnnotation(createNonNegAnnotation());
 					}
 					else if (val == -1) {
-						type.addAnnotation(createIndexOrLowAnnotation(""));
+						type.addAnnotation(createIndexOrLowAnnotation("*"));
 					}
 				}
 			}
@@ -285,6 +285,20 @@ extends GenericAnnotatedTypeFactory<CFValue, CFStore, IndexTransfer, IndexAnalys
 			super(f, bottom);
 		}
 
+        @Override
+        public AnnotationMirror leastUpperBound(AnnotationMirror a1, AnnotationMirror a2) {
+        	if (isSubtype(a1, a2)) {
+        		return a2;
+        	}
+        	if (isSubtype(a2, a1)) {
+        		return a1;
+        	}
+        	if (isSubtype(a1, NonNegative) && isSubtype(a2, NonNegative)) {
+        		return NonNegative;
+        	}
+            return Unknown;
+        }
+        
 		@Override
 		public boolean isSubtype(AnnotationMirror rhs, AnnotationMirror lhs) {
 			boolean rightNonNeg = AnnotationUtils.areSameIgnoringValues(rhs, NonNegative);
