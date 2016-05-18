@@ -310,7 +310,6 @@ extends GenericAnnotatedTypeFactory<CFValue, CFStore, IndexTransfer, IndexAnalys
         	}
             return Unknown;
         }
-        
 		@Override
 		public boolean isSubtype(AnnotationMirror rhs, AnnotationMirror lhs) {
 			boolean rightNonNeg = AnnotationUtils.areSameIgnoringValues(rhs, NonNegative);
