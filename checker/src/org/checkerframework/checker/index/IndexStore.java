@@ -26,9 +26,9 @@ public class IndexStore extends CFAbstractStore<IndexValue, IndexStore> {
 		if (remove || clear) {
 			localVariableValues.clear();
 			fieldValues.clear();
-			methodValues.clear();
-			arrayValues.clear();
-			classValues.clear();
+			//methodValues.clear();
+			//arrayValues.clear();
+			//classValues.clear();
 		}
 		
 		
