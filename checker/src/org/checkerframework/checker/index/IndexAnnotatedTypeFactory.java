@@ -17,9 +17,6 @@ import org.checkerframework.checker.index.qual.LTLength;
 import org.checkerframework.checker.index.qual.NonNegative;
 import org.checkerframework.checker.index.qual.Unknown;
 import org.checkerframework.common.basetype.BaseTypeChecker;
-import org.checkerframework.framework.flow.CFStore;
-import org.checkerframework.framework.flow.CFValue;
-import org.checkerframework.framework.source.Result;
 import org.checkerframework.framework.type.AnnotatedTypeFactory;
 import org.checkerframework.framework.type.AnnotatedTypeMirror;
 import org.checkerframework.framework.type.GenericAnnotatedTypeFactory;
@@ -46,7 +43,7 @@ import com.sun.source.tree.UnaryTree;
 // Defines the hierarchy and intro rules for the index checker //
 //*************************************************************//
 public class IndexAnnotatedTypeFactory
-extends GenericAnnotatedTypeFactory<CFValue, CFStore, IndexTransfer, IndexAnalysis> {
+extends GenericAnnotatedTypeFactory<IndexValue, IndexStore, IndexTransfer, IndexAnalysis> {
 
 	// base annotations
 	protected final AnnotationMirror IndexFor;
@@ -85,7 +82,7 @@ extends GenericAnnotatedTypeFactory<CFValue, CFStore, IndexTransfer, IndexAnalys
 
 
 	@Override
-	protected IndexAnalysis createFlowAnalysis(List<Pair<VariableElement, CFValue>> fieldvalues) {
+	protected IndexAnalysis createFlowAnalysis(List<Pair<VariableElement, IndexValue>> fieldvalues) {
 		return new IndexAnalysis(checker, this, fieldvalues);
 	}
 
