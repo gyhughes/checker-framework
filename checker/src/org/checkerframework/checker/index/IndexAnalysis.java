@@ -13,11 +13,13 @@ import org.checkerframework.javacutil.Pair;
 // subclasses the base analysis to use our Transfers instead of the deafaults
 
 public class IndexAnalysis extends CFAbstractAnalysis<IndexValue, IndexStore, IndexTransfer> {
-
+	IndexAnnotatedTypeFactory atypeFactory;
+	
 	public IndexAnalysis(BaseTypeChecker checker,
 			IndexAnnotatedTypeFactory factory,
 			List<Pair<VariableElement, IndexValue>> fieldValues) {
 		super(checker, factory, fieldValues);
+		this.atypeFactory = (IndexAnnotatedTypeFactory)super.atypeFactory;
 	}
 	
 	//overrides the superclass method to return our transfers
