@@ -17,6 +17,7 @@ public class IndexStore extends CFAbstractStore<IndexValue, IndexStore> {
     }
 
 	// change update to throw away info if we call remove or clear
+    // TODO make it transfer on remove similar to a ++ 
 	@Override
 	public void updateForMethodCall(MethodInvocationNode n,
             AnnotatedTypeFactory atypeFactory, IndexValue val) {
