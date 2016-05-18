@@ -18,15 +18,13 @@ import org.checkerframework.framework.type.AnnotatedTypeMirror;
 
 public class IndexStore extends CFAbstractStore<IndexValue, IndexStore> {
 
-	
-    protected IndexStore(IndexStore other) {
+	protected IndexStore(IndexStore other) {
 		super(other);
 	}
-    
-    public IndexStore(CFAbstractAnalysis<IndexValue, IndexStore, ?> analysis, boolean sequentialSemantics) {
-        super(analysis, sequentialSemantics);
-    }
-
+	public IndexStore(CFAbstractAnalysis<IndexValue, IndexStore, ?> analysis, boolean sequentialSemantics) {
+		super(analysis, sequentialSemantics);
+	}
+	
     // changes values similar to ++ if we remove from a list
     // if we clear a list anything NonNegatvie goes to NonNeg else becomes unknown
 	@Override
