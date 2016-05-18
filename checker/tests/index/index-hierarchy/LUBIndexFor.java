@@ -10,7 +10,7 @@ public class LUBIndexFor {
 	//:: error: (assignment.type.incompatible)
 	@IndexOrHigh("a") int IOH = 2;
 	//:: error: (assignment.type.incompatible)
-	@LTLength("a") int LTL = 6; 
+	@LTLength("a") int LTL = 6;
 	
 	//:: error: (assignment.type.incompatible)
 	@IndexFor("b") int InFb = 3;

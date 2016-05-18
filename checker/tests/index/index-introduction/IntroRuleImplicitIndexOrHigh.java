@@ -1,12 +1,12 @@
 import org.checkerframework.checker.index.qual.*;
-
-//Doesn't test anything yet.
+import java.util.*;
 
 class IntroRuleImplicitIndexOrHigh {
 	
 	int[] arr = new int[5];
+	List<Integer> lst = new ArrayList<>();
 	
-	void foo() {
+	void array() {
 		int[] arrB = new int[5];
 		int v2 = arr.length;
 		
@@ -24,5 +24,9 @@ class IntroRuleImplicitIndexOrHigh {
 		//:: error:(assignment.type.incompatible)
 		@IndexFor("arr") int r = v2;
 		
+	}
+	
+	void list() {
+		@IndexOrHigh("lst") int i = lst.size();
 	}
 }

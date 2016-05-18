@@ -11,7 +11,7 @@ public class LUBOneArray {
 	@Unknown int Unk = -4;
 	@NonNegative int NN = 8;
 	//:: error: (assignment.type.incompatible)
-	@LTLength("arr") int LTL = 6; 
+	@LTLength("arr") int LTL = 6;
 	boolean bool;
 	
 	void IOHandIOL() {

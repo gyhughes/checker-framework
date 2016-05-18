@@ -19,6 +19,7 @@ import org.checkerframework.checker.index.qual.Unknown;
 import org.checkerframework.common.basetype.BaseTypeChecker;
 import org.checkerframework.framework.flow.CFStore;
 import org.checkerframework.framework.flow.CFValue;
+import org.checkerframework.framework.source.Result;
 import org.checkerframework.framework.type.AnnotatedTypeFactory;
 import org.checkerframework.framework.type.AnnotatedTypeMirror;
 import org.checkerframework.framework.type.GenericAnnotatedTypeFactory;
@@ -37,6 +38,7 @@ import org.checkerframework.javacutil.TreeUtils;
 import com.sun.source.tree.BinaryTree;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.LiteralTree;
+import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.UnaryTree;
 
@@ -91,7 +93,8 @@ extends GenericAnnotatedTypeFactory<CFValue, CFStore, IndexTransfer, IndexAnalys
 		public IndexTreeAnnotator(AnnotatedTypeFactory atypeFactory) {
 			super(atypeFactory);
 		}
-
+		
+		@Override
 		public Void visitLiteral(LiteralTree tree, AnnotatedTypeMirror type) {
 			if (!type.isAnnotatedInHierarchy(AnnotationUtils.fromClass(elements, NonNegative.class))) {
 				if (tree.getKind() == Tree.Kind.INT_LITERAL) {
@@ -102,6 +105,18 @@ extends GenericAnnotatedTypeFactory<CFValue, CFStore, IndexTransfer, IndexAnalys
 				}
 			}
 			return super.visitLiteral(tree, type);
+		}
+		
+		@Override
+		public Void visitMethodInvocation(MethodInvocationTree tree, AnnotatedTypeMirror type) {
+			ExecutableElement ListSize = TreeUtils.getMethod("java.util.List", "size", 0, env);
+			String name = tree.getMethodSelect().toString();
+			if (TreeUtils.isMethodInvocation(tree, ListSize, env)) {
+				String listName = name.split("\\.")[0];
+				type.removeAnnotationInHierarchy(IndexFor);
+				type.addAnnotation(createIndexOrHighAnnotation(listName));
+			}	
+			return super.visitMethodInvocation(tree, type);
 		}
 		
 		//*****************************************************************//
@@ -277,11 +292,11 @@ extends GenericAnnotatedTypeFactory<CFValue, CFStore, IndexTransfer, IndexAnalys
 	// This is the class that handles the subtyping for our qualifiers                //
 	//********************************************************************************//	
 	private final class IndexQualifierHierarchy extends GraphQualifierHierarchy {
-
+		
 		public IndexQualifierHierarchy(MultiGraphFactory f, AnnotationMirror bottom) {
 			super(f, bottom);
 		}
-
+		
         @Override
         public AnnotationMirror leastUpperBound(AnnotationMirror a1, AnnotationMirror a2) {
         	if (isSubtype(a1, a2)) {
