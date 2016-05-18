@@ -34,7 +34,7 @@ class DataFlowIndexFor {
 			indexOrLowResult = i;
 			//:: error: (assignment.type.incompatible)
 			indexForResult = i;
-		}else {
+		} else {
 			// Show result is of type IndexFor
 			indexForResult = i;
 		}
