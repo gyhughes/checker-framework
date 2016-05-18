@@ -70,7 +70,7 @@ public class IndexStore extends CFAbstractStore<IndexValue, IndexStore> {
 		boolean IOH = atm.hasAnnotation(IndexOrHigh.class);
 		boolean IOL = atm.hasAnnotation(IndexOrLow.class);
 		boolean NN = atm.hasAnnotation(NonNegative.class);
-		if (isClear) {
+		if (!isClear) {
 			if (InF || IOL) {
 				String name = IndexTransfer.getValue(atm.getAnnotationInHierarchy(atypeFactory.IndexFor));
 				IndexValue val = analysis.createSingleAnnotationValue(atypeFactory.createIndexOrHighAnnotation(name), rec.getType());
