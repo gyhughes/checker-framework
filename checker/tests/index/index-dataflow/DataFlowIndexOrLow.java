@@ -22,10 +22,10 @@ class DataFlowIndexFor {
 			indexOrLowResult = i;
 	        //:: error: (assignment.type.incompatible)
 	        indexForResult = i;
-		} /*else {
+		} else {
 			// Show result is of type IndexFor
 						indexForResult = i;
-		}*/
+		}
 		i = indexOrLowReset;
 		indexOrLowResult = indexOrLowReset;
 		indexForResult = indexForReset;
@@ -34,10 +34,10 @@ class DataFlowIndexFor {
 			indexOrLowResult = i;
 			//:: error: (assignment.type.incompatible)
 			indexForResult = i;
-		}/* else {
+		}else {
 			// Show result is of type IndexFor
 			indexForResult = i;
-		}*/
+		}
 		i = indexOrLowReset;
 		indexOrLowResult = indexOrLowReset;
 		indexForResult = indexForReset;
@@ -70,10 +70,10 @@ class DataFlowIndexFor {
 			indexOrLowResult = i;
 			//:: error: (assignment.type.incompatible)
 			indexForResult = i;
-		} /*else {
+		} else {
 			// Show result is of type IndexFor
 			indexForResult = i;
-		}*/
+		}
 		i = indexOrLowReset;
 		indexOrLowResult = indexOrLowReset;
 		indexForResult = indexForReset;
@@ -109,10 +109,10 @@ class DataFlowIndexFor {
 			indexOrLowResult = i;
 			//:: error: (assignment.type.incompatible)
 			indexForResult = i;
-		} /*else {
+		} else {
 			// Show result is of type IndexFor
 			indexForResult = i;
-		}*/
+		}
 		i = indexOrLowReset;
 		indexOrLowComparison = indexOrLowReset;
 		if (i > indexOrLowComparison) {
@@ -173,10 +173,10 @@ class DataFlowIndexFor {
 			indexOrLowResult = i;
 	        //:: error: (assignment.type.incompatible)
 	        indexForResult = i;
-		} /*else {
+		} else {
 			// Show result is of type IndexFor
 			indexForResult = i;
-		}*/
+		}
 		i = indexOrLowReset;
 		indexOrLowResult = indexOrLowReset;
 		indexForResult = indexForReset;
@@ -185,10 +185,10 @@ class DataFlowIndexFor {
 			indexOrLowResult = i;
 			//:: error: (assignment.type.incompatible)
 			indexForResult = i;
-		} /*else {
+		} else {
 			// Show result is of type IndexFor
 			indexForResult = i;
-		}*/
+		}
 		i = indexOrLowReset;
 		indexOrLowResult = indexOrLowReset;
 		indexForResult = indexForReset;
@@ -221,10 +221,10 @@ class DataFlowIndexFor {
 			indexOrLowResult = i;
 			//:: error: (assignment.type.incompatible)
 			indexForResult = i;
-		} /*else {
+		} else {
 			// Show result is of type IndexFor
 			indexForResult = i;
-		}*/
+		}
 		i = indexOrLowReset;
 		indexOrLowResult = indexOrLowReset;
 		indexForResult = indexForReset;
@@ -258,10 +258,10 @@ class DataFlowIndexFor {
 			indexOrLowResult = i;
 			//:: error: (assignment.type.incompatible)
 			indexForResult = i;	
-		} /*else {
+		} else {
 			// Show result is of type IndexFor
 			indexForResult = i;
-		}*/
+		}
 		i = indexOrLowReset;
 		indexOrLowResult = indexOrLowReset;
 		indexForResult = indexForReset;
@@ -305,10 +305,10 @@ class DataFlowIndexFor {
 			indexOrLowResult = i;
 			//:: error: (assignment.type.incompatible)
 			indexForResult = i;	
-		} /*else {
+		} else {
 			// Show result is of type IndexFor
 			indexForResult = i;
-		}*/
+		}
 	}
 
 	void compareALength(@IndexFor("arr") int indexForReset, @IndexOrLow("arr") int indexOrLowReset) {
@@ -364,10 +364,7 @@ class DataFlowIndexFor {
 			//:: error: (assignment.type.incompatible)
 			indexForResult = i;	
 		} else {
-			// Show result is of type IndexOrLow
-			indexOrLowResult = i;
-			//:: error: (assignment.type.incompatible)
-			indexForResult = i;	
+			// impossible
 		}
 		i = indexOrLowReset;
 		indexOrLowResult = indexOrLowReset;
@@ -476,10 +473,10 @@ class DataFlowIndexFor {
 			indexOrLowResult = i;
 	        //:: error: (assignment.type.incompatible)
 	        indexForResult = i;
-		} /*else {
+		} else {
 			// Show result is of type IndexFor
 			indexForResult = i;
-		}*/
+		}
 		i = indexOrLowReset;
 		indexOrLowResult = indexOrLowReset;
 		indexForResult = indexForReset;
@@ -488,10 +485,10 @@ class DataFlowIndexFor {
 			indexOrLowResult = i;
 			//:: error: (assignment.type.incompatible)
 			indexForResult = i;
-		} /*else {
+		} else {
 			// Show result is of type IndexFor
 			indexForResult = i;
-		}*/
+		}
 		i = indexOrLowReset;
 		indexOrLowResult = indexOrLowReset;
 		indexForResult = indexForReset;
@@ -524,10 +521,10 @@ class DataFlowIndexFor {
 			indexOrLowResult = i;
 			//:: error: (assignment.type.incompatible)
 			indexForResult = i;
-		} /*else {
+		} else {
 			// Show result is of type IndexFor
 			indexForResult = i;
-		}*/
+		}
 		i = indexOrLowReset;
 		indexOrLowResult = indexOrLowReset;
 		indexForResult = indexForReset;
@@ -636,10 +633,10 @@ class DataFlowIndexFor {
 			indexOrLowResult = i;
 	        //:: error: (assignment.type.incompatible)
 	        indexForResult = i;
-		} /*else {
+		} else {
 			// Show result is of type IndexFor
 			indexForResult = i;
-		}*/
+		}
 		i = indexOrLowReset;
 		indexOrLowResult = indexOrLowReset;
 		indexForResult = indexForReset;
@@ -648,10 +645,10 @@ class DataFlowIndexFor {
 			indexOrLowResult = i;
 			//:: error: (assignment.type.incompatible)
 			indexForResult = i;
-		} /*else {
+		} else {
 			// Show result is of type IndexFor
 			indexForResult = i;
-		}*/
+		}
 		i = indexOrLowReset;
 		indexOrLowResult = indexOrLowReset;
 		indexForResult = indexForReset;
@@ -684,10 +681,10 @@ class DataFlowIndexFor {
 			indexOrLowResult = i;
 			//:: error: (assignment.type.incompatible)
 			indexForResult = i;
-		} /*else {
+		} else {
 			// Show result is of type IndexFor
 			indexForResult = i;
-		}*/
+		}
 		i = indexOrLowReset;
 		indexOrLowResult = indexOrLowReset;
 		indexForResult = indexForReset;

@@ -69,11 +69,15 @@ public class IndexTransfer extends CFAbstractTransfer<CFValue, CFStore, IndexTra
 
 		if (leftType.hasAnnotation(Unknown.class)) {
 			UnknownGreaterThan(rec, right, thenStore, false);
+			UnknownLessThan(rec, right, elseStore, true);
 		}
 		if (leftType.hasAnnotation(IndexOrLow.class) || leftType.hasAnnotation(LTLength.class)) {
 			AnnotationMirror leftAnno = leftType.getAnnotationInHierarchy(atypeFactory.IndexOrLow);
 			String name = getValue(leftAnno);
 			IndexOrLowGreaterThan(rec, right, thenStore, name, false);
+		}
+		if (leftType.hasAnnotation(IndexOrHigh.class) || leftType.hasAnnotation(NonNegative.class)) {
+			IndexOrHighLessThan(rec, right, elseStore, true);
 		}
 		return newResult;
 	}
@@ -94,11 +98,16 @@ public class IndexTransfer extends CFAbstractTransfer<CFValue, CFStore, IndexTra
 
 		if (leftType.hasAnnotation(Unknown.class)) {
 			UnknownGreaterThan(rec, right, thenStore, true);
+			UnknownLessThan(rec, right, elseStore, false);
+
 		}
 		if (leftType.hasAnnotation(IndexOrLow.class) || leftType.hasAnnotation(LTLength.class)) {
 			AnnotationMirror leftAnno = leftType.getAnnotationInHierarchy(atypeFactory.IndexOrLow);
 			String name = getValue(leftAnno);
 			IndexOrLowGreaterThan(rec, right, thenStore, name, true);
+		}
+		if (leftType.hasAnnotation(IndexOrHigh.class) || leftType.hasAnnotation(NonNegative.class)) {
+			IndexOrHighLessThan(rec, right, elseStore, false);
 		}
 		return newResult;
 	}
@@ -109,7 +118,10 @@ public class IndexTransfer extends CFAbstractTransfer<CFValue, CFStore, IndexTra
 		Node left = node.getLeftOperand();
 		Node right = node.getRightOperand();
 		Receiver rec = FlowExpressions.internalReprOf(analysis.getTypeFactory(), left);
+		Receiver rightRec = FlowExpressions.internalReprOf(analysis.getTypeFactory(), right);
+
 		AnnotatedTypeMirror leftType = atypeFactory.getAnnotatedType(left.getTree());
+		AnnotatedTypeMirror rightType = atypeFactory.getAnnotatedType(right.getTree());
 		CFStore thenStore = result.getRegularStore();
 		CFStore elseStore = thenStore.copy();
 		ConditionalTransferResult<CFValue, CFStore> newResult =
@@ -140,6 +152,10 @@ public class IndexTransfer extends CFAbstractTransfer<CFValue, CFStore, IndexTra
 				thenStore.insertValue(rec, anno);
 			}
 		}
+		// so the elseStore using ==
+		if (leftType.hasAnnotation(IndexOrLow.class) || leftType.hasAnnotation(LTLength.class)) {
+			IOLEqual(rec, rightRec, leftType, rightType, elseStore);
+		}
 		return newResult;
 	}
 
@@ -162,8 +178,13 @@ public class IndexTransfer extends CFAbstractTransfer<CFValue, CFStore, IndexTra
 		}
 		if (leftType.hasAnnotation(Unknown.class)) {
 			UnknownLessThan(rec, right, thenStore, false);
+			UnknownGreaterThan(rec, right, elseStore, true);
 		}
-
+		if (leftType.hasAnnotation(IndexOrLow.class) || leftType.hasAnnotation(LTLength.class)) {
+			AnnotationMirror leftAnno = leftType.getAnnotationInHierarchy(atypeFactory.IndexOrLow);
+			String name = getValue(leftAnno);
+			IndexOrLowGreaterThan(rec, right, elseStore, name, true);
+		}
 		return newResult;
 	}
 
@@ -183,9 +204,15 @@ public class IndexTransfer extends CFAbstractTransfer<CFValue, CFStore, IndexTra
 
 		if (leftType.hasAnnotation(Unknown.class)) {
 			UnknownLessThan(rec, right, thenStore, true);
+			UnknownGreaterThan(rec, right, elseStore, false);
 		}
 		if (leftType.hasAnnotation(IndexOrHigh.class) || leftType.hasAnnotation(NonNegative.class)) {
 			IndexOrHighLessThan(rec, right, thenStore, true);
+		}
+		if (leftType.hasAnnotation(IndexOrLow.class) || leftType.hasAnnotation(LTLength.class)) {
+			AnnotationMirror leftAnno = leftType.getAnnotationInHierarchy(atypeFactory.IndexOrLow);
+			String name = getValue(leftAnno);
+			IndexOrLowGreaterThan(rec, right, elseStore, name, false);
 		}
 		return newResult;
 	}
@@ -212,6 +239,36 @@ public class IndexTransfer extends CFAbstractTransfer<CFValue, CFStore, IndexTra
 		if (rightType.hasAnnotation(IndexOrLow.class) || rightType.hasAnnotation(LTLength.class) || rightType.hasAnnotation(IndexFor.class)) {
 			IOLEqual(leftRec, rightRec, rightType, leftType, thenStore);
 		}
+		
+		
+		// do the else store (same as notEqual)
+		
+		if (leftType.hasAnnotation(IndexOrHigh.class)) {
+			if (right instanceof FieldAccessNode) {
+				FieldAccessNode FANode = (FieldAccessNode) right;
+				if (FANode.getFieldName().equals("length")) {
+					String arrName = FANode.getReceiver().toString();
+					if (arrName.contains(".")) {
+						String[] objs = arrName.split("\\.");
+						arrName = objs[objs.length -1];
+					}
+					AnnotationMirror anno = atypeFactory.createIndexForAnnotation(arrName);
+					elseStore.insertValue(leftRec, anno);
+				}
+			}
+
+		}
+		// have to check exactly -1 because indexorlow could be different
+		else if (leftType.hasAnnotation(IndexOrLow.class)) {
+			AnnotationMirror leftAnno = leftType.getAnnotation(IndexOrLow.class);
+			String name = getValue(leftAnno);
+			if (right.getTree().getKind().equals(Tree.Kind.INT_LITERAL) && (int)((LiteralTree)right.getTree()).getValue() == -1) {
+				AnnotationMirror anno = atypeFactory.createIndexForAnnotation(name);
+				elseStore.insertValue(leftRec, anno);
+			}
+		}
+		
+		
 		return newResult;
 	}
 
@@ -291,6 +348,7 @@ public class IndexTransfer extends CFAbstractTransfer<CFValue, CFStore, IndexTra
 			AnnotationMirror anno = atypeFactory.createNonNegAnnotation();
 			thenStore.insertValue(rec, anno);
 		}
+		
 	}
 	
 	private boolean isNegOne(Node right) {
@@ -311,7 +369,7 @@ public class IndexTransfer extends CFAbstractTransfer<CFValue, CFStore, IndexTra
 		if (IOL || InF || NN || IOH) {
 			thenStore.insertValue(rec, atypeFactory.createIndexForAnnotation(name));
 		}
-		else if (rightType.hasAnnotation(IndexOrLow.class) && orEqual) {
+		else if ((rightType.hasAnnotation(IndexOrLow.class) || isNegOne(right))  && orEqual) {
 			thenStore.insertValue(rec, atypeFactory.createIndexOrLowAnnotation(name));
 		}
 	}
