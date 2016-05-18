@@ -228,17 +228,17 @@ public class IndexTransfer extends CFAbstractTransfer<CFValue, CFStore, IndexTra
 		if (IOH || NN || InF) {
 			// they are both a valid index for just IOL array
 			thenStore.insertValue(leftRec, atypeFactory.createIndexForAnnotation(leftName));
-			thenStore.insertValue(rightRec, atypeFactory.createIndexForAnnotation(leftName));
+			//thenStore.insertValue(rightRec, atypeFactory.createIndexForAnnotation(leftName));
 			if (InF) {
 				// add to both left and right operands
 				String rightName = getValue(rightType.getAnnotation(IndexFor.class));
 				thenStore.insertValue(leftRec, atypeFactory.createIndexForAnnotation(rightName));
-				thenStore.insertValue(rightRec, atypeFactory.createIndexForAnnotation(rightName));
+				//thenStore.insertValue(rightRec, atypeFactory.createIndexForAnnotation(rightName));
 			}
 		}
 		if (rightType.hasAnnotation(IndexOrLow.class)) {
 			thenStore.insertValue(leftRec, atypeFactory.createIndexOrLowAnnotation(leftName));
-			thenStore.insertValue(rightRec, atypeFactory.createIndexOrLowAnnotation(leftName));
+			//thenStore.insertValue(rightRec, atypeFactory.createIndexOrLowAnnotation(leftName));
 		}
 	}
 
