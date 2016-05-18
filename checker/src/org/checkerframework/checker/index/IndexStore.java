@@ -20,16 +20,16 @@ public class IndexStore extends CFAbstractStore<IndexValue, IndexStore> {
 	@Override
 	public void updateForMethodCall(MethodInvocationNode n,
             AnnotatedTypeFactory atypeFactory, IndexValue val) {
-//		String methodName = n.getTarget().getMethod().toString();
-//		boolean remove = methodName.startsWith("remove(");
-//        boolean clear = methodName.startsWith("clear(");
-//		if (remove || clear) {
-//			localVariableValues.clear();
-//			fieldValues.clear();
-//			methodValues.clear();
-//			arrayValues.clear();
-//			classValues.clear();
-//		}
+		String methodName = n.getTarget().getMethod().toString();
+		boolean remove = methodName.startsWith("remove(");
+        boolean clear = methodName.startsWith("clear(");
+		if (remove || clear) {
+			localVariableValues.clear();
+			fieldValues.clear();
+			methodValues.clear();
+			arrayValues.clear();
+			classValues.clear();
+		}
 		
 		
 		super.updateForMethodCall(n, atypeFactory, val);
