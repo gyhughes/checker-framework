@@ -698,5 +698,9 @@ class DataFlowIndexFor {
 			indexForResult = i;
 		}
 	}
+
+	void compareIndexOrHighB(@IndexOrHigh("arrB") int v) {
+			// TBD
+	}
 	
 }
