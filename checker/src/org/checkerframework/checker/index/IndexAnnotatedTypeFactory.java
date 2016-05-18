@@ -222,16 +222,17 @@ extends GenericAnnotatedTypeFactory<IndexValue, IndexStore, IndexTransfer, Index
 		// make increments and decrements work properly
 		@Override
 		public Void visitUnary(UnaryTree tree,  AnnotatedTypeMirror type) {
+			AnnotatedTypeMirror left = getAnnotatedType(tree.getExpression());
 			switch(tree.getKind()) {
 			case PREFIX_INCREMENT:
-				preInc(tree, type);
+				preInc(left, type);
 				break;
 			case PREFIX_DECREMENT:
-				preDec(tree, type);
+				preDec(left, type);
 				break;
 			case POSTFIX_INCREMENT:
 				// works same as preIncrement so use that
-				preInc(tree, type);
+				preInc(left, type);
 				break;
 			default:
 				break;
@@ -247,8 +248,7 @@ extends GenericAnnotatedTypeFactory<IndexValue, IndexStore, IndexTransfer, Index
 		// IndexOrLow || IndexFor -> IndexOrHigh
 		// NonNeg || IndexOrHigh -> NonNeg
 		// else -> Unknown
-		private void preInc(UnaryTree tree, AnnotatedTypeMirror type) {
-			AnnotatedTypeMirror left = getAnnotatedType(tree.getExpression());
+		protected void preInc(AnnotatedTypeMirror left, AnnotatedTypeMirror type) {
 			if (left.hasAnnotation(IndexOrLow.class) || left.hasAnnotation(IndexFor.class)) {
 				String value = IndexTransfer.getValue(left.getAnnotationInHierarchy(IndexOrLow));
 				type.addAnnotation(createIndexOrHighAnnotation(value));						
@@ -262,8 +262,7 @@ extends GenericAnnotatedTypeFactory<IndexValue, IndexStore, IndexTransfer, Index
 		// IndexOrHigh or IndexFor -> IndexOrLow
 		// LTLength or IndexOrLow -> LTLength
 		// NonNeg or Unknown -> Unknown
-		private void preDec(UnaryTree tree, AnnotatedTypeMirror type) {
-			AnnotatedTypeMirror  ATM = getAnnotatedType(tree.getExpression());
+		private void preDec(AnnotatedTypeMirror ATM, AnnotatedTypeMirror type) {
 			if (ATM.hasAnnotation(IndexOrHigh.class) || ATM.hasAnnotation(IndexFor.class)) {
 				String value = IndexTransfer.getValue(ATM.getAnnotationInHierarchy(IndexFor));
 				type.addAnnotation(createIndexOrLowAnnotation(value));						
