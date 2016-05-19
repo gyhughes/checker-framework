@@ -31,5 +31,10 @@ class ListAccess {
 		//:: warning: (Potentially unsafe list access: only use @IndexFor as index. Found: @Unknown int)
 		Integer result = lst.get(i);
 	}
+	
+	void accessIndexForOther(List<Integer> lst, List<Integer> notlst, @IndexFor("notlst") int i) {
+		//:: warning: (Potentially unsafe list access: only use @IndexFor("lst") index. Found: @IndexFor("notlst") int)
+		Integer result = lst.get(i);
+	}
 
 }

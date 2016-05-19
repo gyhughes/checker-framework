@@ -67,7 +67,7 @@ public class IndexVisitor extends BaseTypeVisitor<IndexAnnotatedTypeFactory> {
 				checker.report(Result.warning("Potentially unsafe list access: only use @IndexFor as index. Found: " + indexType.toString()), index);
 			}
 			else if (!(getIndexValue(indexType.getAnnotation(IndexFor.class), IndexValueElement).equals(listName))) {
-				checker.report(Result.warning("Potentially unsafe list access: only use IndexFor("+ listName +") index.  Found: " + indexType.toString()), index);
+				checker.report(Result.warning("Potentially unsafe list access: only use @IndexFor(\""+ listName +"\") index. Found: " + indexType.toString()), index);
 			}
 			
 		}

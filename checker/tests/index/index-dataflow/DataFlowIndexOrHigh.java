@@ -72,14 +72,14 @@ class DataFlowIndexOrHigh {
 			//:: error: (assignment.type.incompatible)
 			@IndexFor("arr") int indexFor = i;
 		} else {
-			// Show result is of type indexForResult
+			// Show result is of type indexFor
 			indexForResult = i;
 		}
 		i = indexOrHighReset;
 		indexOrHighResult = indexOrHighReset;
 		indexForResult = indexForReset;
 		if (i == indexForComparison) {
-			// Show result is of type indexForResult
+			// Show result is of type indexFor
 			indexForResult = i;
 		} else {
 			// Show result is of type IndexOrHigh
