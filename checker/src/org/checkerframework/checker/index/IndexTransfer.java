@@ -355,7 +355,7 @@ public class IndexTransfer extends CFAbstractTransfer<IndexValue, IndexStore, In
 			thenStore.insertValue(rec, atypeFactory.createIndexForAnnotation(name));
 		}
 		// if left wasnt an indexOrhigh it should be now
-		if (rightType.hasAnnotation(IndexOrHigh.class) && orEqual) { 
+		if (rightType.hasAnnotation(IndexOrHigh.class) && orEqual) {
 			String name = getValue(rightType.getAnnotationInHierarchy(atypeFactory.IndexOrHigh));
 			thenStore.insertValue(rec, atypeFactory.createIndexOrHighAnnotation(name));
 		}
