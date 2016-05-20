@@ -67,7 +67,7 @@ after_success:
       fi
       
 after_script:
-  - vendor/bin/test-reporter
+  - codeclimate-test-reporter < lcov.info
 
 git:
   depth: 3
