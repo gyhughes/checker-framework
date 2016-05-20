@@ -65,7 +65,6 @@ after_success:
         sh trigger-travis.sh typetools plume-lib-typecheck $TRAVISTOKEN
         sh trigger-travis.sh typetools sparta $TRAVISTOKEN
       fi
-      
 after_script:
   - codeclimate-test-reporter < lcov.info
 
