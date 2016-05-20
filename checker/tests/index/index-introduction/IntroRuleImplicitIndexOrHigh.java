@@ -27,6 +27,6 @@ class IntroRuleImplicitIndexOrHigh {
 	}
 	
 	void list() {
-		@IndexOrHigh("lst") int i = lst.size();
+		@IndexOrHigh("lst") int indexOrHigh1 = lst.size();
 	}
 }
