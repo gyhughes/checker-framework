@@ -1,9 +1,12 @@
 import org.checkerframework.checker.index.qual.*;
+import java.util.ArrayList;
+import java.util.List;
 
 class HierarchyIndexFor {
 	
 	int[] arr = new int[5];
 	int[] arrB = new int[5];
+	List<Integer> lst = new ArrayList<Integer>();
 	
 	@Unknown int i;
 	
@@ -44,6 +47,22 @@ class HierarchyIndexFor {
 	}
 	
 	void assignLTLengthB(@LTLength("arrB") int v) {
+		i = v;
+	}
+	
+	void assignIndexForList(@IndexFor("lst") int v) {
+		i = v;
+	}
+
+	void assignIndexOrHighList(@IndexOrHigh("arrB") int v) {
+		i = v;
+	}
+
+	void assignIndexOrLowList(@IndexOrLow("List") int v) {
+		i = v;
+	}
+	
+	void assignLTLengthList(@LTLength("List") int v) {
 		i = v;
 	}
 }

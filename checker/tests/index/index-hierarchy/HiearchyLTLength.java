@@ -1,9 +1,11 @@
 import org.checkerframework.checker.index.qual.*;
+import java.util.*;
 
 class HierarchyLTLength {
 	
 	int[] arr = new int[5];
 	int[] arrB = new int[5];
+	List<Integer> lst = new ArrayList<Integer>();
 	
 	@LTLength("arr") int i;
 	
@@ -50,6 +52,26 @@ class HierarchyLTLength {
 	}
 	
 	void assignLTLengthB(@LTLength("arrB") int v) {
+		//:: error: (assignment.type.incompatible)
+		i = v;
+	}
+	
+	void assignIndexForList(@IndexFor("lst") int v) {
+		//:: error: (assignment.type.incompatible)
+		i = v;
+	}
+
+	void assignIndexOrHighList(@IndexOrHigh("lst") int v) {
+		//:: error: (assignment.type.incompatible)
+		i = v;
+	}
+
+	void assignIndexOrLowList(@IndexOrLow("lst") int v) {
+		//:: error: (assignment.type.incompatible)
+		i = v;
+	}
+
+	void assignLTLengthList(@LTLength("lst") int v) {
 		//:: error: (assignment.type.incompatible)
 		i = v;
 	}
