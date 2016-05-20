@@ -165,6 +165,9 @@ public class IndexTransfer extends CFAbstractTransfer<IndexValue, IndexStore, In
 		if (leftType.hasAnnotation(IndexOrLow.class) || leftType.hasAnnotation(LTLength.class)) {
 			IOLEqual(rec, rightRec, leftType, rightType, elseStore);
 		}
+		if (leftType.hasAnnotation(IndexOrHigh.class) || leftType.hasAnnotation(NonNegative.class)) {
+			NonNegEqual(rec, rightType, elseStore);
+		}
 		return newResult;
 	}
 
@@ -245,10 +248,9 @@ public class IndexTransfer extends CFAbstractTransfer<IndexValue, IndexStore, In
 		if (leftType.hasAnnotation(IndexOrLow.class) || leftType.hasAnnotation(LTLength.class) || leftType.hasAnnotation(IndexFor.class)) {
 			IOLEqual(leftRec, rightRec, leftType, rightType, thenStore);
 		}
-		if (rightType.hasAnnotation(IndexOrLow.class) || rightType.hasAnnotation(LTLength.class) || rightType.hasAnnotation(IndexFor.class)) {
-			IOLEqual(leftRec, rightRec, rightType, leftType, thenStore);
+		if (leftType.hasAnnotation(IndexOrHigh.class) || leftType.hasAnnotation(NonNegative.class)) {
+			NonNegEqual(leftRec, rightType, thenStore);
 		}
-		
 		
 		// do the else store (same as notEqual)
 		
@@ -307,6 +309,21 @@ public class IndexTransfer extends CFAbstractTransfer<IndexValue, IndexStore, In
 			//thenStore.insertValue(rightRec, atypeFactory.createIndexOrLowAnnotation(leftName));
 		}
 	}
+	
+	private void NonNegEqual(Receiver leftRec, AnnotatedTypeMirror rightType, IndexStore thenStore) {
+		boolean InF = rightType.hasAnnotation(IndexFor.class);
+		boolean IOL = rightType.hasAnnotation(IndexOrLow.class);
+		boolean LTL = rightType.hasAnnotation(LTLength.class);
+		if (InF || IOL || LTL) {
+			String name = getValue(rightType.getAnnotationInHierarchy(atypeFactory.IndexFor));
+			thenStore.insertValue(leftRec, atypeFactory.createIndexForAnnotation(name));
+		}
+		// if right is indexOrHigh left should be too
+		if (rightType.hasAnnotation(IndexOrHigh.class)) {
+			String name = getValue(rightType.getAnnotationInHierarchy(atypeFactory.IndexFor));
+			thenStore.insertValue(leftRec, atypeFactory.createIndexOrHighAnnotation(name));
+		}
+	}
 
 	//********************************************************************************//
 	// these are methods for LessThan Nodes once left operand Annotation is known  //
@@ -336,6 +353,11 @@ public class IndexTransfer extends CFAbstractTransfer<IndexValue, IndexStore, In
 			thenStore.clearValue(rec);
 			String name = getValue(rightType.getAnnotationInHierarchy(atypeFactory.IndexOrHigh));
 			thenStore.insertValue(rec, atypeFactory.createIndexForAnnotation(name));
+		}
+		// if left wasnt an indexOrhigh it should be now
+		if (rightType.hasAnnotation(IndexOrHigh.class) && orEqual) { 
+			String name = getValue(rightType.getAnnotationInHierarchy(atypeFactory.IndexOrHigh));
+			thenStore.insertValue(rec, atypeFactory.createIndexOrHighAnnotation(name));
 		}
 
 	}
