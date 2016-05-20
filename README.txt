@@ -12,3 +12,7 @@ Prebuilt versions also appear on the web:
 
   * http://types.cs.washington.edu/checker-framework/current/checker-framework-manual.html
   * http://types.cs.washington.edu/checker-framework/current/checker-framework-manual.pdf
+
+Build status:
+
+  [![Build Status](https://travis-ci.org/gyhughes/checker-framework.svg?branch=master)](https://travis-ci.org/gyhughes/checker-framework)
