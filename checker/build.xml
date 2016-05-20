@@ -866,12 +866,18 @@
         <antcall target="-run-tests">
             <param name="param" value="tests.FormatterTest"/>
         </antcall>
+        <antcall target="-run-tests">
+            <param name="param" value="tests.FormatterGlbCheckerTest"/>
+        </antcall>
     </target>
 
     <target name="i18n-formatter-tests" depends="jar,build-tests"
             description="Run tests for the Internationalization Formatter checker">
         <antcall target="-run-tests">
             <param name="param" value="tests.I18nFormatterTest"/>
+        </antcall>
+        <antcall target="-run-tests">
+            <param name="param" value="tests.I18nFormatterGlbCheckerTest"/>
         </antcall>
     </target>
 
