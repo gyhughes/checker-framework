@@ -35,3 +35,6 @@ exclude_paths:
 - "release/**/*"
 - "stubparser/**/*"
 - "tutorial/**/*"
+- "checker/jdk/**/*"
+- "checker/eclipse/**/*"
+- "checker/lib/**/*"
