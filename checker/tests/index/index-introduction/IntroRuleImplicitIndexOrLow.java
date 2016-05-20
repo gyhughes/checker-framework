@@ -1,8 +1,10 @@
+import java.util.ArrayList;
+
 import org.checkerframework.checker.index.qual.*;
 
 //Doesn't test anything yet.
 
-class IntroRuleImplicitIndexOrHigh {
+class IntroRuleImplicitIndexOrLow {
 	
 	int[] arr = new int[5];
 	
@@ -23,4 +25,12 @@ class IntroRuleImplicitIndexOrHigh {
 
 		
 	}
+	
+	void list(ArrayList<Integer> lst) {
+		@IndexOrLow("lst") int indexOrLow1 = lst.size() - 1;
+		
+		//:: error:(assignment.type.incompatible)
+		@IndexOrLow("lst") int indexOrLow2 = lst.size();
+	}
+	
 }

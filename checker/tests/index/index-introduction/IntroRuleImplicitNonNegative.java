@@ -1,3 +1,5 @@
+import java.util.ArrayList;
+
 import org.checkerframework.checker.index.qual.*;
 
 class IntroRuleImplicitNonNegative {
@@ -24,4 +26,12 @@ class IntroRuleImplicitNonNegative {
 		nn = v2;
 		
 	}
+	
+	void list(ArrayList<Integer> lst) {
+		@NonNegative int nonNeg1 = lst.size();
+		
+		//:: error:(assignment.type.incompatible)
+		@NonNegative int nonNeg2 = lst.size() - 1;
+	}
+	
 }

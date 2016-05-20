@@ -1,6 +1,8 @@
+import java.util.ArrayList;
+
 import org.checkerframework.checker.index.qual.*;
 
-class IntroRuleImplicitIndexOrHigh {
+class IntroRuleImplicitUnknown {
 	
 	int[] arr = new int[5];
 	
@@ -41,4 +43,10 @@ class IntroRuleImplicitIndexOrHigh {
 		nn = v4;
 		
 	}
+	
+	void list(ArrayList<Integer> lst) {
+		@Unknown int unknown1 = lst.size();
+		@Unknown int unknown2 = lst.size() - 1;
+	}
+	
 }

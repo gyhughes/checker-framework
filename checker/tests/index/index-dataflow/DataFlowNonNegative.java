@@ -268,7 +268,7 @@ class DataFlowNonNegative {
 		}
 	}
 
-	void compareALength(@IndexFor("arr") int indexForReset, @IndexFor("arr") int indexForReset, @IndexOrHigh("arr") int indexOrHighReset, @NonNegative int nonNegativeReset) {
+	void compareALength(@IndexFor("arr") int indexForReset, @IndexOrHigh("arr") int indexOrHighReset, @NonNegative int nonNegativeReset) {
 
 		@NonNegative int nonNegativeResult;
 		@IndexOrHigh("arr") int indexOrHighResult;

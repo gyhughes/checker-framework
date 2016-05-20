@@ -64,10 +64,10 @@ public class IndexVisitor extends BaseTypeVisitor<IndexAnnotatedTypeFactory> {
 			String listName = name.split("\\.")[0];
 			AnnotatedTypeMirror indexType = atypeFactory.getAnnotatedType(index);
 			if (!indexType.hasAnnotation(IndexFor.class)) {
-				checker.report(Result.warning("potentially unsafe list access: only use @IndexFor as index.  Found: " + indexType.toString()), index);
+				checker.report(Result.warning("Potentially unsafe list access: only use @IndexFor as index. Found: " + indexType.toString()), index);
 			}
 			else if (!(getIndexValue(indexType.getAnnotation(IndexFor.class), IndexValueElement).equals(listName))) {
-				checker.report(Result.warning("Potentially unsafe list access: only use IndexFor("+ listName +") index.  Found: " + indexType.toString()), index);
+				checker.report(Result.warning("Potentially unsafe list access: only use @IndexFor(\""+ listName +"\") index. Found: " + indexType.toString()), index);
 			}
 			
 		}
