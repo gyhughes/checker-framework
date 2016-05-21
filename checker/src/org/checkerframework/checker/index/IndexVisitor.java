@@ -11,6 +11,7 @@ import org.checkerframework.framework.source.Result;
 import org.checkerframework.framework.type.AnnotatedTypeMirror;
 import org.checkerframework.javacutil.AnnotationUtils;
 import org.checkerframework.javacutil.TreeUtils;
+import org.checkerframework.checker.compilermsgs.qual.CompilerMessageKey;
 
 import com.sun.source.tree.ArrayAccessTree;
 import com.sun.source.tree.ExpressionTree;
@@ -25,6 +26,14 @@ public class IndexVisitor extends BaseTypeVisitor<IndexAnnotatedTypeFactory> {
 	protected final ExecutableElement ListGet;
 	protected final ProcessingEnvironment env;
 
+	private static final /*@CompilerMessageKey*/ String ARRAY_HIGH = "array.access.unsafe.high";
+	private static final /*@CompilerMessageKey*/ String ARRAY_NAME = "array.access.unsafe.name";
+	private static final /*@CompilerMessageKey*/ String ARRAY_UNSAFE = "array.access.unsafe";
+	private static final /*@CompilerMessageKey*/ String ARRAY_LOW = "array.access.unsafe.low";
+	private static final /*@CompilerMessageKey*/ String LIST_UNSAFE = "list.access.unsafe";
+	private static final /*@CompilerMessageKey*/ String LIST_UNSAFE_NAME = "list.access.unsafe.name";
+
+	
 	public IndexVisitor(BaseTypeChecker checker) {
 		super(checker);
 		env = checker.getProcessingEnvironment();
@@ -41,15 +50,17 @@ public class IndexVisitor extends BaseTypeVisitor<IndexAnnotatedTypeFactory> {
 		// warn if not Index for
 		if (!indexType.hasAnnotation(IndexFor.class)) {
 			String message = "Potentially unsafe array access: only use @IndexFor as index. Found: " + indexType.toString();
-			if (indexType.hasAnnotation(NonNegative.class)) {
-				checker.report(Result.warning(message + " which could be to high"), index);
+			if (indexType.hasAnnotation(NonNegative.class) || indexType.hasAnnotation(IndexOrHigh.class)) {
+				checker.report(Result.warning(ARRAY_HIGH, name, indexType.toString()), index);
+			} else if (indexType.hasAnnotation(LTLength.class) || indexType.hasAnnotation(IndexOrLow.class)){
+				checker.report(Result.warning(ARRAY_LOW, name, indexType.toString()), index);
 			} else {
-				checker.report(Result.warning(message), index);
+				checker.report(Result.warning(ARRAY_UNSAFE, name, indexType.toString()), index);
 			}
 		}
 		// warn if it is IndexFor nut not the right array
 		else if (!(getIndexValue(indexType.getAnnotation(IndexFor.class), IndexValueElement).equals(name))) {
-			checker.report(Result.warning("Potentially unsafe array access: only use IndexFor("+ name +") index. Found: " + indexType.toString()), index);
+			checker.report(Result.warning(ARRAY_NAME, name, indexType.toString()), index);
 		}
 		return super.visitArrayAccess(tree, type);
 	}
@@ -64,10 +75,10 @@ public class IndexVisitor extends BaseTypeVisitor<IndexAnnotatedTypeFactory> {
 			String listName = name.split("\\.")[0];
 			AnnotatedTypeMirror indexType = atypeFactory.getAnnotatedType(index);
 			if (!indexType.hasAnnotation(IndexFor.class)) {
-				checker.report(Result.warning("Potentially unsafe list access: only use @IndexFor as index. Found: " + indexType.toString()), index);
+				checker.report(Result.warning(LIST_UNSAFE, listName, indexType.toString()), index);
 			}
 			else if (!(getIndexValue(indexType.getAnnotation(IndexFor.class), IndexValueElement).equals(listName))) {
-				checker.report(Result.warning("Potentially unsafe list access: only use @IndexFor(\""+ listName +"\") index. Found: " + indexType.toString()), index);
+				checker.report(Result.warning(LIST_UNSAFE_NAME, listName, indexType.toString()), index);
 			}
 			
 		}

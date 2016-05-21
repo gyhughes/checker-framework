@@ -8,32 +8,32 @@ class ListAccess {
 	}
 	
 	void accessIndexOrHigh(List<Integer> lst, @IndexOrHigh("lst") int i) {
-		//:: warning: (Potentially unsafe list access: only use @IndexFor as index. Found: @IndexOrHigh("lst") int)
+		//:: warning: (list.access.unsafe)
 		Integer result = lst.get(i);
 	}
 	
 	void accessIndexOrLow(List<Integer> lst, @IndexOrLow("lst") int i) {
-		//:: warning: (Potentially unsafe list access: only use @IndexFor as index. Found: @IndexOrLow("lst") int)
+		//:: warning: (list.access.unsafe)
 		Integer result = lst.get(i);
 	}
 	
 	void accessNonNegative(List<Integer> lst, @NonNegative int i) {
-		//:: warning: (Potentially unsafe list access: only use @IndexFor as index. Found: @NonNegative int)
+		//:: warning: (list.access.unsafe)
 		Integer result = lst.get(i);
 	}
 	
 	void accessLTLength(List<Integer> lst, @LTLength("lst") int i) {
-		//:: warning: (Potentially unsafe list access: only use @IndexFor as index. Found: @LTLength("lst") int)
+		//:: warning: (list.access.unsafe)
 		Integer result = lst.get(i);
 	}
 	
 	void accessUnknown(List<Integer> lst, @Unknown int i) {
-		//:: warning: (Potentially unsafe list access: only use @IndexFor as index. Found: @Unknown int)
+		//:: warning: (list.access.unsafe)
 		Integer result = lst.get(i);
 	}
 	
 	void accessIndexForOther(List<Integer> lst, List<Integer> notlst, @IndexFor("notlst") int i) {
-		//:: warning: (Potentially unsafe list access: only use @IndexFor("lst") index. Found: @IndexFor("notlst") int)
+		//:: warning: (list.access.unsafe.name)
 		Integer result = lst.get(i);
 	}
 

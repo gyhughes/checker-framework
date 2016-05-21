@@ -5,7 +5,7 @@ class TypeRuleLTLengthB {
 	int[] arrB = new int[5];
 	
 	int accessArray (@LTLength("arrB") int i) {
-		//:: warning: (Potentially unsafe array access: only use @IndexFor as index. Found: @LTLength("arrB") int)
+		//:: warning: (array.access.unsafe.low)
 		return arr[i];
 	}
 }

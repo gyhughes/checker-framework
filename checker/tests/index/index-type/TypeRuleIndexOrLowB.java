@@ -5,7 +5,7 @@ class TypeRuleIndexOrLowB {
 	int[] arrB = new int[5];
 	
 	int accessArray (@IndexOrLow("arrB") int i) {
-		//:: warning: (Potentially unsafe array access: only use @IndexFor as index. Found: @IndexOrLow("arrB") int)
+		//:: warning: (array.access.unsafe.low)
 		return arr[i];
 	}
 }
