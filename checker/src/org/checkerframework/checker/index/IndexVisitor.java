@@ -52,7 +52,7 @@ public class IndexVisitor extends BaseTypeVisitor<IndexAnnotatedTypeFactory> {
 			String message = "Potentially unsafe array access: only use @IndexFor as index. Found: " + indexType.toString();
 			if (indexType.hasAnnotation(NonNegative.class) || indexType.hasAnnotation(IndexOrHigh.class)) {
 				checker.report(Result.warning(ARRAY_HIGH, name, indexType.toString()), index);
-			} else if (indexType.hasAnnotation(LTLength.class) || indexType.hasAnnotation(IndexOrLow.class)){
+			} else if (indexType.hasAnnotation(LTLength.class) || indexType.hasAnnotation(IndexOrLow.class)) {
 				checker.report(Result.warning(ARRAY_LOW, name, indexType.toString()), index);
 			} else {
 				checker.report(Result.warning(ARRAY_UNSAFE, name, indexType.toString()), index);
