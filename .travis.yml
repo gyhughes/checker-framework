@@ -32,12 +32,9 @@ addons:
       # - texlive-latex-base
       # # for fullpage.sty
       # - texlive-latex-extra
-<<<<<<< HEAD
   code_climate:
     repo_token: d8b1f555ad09ae128fdfc60ed3ad27d96f822a60a4b9978e8bb6518f1c9c2168
     # For CodeClimate integration
-=======
->>>>>>> master
 
 ## Enable this when you wish to see JUnit reports.
 ## Disable to minimize use of Amazon S3.
