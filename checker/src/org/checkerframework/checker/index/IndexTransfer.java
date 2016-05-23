@@ -78,18 +78,7 @@ public class IndexTransfer extends CFAbstractTransfer<IndexValue, IndexStore, In
 		greaterThanHelper(left, right, thenStore, elseStore);
 		// refine the right side
 		// do same transfers a <= to right side of the >
-		if (rightType.hasAnnotation(Unknown.class)) {
-			UnknownLessThan(rightRec, left, thenStore, true);
-			UnknownGreaterThan(rightRec, left, elseStore, false);
-		}
-		if (rightType.hasAnnotation(IndexOrHigh.class) || rightType.hasAnnotation(NonNegative.class)) {
-			IndexOrHighLessThan(rightRec, left, thenStore, true);
-		}
-		if (rightType.hasAnnotation(IndexOrLow.class) || rightType.hasAnnotation(LTLength.class)) {
-			AnnotationMirror rightAnno = rightType.getAnnotationInHierarchy(atypeFactory.IndexOrLow);
-			String name = getValue(rightAnno);
-			IndexOrLowGreaterThan(rightRec, left, elseStore, name, false);
-		}
+		lessThanOrEqualHelper(right, left, thenStore, elseStore);
 		return newResult;
 	}
 
@@ -116,44 +105,32 @@ public class IndexTransfer extends CFAbstractTransfer<IndexValue, IndexStore, In
 		TransferResult<IndexValue, IndexStore> result = super.visitGreaterThanOrEqual(node, in);
 		Node left = node.getLeftOperand();
 		Node right = node.getRightOperand();
-		Receiver rec = FlowExpressions.internalReprOf(analysis.getTypeFactory(), left);
-		AnnotatedTypeMirror leftType = atypeFactory.getAnnotatedType(left.getTree());
-
 		IndexStore thenStore = result.getRegularStore();
 		IndexStore elseStore = thenStore.copy();
 		ConditionalTransferResult<IndexValue, IndexStore> newResult =
 				new ConditionalTransferResult<>(result.getResultValue(), thenStore, elseStore);
+		greaterThanOrEqualHelper(left, right, thenStore, elseStore);
+		// refine right side
+		lessThanHelper(right, left, thenStore, elseStore);
+		return newResult;
+	}
 
+	private void greaterThanOrEqualHelper(Node left, Node right, IndexStore thenStore, IndexStore elseStore) {
+		Receiver leftRec = FlowExpressions.internalReprOf(analysis.getTypeFactory(), left);
+		AnnotatedTypeMirror leftType = atypeFactory.getAnnotatedType(left.getTree());
 		if (leftType.hasAnnotation(Unknown.class)) {
-			UnknownGreaterThan(rec, right, thenStore, true);
-			UnknownLessThan(rec, right, elseStore, false);
+			UnknownGreaterThan(leftRec, right, thenStore, true);
+			UnknownLessThan(leftRec, right, elseStore, false);
 
 		}
 		if (leftType.hasAnnotation(IndexOrLow.class) || leftType.hasAnnotation(LTLength.class)) {
 			AnnotationMirror leftAnno = leftType.getAnnotationInHierarchy(atypeFactory.IndexOrLow);
 			String name = getValue(leftAnno);
-			IndexOrLowGreaterThan(rec, right, thenStore, name, true);
+			IndexOrLowGreaterThan(leftRec, right, thenStore, name, true);
 		}
 		if (leftType.hasAnnotation(IndexOrHigh.class) || leftType.hasAnnotation(NonNegative.class)) {
-			IndexOrHighLessThan(rec, right, elseStore, false);
+			IndexOrHighLessThan(leftRec, right, elseStore, false);
 		}
-		
-		// refine right side
-		Receiver rightRec = FlowExpressions.internalReprOf(analysis.getTypeFactory(), right);
-		AnnotatedTypeMirror rightType = atypeFactory.getAnnotatedType(right.getTree());
-		if (rightType.hasAnnotation(IndexOrHigh.class) || rightType.hasAnnotation(NonNegative.class)) {
-			IndexOrHighLessThan(rightRec, left, thenStore, false);
-		}
-		if (rightType.hasAnnotation(Unknown.class)) {
-			UnknownLessThan(rightRec, left, thenStore, false);
-			UnknownGreaterThan(rightRec, left, elseStore, true);
-		}
-		if (rightType.hasAnnotation(IndexOrLow.class) || rightType.hasAnnotation(LTLength.class)) {
-			AnnotationMirror rightAnno = rightType.getAnnotationInHierarchy(atypeFactory.IndexOrLow);
-			String name = getValue(rightAnno);
-			IndexOrLowGreaterThan(rightRec, left, elseStore, name, true);
-		}
-		return newResult;
 	}
 
 	@Override
@@ -219,14 +196,19 @@ public class IndexTransfer extends CFAbstractTransfer<IndexValue, IndexStore, In
 		TransferResult<IndexValue, IndexStore> result = super.visitLessThan(node, in);
 		Node left = node.getLeftOperand();
 		Node right = node.getRightOperand();
-		Receiver rec = FlowExpressions.internalReprOf(analysis.getTypeFactory(), left);
-		AnnotatedTypeMirror leftType = atypeFactory.getAnnotatedType(left.getTree());
-
 		IndexStore thenStore = result.getRegularStore();
 		IndexStore elseStore = thenStore.copy();
 		ConditionalTransferResult<IndexValue, IndexStore> newResult =
 				new ConditionalTransferResult<>(result.getResultValue(), thenStore, elseStore);
-		
+		lessThanHelper(left, right, thenStore, elseStore);
+		//refine right side
+		greaterThanOrEqualHelper(right, left, thenStore, elseStore);
+		return newResult;
+	}
+
+	private void lessThanHelper(Node left, Node right, IndexStore thenStore, IndexStore elseStore) {
+		Receiver rec = FlowExpressions.internalReprOf(analysis.getTypeFactory(), left);
+		AnnotatedTypeMirror leftType = atypeFactory.getAnnotatedType(left.getTree());
 		if (leftType.hasAnnotation(IndexOrHigh.class) || leftType.hasAnnotation(NonNegative.class)) {
 			IndexOrHighLessThan(rec, right, thenStore, false);
 		}
@@ -239,7 +221,6 @@ public class IndexTransfer extends CFAbstractTransfer<IndexValue, IndexStore, In
 			String name = getValue(leftAnno);
 			IndexOrLowGreaterThan(rec, right, elseStore, name, true);
 		}
-		return newResult;
 	}
 
 	// find the left hand sides annotation then passes it to the right method to handle it
@@ -248,14 +229,20 @@ public class IndexTransfer extends CFAbstractTransfer<IndexValue, IndexStore, In
 		TransferResult<IndexValue, IndexStore> result = super.visitLessThanOrEqual(node, in);
 		Node left = node.getLeftOperand();
 		Node right = node.getRightOperand();
-		Receiver rec = FlowExpressions.internalReprOf(analysis.getTypeFactory(), left);
-		AnnotatedTypeMirror leftType = atypeFactory.getAnnotatedType(left.getTree());
-
 		IndexStore thenStore = result.getRegularStore();
 		IndexStore elseStore = thenStore.copy();
 		ConditionalTransferResult<IndexValue, IndexStore> newResult =
 				new ConditionalTransferResult<>(result.getResultValue(), thenStore, elseStore);
 
+		lessThanOrEqualHelper(left, right, thenStore, elseStore);
+		// refine right side
+		greaterThanHelper(right, left, thenStore, elseStore);
+		return newResult;
+	}
+
+	private void lessThanOrEqualHelper(Node left, Node right, IndexStore thenStore, IndexStore elseStore) {
+		Receiver rec = FlowExpressions.internalReprOf(analysis.getTypeFactory(), left);
+		AnnotatedTypeMirror leftType = atypeFactory.getAnnotatedType(left.getTree());
 		if (leftType.hasAnnotation(Unknown.class)) {
 			UnknownLessThan(rec, right, thenStore, true);
 			UnknownGreaterThan(rec, right, elseStore, false);
@@ -268,7 +255,6 @@ public class IndexTransfer extends CFAbstractTransfer<IndexValue, IndexStore, In
 			String name = getValue(leftAnno);
 			IndexOrLowGreaterThan(rec, right, elseStore, name, false);
 		}
-		return newResult;
 	}
 
 	// find the left hand sides annotation then passes it to the right method to handle it
@@ -278,15 +264,23 @@ public class IndexTransfer extends CFAbstractTransfer<IndexValue, IndexStore, In
 		TransferResult<IndexValue, IndexStore> result = super.visitEqualTo(node, in);
 		Node left = node.getLeftOperand();
 		Node right = node.getRightOperand();
-		Receiver leftRec = FlowExpressions.internalReprOf(analysis.getTypeFactory(), left);
-		Receiver rightRec = FlowExpressions.internalReprOf(analysis.getTypeFactory(), right);
-		AnnotatedTypeMirror leftType = atypeFactory.getAnnotatedType(left.getTree());
-		AnnotatedTypeMirror rightType = atypeFactory.getAnnotatedType(right.getTree());
 		IndexStore thenStore = result.getRegularStore();
 		IndexStore elseStore = thenStore.copy();
 		ConditionalTransferResult<IndexValue, IndexStore> newResult =
 				new ConditionalTransferResult<>(result.getResultValue(), thenStore, elseStore);
-		// do both directions because == is commutative
+
+		equalsToHelper(left, right, thenStore, elseStore);
+		// refine right side
+		equalsToHelper(right, left, thenStore, elseStore);
+		return newResult;
+	}
+
+
+	private void equalsToHelper(Node left, Node right, IndexStore thenStore, IndexStore elseStore) {
+		Receiver leftRec = FlowExpressions.internalReprOf(analysis.getTypeFactory(), left);
+		Receiver rightRec = FlowExpressions.internalReprOf(analysis.getTypeFactory(), right);
+		AnnotatedTypeMirror leftType = atypeFactory.getAnnotatedType(left.getTree());
+		AnnotatedTypeMirror rightType = atypeFactory.getAnnotatedType(right.getTree());
 		if (leftType.hasAnnotation(IndexOrLow.class) || leftType.hasAnnotation(LTLength.class) || leftType.hasAnnotation(IndexFor.class)) {
 			IOLEqual(leftRec, rightRec, leftType, rightType, thenStore);
 		}
@@ -320,11 +314,7 @@ public class IndexTransfer extends CFAbstractTransfer<IndexValue, IndexStore, In
 				elseStore.insertValue(leftRec, anno);
 			}
 		}
-		
-		
-		return newResult;
 	}
-
 
 	//********************************************************************************//
 	// these are methods for equalsTo Nodes once left hand annotation is known		//
@@ -338,17 +328,14 @@ public class IndexTransfer extends CFAbstractTransfer<IndexValue, IndexStore, In
 		if (IOH || NN || InF) {
 			// they are both a valid index for just IOL array
 			thenStore.insertValue(leftRec, atypeFactory.createIndexForAnnotation(leftName));
-			//thenStore.insertValue(rightRec, atypeFactory.createIndexForAnnotation(leftName));
 			if (InF) {
 				// add to both left and right operands
 				String rightName = getValue(rightType.getAnnotation(IndexFor.class));
 				thenStore.insertValue(leftRec, atypeFactory.createIndexForAnnotation(rightName));
-				//thenStore.insertValue(rightRec, atypeFactory.createIndexForAnnotation(rightName));
 			}
 		}
 		if (rightType.hasAnnotation(IndexOrLow.class)) {
 			thenStore.insertValue(leftRec, atypeFactory.createIndexOrLowAnnotation(leftName));
-			//thenStore.insertValue(rightRec, atypeFactory.createIndexOrLowAnnotation(leftName));
 		}
 	}
 	
