@@ -57,7 +57,7 @@ public class IndexTransfer extends CFAbstractTransfer<IndexValue, IndexStore, In
 
 		return result;
 	}
-
+	//TODO refactor methods to use helpers (like visitNotEqual) to avoid rewriting for left and right side refinements
 	//******************************************************//
 	// these are methods that handle refining on comparisons//
 	//******************************************************//
@@ -75,7 +75,7 @@ public class IndexTransfer extends CFAbstractTransfer<IndexValue, IndexStore, In
 		IndexStore elseStore = thenStore.copy();
 		ConditionalTransferResult<IndexValue, IndexStore> newResult =
 				new ConditionalTransferResult<>(result.getResultValue(), thenStore, elseStore);
-
+		// refine the left side
 		if (leftType.hasAnnotation(Unknown.class)) {
 			UnknownGreaterThan(rec, right, thenStore, false);
 			UnknownLessThan(rec, right, elseStore, true);
@@ -87,6 +87,23 @@ public class IndexTransfer extends CFAbstractTransfer<IndexValue, IndexStore, In
 		}
 		if (leftType.hasAnnotation(IndexOrHigh.class) || leftType.hasAnnotation(NonNegative.class)) {
 			IndexOrHighLessThan(rec, right, elseStore, true);
+		}
+		
+		Receiver rightRec = FlowExpressions.internalReprOf(analysis.getTypeFactory(), right);
+		AnnotatedTypeMirror rightType = atypeFactory.getAnnotatedType(right.getTree());
+		// refine the right side
+		// do same transfers a <= to right side of the >
+		if (rightType.hasAnnotation(Unknown.class)) {
+			UnknownLessThan(rightRec, left, thenStore, true);
+			UnknownGreaterThan(rightRec, left, elseStore, false);
+		}
+		if (rightType.hasAnnotation(IndexOrHigh.class) || rightType.hasAnnotation(NonNegative.class)) {
+			IndexOrHighLessThan(rightRec, left, thenStore, true);
+		}
+		if (rightType.hasAnnotation(IndexOrLow.class) || rightType.hasAnnotation(LTLength.class)) {
+			AnnotationMirror rightAnno = rightType.getAnnotationInHierarchy(atypeFactory.IndexOrLow);
+			String name = getValue(rightAnno);
+			IndexOrLowGreaterThan(rightRec, left, elseStore, name, false);
 		}
 		return newResult;
 	}
@@ -118,6 +135,22 @@ public class IndexTransfer extends CFAbstractTransfer<IndexValue, IndexStore, In
 		if (leftType.hasAnnotation(IndexOrHigh.class) || leftType.hasAnnotation(NonNegative.class)) {
 			IndexOrHighLessThan(rec, right, elseStore, false);
 		}
+		
+		// refine right side
+		Receiver rightRec = FlowExpressions.internalReprOf(analysis.getTypeFactory(), right);
+		AnnotatedTypeMirror rightType = atypeFactory.getAnnotatedType(right.getTree());
+		if (rightType.hasAnnotation(IndexOrHigh.class) || rightType.hasAnnotation(NonNegative.class)) {
+			IndexOrHighLessThan(rightRec, left, thenStore, false);
+		}
+		if (rightType.hasAnnotation(Unknown.class)) {
+			UnknownLessThan(rightRec, left, thenStore, false);
+			UnknownGreaterThan(rightRec, left, elseStore, true);
+		}
+		if (rightType.hasAnnotation(IndexOrLow.class) || rightType.hasAnnotation(LTLength.class)) {
+			AnnotationMirror rightAnno = rightType.getAnnotationInHierarchy(atypeFactory.IndexOrLow);
+			String name = getValue(rightAnno);
+			IndexOrLowGreaterThan(rightRec, left, elseStore, name, true);
+		}
 		return newResult;
 	}
 
@@ -126,7 +159,7 @@ public class IndexTransfer extends CFAbstractTransfer<IndexValue, IndexStore, In
 		TransferResult<IndexValue, IndexStore> result = super.visitNotEqual(node, in);
 		Node left = node.getLeftOperand();
 		Node right = node.getRightOperand();
-		Receiver rec = FlowExpressions.internalReprOf(analysis.getTypeFactory(), left);
+		Receiver leftRec = FlowExpressions.internalReprOf(analysis.getTypeFactory(), left);
 		Receiver rightRec = FlowExpressions.internalReprOf(analysis.getTypeFactory(), right);
 
 		AnnotatedTypeMirror leftType = atypeFactory.getAnnotatedType(left.getTree());
@@ -135,8 +168,17 @@ public class IndexTransfer extends CFAbstractTransfer<IndexValue, IndexStore, In
 		IndexStore elseStore = thenStore.copy();
 		ConditionalTransferResult<IndexValue, IndexStore> newResult =
 				new ConditionalTransferResult<>(result.getResultValue(), thenStore, elseStore);
-		// check if the right side is the field a.length
-		// can't use IndexOrHigh because that might not be exactly the length
+		// refine the left side with the helper
+		NotEqualHelper(leftType, rightType, left,  right, leftRec, rightRec, thenStore, elseStore);
+		// refine right side using swapped params
+		NotEqualHelper(rightType, leftType, right, left, rightRec, leftRec, thenStore, elseStore);
+		return newResult;
+	}
+	
+	// does the transfers for NotEqual, given the left and right typeMirrors the receivers for them and the Stores
+	// factored out of the old method so that we can do left side and right side separatly
+	public void NotEqualHelper(AnnotatedTypeMirror leftType, AnnotatedTypeMirror rightType, Node left, Node right,
+			Receiver leftRec, Receiver rightRec, IndexStore thenStore, IndexStore elseStore) {
 		if (leftType.hasAnnotation(IndexOrHigh.class)) {
 			if (right instanceof FieldAccessNode) {
 				FieldAccessNode FANode = (FieldAccessNode) right;
@@ -147,7 +189,7 @@ public class IndexTransfer extends CFAbstractTransfer<IndexValue, IndexStore, In
 						arrName = objs[objs.length -1];
 					}
 					AnnotationMirror anno = atypeFactory.createIndexForAnnotation(arrName);
-					thenStore.insertValue(rec, anno);
+					thenStore.insertValue(leftRec, anno);
 				}
 			}
 
@@ -158,17 +200,16 @@ public class IndexTransfer extends CFAbstractTransfer<IndexValue, IndexStore, In
 			String name = getValue(leftAnno);
 			if (right.getTree().getKind().equals(Tree.Kind.INT_LITERAL) && (int)((LiteralTree)right.getTree()).getValue() == -1) {
 				AnnotationMirror anno = atypeFactory.createIndexForAnnotation(name);
-				thenStore.insertValue(rec, anno);
+				thenStore.insertValue(leftRec, anno);
 			}
 		}
 		// so the elseStore using ==
 		if (leftType.hasAnnotation(IndexOrLow.class) || leftType.hasAnnotation(LTLength.class)) {
-			IOLEqual(rec, rightRec, leftType, rightType, elseStore);
+			IOLEqual(leftRec, rightRec, leftType, rightType, elseStore);
 		}
 		if (leftType.hasAnnotation(IndexOrHigh.class) || leftType.hasAnnotation(NonNegative.class)) {
-			NonNegEqual(rec, rightType, elseStore);
+			NonNegEqual(leftRec, rightType, elseStore);
 		}
-		return newResult;
 	}
 
 	// find the left hand sides annotation then passes it to the right method to handle it
