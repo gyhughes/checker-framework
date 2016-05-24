@@ -24,6 +24,7 @@ public class IndexVisitor extends BaseTypeVisitor<IndexAnnotatedTypeFactory> {
 	
 	protected final ExecutableElement IndexValueElement;
 	protected final ExecutableElement ListGet;
+	protected final ExecutableElement CharAt;
 	protected final ProcessingEnvironment env;
 
 	private static final /*@CompilerMessageKey*/ String ARRAY_HIGH = "array.access.unsafe.high";
@@ -39,6 +40,7 @@ public class IndexVisitor extends BaseTypeVisitor<IndexAnnotatedTypeFactory> {
 		env = checker.getProcessingEnvironment();
 		IndexValueElement = TreeUtils.getMethod("org.checkerframework.checker.index.qual.IndexFor", "value", 0, env);
 		ListGet = TreeUtils.getMethod("java.util.List", "get", 1, env);
+		CharAt = TreeUtils.getMethod("java.lang.String", "charAt", 1, env);
 	}
 	// visit an array access
 	// if we arent using an IndexFor the right array, give a warning
@@ -81,6 +83,17 @@ public class IndexVisitor extends BaseTypeVisitor<IndexAnnotatedTypeFactory> {
 				checker.report(Result.warning(LIST_UNSAFE_NAME, listName, indexType.toString()), index);
 			}
 			
+		}
+		if (TreeUtils.isMethodInvocation(tree, CharAt, env)) {
+			ExpressionTree index = tree.getArguments().get(0);
+			String listName = name.split("\\.")[0];
+			AnnotatedTypeMirror indexType = atypeFactory.getAnnotatedType(index);
+			if (!indexType.hasAnnotation(IndexFor.class)) {
+				checker.report(Result.warning(LIST_UNSAFE, listName, indexType.toString()), index);
+			}
+			else if (!(getIndexValue(indexType.getAnnotation(IndexFor.class), IndexValueElement).equals(listName))) {
+				checker.report(Result.warning(LIST_UNSAFE_NAME, listName, indexType.toString()), index);
+			}
 		}
 		return super.visitMethodInvocation(tree, type);
 		
