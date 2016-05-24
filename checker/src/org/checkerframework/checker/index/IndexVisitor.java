@@ -53,7 +53,6 @@ public class IndexVisitor extends BaseTypeVisitor<IndexAnnotatedTypeFactory> {
 		AnnotatedTypeMirror indexType = atypeFactory.getAnnotatedType(index);
 		// warn if not Index for
 		if (!indexType.hasAnnotation(IndexFor.class)) {
-			String message = "Potentially unsafe array access: only use @IndexFor as index. Found: " + indexType.toString();
 			if (indexType.hasAnnotation(NonNegative.class) || indexType.hasAnnotation(IndexOrHigh.class)) {
 				checker.report(Result.warning(ARRAY_HIGH, name, indexType.toString()), index);
 			} else if (indexType.hasAnnotation(LTLength.class) || indexType.hasAnnotation(IndexOrLow.class)) {
