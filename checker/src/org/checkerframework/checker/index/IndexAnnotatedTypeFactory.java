@@ -107,12 +107,13 @@ extends GenericAnnotatedTypeFactory<IndexValue, IndexStore, IndexTransfer, Index
 		@Override
 		public Void visitMethodInvocation(MethodInvocationTree tree, AnnotatedTypeMirror type) {
 			ExecutableElement ListSize = TreeUtils.getMethod("java.util.List", "size", 0, env);
+			ExecutableElement StrLen = TreeUtils.getMethod("java.lang.String", "length", 0, env);
 			String name = tree.getMethodSelect().toString();
-			if (TreeUtils.isMethodInvocation(tree, ListSize, env)) {
+			if (TreeUtils.isMethodInvocation(tree, ListSize, env) || TreeUtils.isMethodInvocation(tree, StrLen, env)) {
 				String listName = name.split("\\.")[0];
 				type.removeAnnotationInHierarchy(IndexFor);
 				type.addAnnotation(createIndexOrHighAnnotation(listName));
-			}	
+			}
 			return super.visitMethodInvocation(tree, type);
 		}
 		
