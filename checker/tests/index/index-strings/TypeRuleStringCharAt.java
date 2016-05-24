@@ -8,32 +8,32 @@ class StringAccess {
 	}
 	
 	void accessIndexOrHigh(String str, @IndexOrHigh("str") int i) {
-		//:: warning: (list.access.unsafe)
+		//:: warning: (string.access.unsafe)
 		char result = str.charAt(i);
 	}
 	
 	void accessIndexOrLow(String str, @IndexOrLow("str") int i) {
-		//:: warning: (list.access.unsafe)
+		//:: warning: (string.access.unsafe)
 		char result = str.charAt(i);
 	}
 	
 	void accessNonNegative(String str, @NonNegative int i) {
-		//:: warning: (list.access.unsafe)
+		//:: warning: (string.access.unsafe)
 		char result = str.charAt(i);
 	}
 	
 	void accessLTLength(String str, @LTLength("str") int i) {
-		//:: warning: (list.access.unsafe)
+		//:: warning: (string.access.unsafe)
 		char result = str.charAt(i);
 	}
 	
 	void accessUnknown(String str, @Unknown int i) {
-		//:: warning: (list.access.unsafe)
+		//:: warning: (string.access.unsafe)
 		char result = str.charAt(i);
 	}
 	
 	void accessIndexForOther(String str, String notstr, @IndexFor("notstr") int i) {
-		//:: warning: (list.access.unsafe.name)
+		//:: warning: (string.access.unsafe.name)
 		char result = str.charAt(i);
 	}
 

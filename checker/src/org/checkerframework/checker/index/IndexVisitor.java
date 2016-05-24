@@ -33,6 +33,8 @@ public class IndexVisitor extends BaseTypeVisitor<IndexAnnotatedTypeFactory> {
 	private static final /*@CompilerMessageKey*/ String ARRAY_LOW = "array.access.unsafe.low";
 	private static final /*@CompilerMessageKey*/ String LIST_UNSAFE = "list.access.unsafe";
 	private static final /*@CompilerMessageKey*/ String LIST_UNSAFE_NAME = "list.access.unsafe.name";
+	private static final /*@CompilerMessageKey*/ String STRING_UNSAFE = "string.access.unsafe";
+	private static final /*@CompilerMessageKey*/ String STRING_UNSAFE_NAME = "string.access.unsafe.name";
 
 	
 	public IndexVisitor(BaseTypeChecker checker) {
@@ -89,10 +91,10 @@ public class IndexVisitor extends BaseTypeVisitor<IndexAnnotatedTypeFactory> {
 			String listName = name.split("\\.")[0];
 			AnnotatedTypeMirror indexType = atypeFactory.getAnnotatedType(index);
 			if (!indexType.hasAnnotation(IndexFor.class)) {
-				checker.report(Result.warning(LIST_UNSAFE, listName, indexType.toString()), index);
+				checker.report(Result.warning(STRING_UNSAFE, listName, indexType.toString()), index);
 			}
 			else if (!(getIndexValue(indexType.getAnnotation(IndexFor.class), IndexValueElement).equals(listName))) {
-				checker.report(Result.warning(LIST_UNSAFE_NAME, listName, indexType.toString()), index);
+				checker.report(Result.warning(STRING_UNSAFE_NAME, listName, indexType.toString()), index);
 			}
 		}
 		return super.visitMethodInvocation(tree, type);
