@@ -50,7 +50,7 @@ public class IndexChecker_ExercizeSolution {
 	private static void lastOcc(int[] arr, int num) {
 		//ERROR: trying to increment up whilst at the end of the array
 //		for (int i = arr.length - 1; i > -1; i++) {
-		for (int i = arr.length - 1; i > -1; i--) { 
+		for (int i = arr.length - 1; i > -1; i--) {
 			if (arr[i] == num) {
 				System.out.println("Last Occurence of" + num + " is at " + i);
 				return;
