@@ -80,9 +80,9 @@ public class IndexTransfer extends CFAbstractTransfer<IndexValue, IndexStore, In
 		// refine the right side
 		// do same transfers a <= to right side of the >
 		lessThanOrEqualHelper(right, left, thenStore);
-		//refine else branch
+		// refine else branch
 		lessThanOrEqualHelper(left, right, elseStore);
-		//refine right side else branch
+		// refine right side else branch
 		greaterThanHelper(right, left, elseStore);
 		return newResult;
 	}
@@ -113,10 +113,11 @@ public class IndexTransfer extends CFAbstractTransfer<IndexValue, IndexStore, In
 		IndexStore elseStore = thenStore.copy();
 		ConditionalTransferResult<IndexValue, IndexStore> newResult =
 				new ConditionalTransferResult<>(result.getResultValue(), thenStore, elseStore);
+		// refine the left side
 		greaterThanOrEqualHelper(left, right, thenStore);
 		// refine right side
 		lessThanHelper(right, left, thenStore);
-		//refine else branch
+		// refine else branch
 		lessThanHelper(left, right, elseStore);
 		//refine right side else branch
 		greaterThanOrEqualHelper(right, left, elseStore);
@@ -205,12 +206,13 @@ public class IndexTransfer extends CFAbstractTransfer<IndexValue, IndexStore, In
 		IndexStore elseStore = thenStore.copy();
 		ConditionalTransferResult<IndexValue, IndexStore> newResult =
 				new ConditionalTransferResult<>(result.getResultValue(), thenStore, elseStore);
+		// refine the left side
 		lessThanHelper(left, right, thenStore);
-		//refine right side
+		// refine right side
 		greaterThanOrEqualHelper(right, left, thenStore);
 		// refine else
 		greaterThanOrEqualHelper(left, right, elseStore);
-		// reifne right side else
+		// refine right side else
 		lessThanHelper(right, left, elseStore);
 		return newResult;
 	}
@@ -239,7 +241,7 @@ public class IndexTransfer extends CFAbstractTransfer<IndexValue, IndexStore, In
 		IndexStore elseStore = thenStore.copy();
 		ConditionalTransferResult<IndexValue, IndexStore> newResult =
 				new ConditionalTransferResult<>(result.getResultValue(), thenStore, elseStore);
-
+		// refine the left side
 		lessThanOrEqualHelper(left, right, thenStore);
 		// refine right side
 		greaterThanHelper(right, left, thenStore);
@@ -276,7 +278,7 @@ public class IndexTransfer extends CFAbstractTransfer<IndexValue, IndexStore, In
 		IndexStore elseStore = thenStore.copy();
 		ConditionalTransferResult<IndexValue, IndexStore> newResult =
 				new ConditionalTransferResult<>(result.getResultValue(), thenStore, elseStore);
-
+		// refine the left side
 		equalsToHelper(left, right, thenStore);
 		// refine right side
 		equalsToHelper(right, left, thenStore);
