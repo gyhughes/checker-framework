@@ -29,4 +29,12 @@ class IntroRuleImplicitIndexOrHigh {
 	void list() {
 		@IndexOrHigh("lst") int indexOrHigh1 = lst.size();
 	}
+	
+	void arrayCreation() {
+		int size = 10;
+		int[] a = new int[size];
+		@IndexOrHigh("a") int IOH = size;
+		//:: error:(assignment.type.incompatible)
+		@IndexFor("a") int InF = size;
+	}
 }

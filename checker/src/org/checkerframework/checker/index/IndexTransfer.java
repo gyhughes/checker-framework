@@ -10,10 +10,13 @@ import org.checkerframework.checker.index.qual.NonNegative;
 import org.checkerframework.checker.index.qual.Unknown;
 import org.checkerframework.dataflow.analysis.ConditionalTransferResult;
 import org.checkerframework.dataflow.analysis.FlowExpressions;
+import org.checkerframework.dataflow.analysis.FlowExpressions.ArrayCreation;
 import org.checkerframework.dataflow.analysis.FlowExpressions.Receiver;
 import org.checkerframework.dataflow.analysis.RegularTransferResult;
 import org.checkerframework.dataflow.analysis.TransferInput;
 import org.checkerframework.dataflow.analysis.TransferResult;
+import org.checkerframework.dataflow.cfg.node.ArrayCreationNode;
+import org.checkerframework.dataflow.cfg.node.AssignmentNode;
 import org.checkerframework.dataflow.cfg.node.EqualToNode;
 import org.checkerframework.dataflow.cfg.node.FieldAccessNode;
 import org.checkerframework.dataflow.cfg.node.GreaterThanNode;
@@ -37,6 +40,24 @@ public class IndexTransfer extends CFAbstractTransfer<IndexValue, IndexStore, In
 		super(analysis);
 		this.analysis = analysis;
 		atypeFactory = (IndexAnnotatedTypeFactory) analysis.getTypeFactory();
+	}
+	
+	@Override
+	public TransferResult<IndexValue, IndexStore> visitAssignment(AssignmentNode node, TransferInput<IndexValue, IndexStore> in) {
+		TransferResult<IndexValue, IndexStore> result = super.visitAssignment(node, in);
+		if (node.getExpression() instanceof ArrayCreationNode) {
+			ArrayCreationNode ACNode = (ArrayCreationNode)node.getExpression();
+			IndexStore store = result.getRegularStore();
+			Node dim = ACNode.getDimension(0);
+			Receiver rec = FlowExpressions.internalReprOf(analysis.getTypeFactory(), dim);
+			String name = node.getTarget().toString();
+			if (name.contains(".")) {
+				String[] objs = name.split("\\.");
+				name = objs[objs.length -1];
+			}
+			store.insertValue(rec, atypeFactory.createIndexOrHighAnnotation(name));
+		}
+		return result;
 	}
 
 	// annotate arr.length to be IndexOrHigh("arr")
