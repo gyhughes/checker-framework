@@ -1,3 +1,5 @@
+package debuggingIndex;
+
 import java.util.Random;
 import java.util.Scanner;
 import org.checkerframework.checker.index.qual.*;
