@@ -17,6 +17,7 @@ public class IndexDemo_wSuppWarn {
 		firstocc(arr, num);
 		lastOcc(arr, num);
 		numOcc(arr, num);
+		firstTen(arr);
 	}
 
 	private static void numOcc(int[] arr, int num) {
@@ -49,6 +50,9 @@ public class IndexDemo_wSuppWarn {
 	}
 
 	private static void firstTen(int[] arr) {
+		if (arr.length < 10)
+			throw new IllegalArgumentException();
+
 		for (int i = 0; i < 10; i++) {
 
 			System.out.println("arr[" + i + "] == " + arr[i]);
