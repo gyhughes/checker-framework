@@ -42,6 +42,8 @@ public class IndexTransfer extends CFAbstractTransfer<IndexValue, IndexStore, In
 		atypeFactory = (IndexAnnotatedTypeFactory) analysis.getTypeFactory();
 	}
 	
+	// this transfer makes a variable used in the creation of an array as its length
+	// become an IndexOrHigh for the array it intialized
 	@Override
 	public TransferResult<IndexValue, IndexStore> visitAssignment(AssignmentNode node, TransferInput<IndexValue, IndexStore> in) {
 		TransferResult<IndexValue, IndexStore> result = super.visitAssignment(node, in);
