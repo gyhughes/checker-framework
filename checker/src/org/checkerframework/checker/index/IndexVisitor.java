@@ -75,6 +75,7 @@ public class IndexVisitor extends BaseTypeVisitor<IndexAnnotatedTypeFactory> {
 		String name = tree.getMethodSelect().toString();
 		if (TreeUtils.isMethodInvocation(tree, ListGet, env)) {
 			ExpressionTree index = tree.getArguments().get(0);
+			// method is list.get, split to get name of list
 			String listName = name.split("\\.")[0];
 			AnnotatedTypeMirror indexType = atypeFactory.getAnnotatedType(index);
 			if (!indexType.hasAnnotation(IndexFor.class)) {
@@ -87,6 +88,7 @@ public class IndexVisitor extends BaseTypeVisitor<IndexAnnotatedTypeFactory> {
 		}
 		if (TreeUtils.isMethodInvocation(tree, CharAt, env)) {
 			ExpressionTree index = tree.getArguments().get(0);
+			// method is String.charAt split to get name
 			String listName = name.split("\\.")[0];
 			AnnotatedTypeMirror indexType = atypeFactory.getAnnotatedType(index);
 			if (!indexType.hasAnnotation(IndexFor.class)) {
