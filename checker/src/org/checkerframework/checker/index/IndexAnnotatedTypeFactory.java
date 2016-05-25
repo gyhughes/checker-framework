@@ -188,7 +188,7 @@ extends GenericAnnotatedTypeFactory<IndexValue, IndexStore, IndexTransfer, Index
 			IndexQualifierHierarchy hierarchy = (IndexQualifierHierarchy) qualHierarchy;
 			AnnotatedTypeMirror left = getAnnotatedType(leftExpr);
 			AnnotatedTypeMirror right = getAnnotatedType(rightExpr);
-			for (AnnotationMirror anno: left.getAnnotations()) {
+			AnnotationMirror anno = left.getAnnotationInHierarchy(IndexFor);
 				// if right side is 1
 				if (rightExpr.getKind() == Tree.Kind.INT_LITERAL) {
 					int val = (int)((LiteralTree)rightExpr).getValue();
@@ -212,12 +212,12 @@ extends GenericAnnotatedTypeFactory<IndexValue, IndexStore, IndexTransfer, Index
 				}
 				// if right is sub of NonNeg
 				if (right.hasAnnotationRelaxed(IndexFor) || right.hasAnnotationRelaxed(IndexOrHigh) || right.hasAnnotation(NonNegative)) {
-					if (hierarchy.isSubtypeRelaxed(anno, LTLength)) {
+					if (hierarchy.isSubtypeRelaxed(anno, LTLength) || left.hasAnnotation(IndexOrHigh.class)) {
 						String value = IndexVisitor.getIndexValue(anno, getValueMethod(anno));
 						type.addAnnotation(createLTLengthAnnotation(value));
 					}
 				}
-			}
+			
 		}
 
 		// make increments and decrements work properly
