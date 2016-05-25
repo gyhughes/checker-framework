@@ -1,7 +1,7 @@
 import org.checkerframework.checker.index.qual.*;
 import java.util.*;
 
-class ListAccess {
+class TypeRuleListAccess {
 
 	void accessIndexFor(List<Integer> lst, @IndexFor("lst") int i) {
 		Integer result = lst.get(i);
