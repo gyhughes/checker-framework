@@ -64,8 +64,8 @@ after_success:
         sh trigger-travis.sh typetools daikon-typecheck $TRAVISTOKEN
         sh trigger-travis.sh typetools plume-lib-typecheck $TRAVISTOKEN
         sh trigger-travis.sh typetools sparta $TRAVISTOKEN
+        bash <(curl -s https://codecov.io/bash)
       fi
-  - bash <(curl -s https://codecov.io/bash)
 
 git:
   depth: 3
