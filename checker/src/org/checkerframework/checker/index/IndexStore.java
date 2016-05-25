@@ -6,11 +6,13 @@ import java.util.Map;
 import org.checkerframework.checker.index.qual.IndexFor;
 import org.checkerframework.checker.index.qual.IndexOrHigh;
 import org.checkerframework.checker.index.qual.IndexOrLow;
+import org.checkerframework.checker.index.qual.LTLength;
 import org.checkerframework.checker.index.qual.NonNegative;
 import org.checkerframework.dataflow.analysis.FlowExpressions;
 import org.checkerframework.dataflow.analysis.FlowExpressions.FieldAccess;
 import org.checkerframework.dataflow.analysis.FlowExpressions.Receiver;
 import org.checkerframework.dataflow.cfg.node.MethodInvocationNode;
+import org.checkerframework.dataflow.cfg.node.Node;
 import org.checkerframework.framework.flow.CFAbstractAnalysis;
 import org.checkerframework.framework.flow.CFAbstractStore;
 import org.checkerframework.framework.type.AnnotatedTypeFactory;
@@ -62,7 +64,7 @@ public class IndexStore extends CFAbstractStore<IndexValue, IndexStore> {
 	// then put it in the map
 	private void applyTransfer(Receiver rec, Map<Receiver, IndexValue> replace, boolean isClear) {
 		IndexAnnotatedTypeFactory atypeFactory = ((IndexAnalysis)this.analysis).atypeFactory;
-		IndexValue value = localVariableValues.get(rec);
+		IndexValue value = this.getValue(rec);
 		AnnotatedTypeMirror atm = value.getType();
 		boolean InF = atm.hasAnnotation(IndexFor.class);
 		boolean IOH = atm.hasAnnotation(IndexOrHigh.class);
@@ -90,5 +92,44 @@ public class IndexStore extends CFAbstractStore<IndexValue, IndexStore> {
 			}
 		}
 		
+	}
+	@Override
+	public void updateForAssignment(Node n ,IndexValue val) {
+		super.updateForAssignment(n, val);
+		// make a map to store all the update we want to make
+		Map<Receiver, IndexValue> replace = new HashMap<Receiver, IndexValue>();
+		// update all local variable info
+		for (FlowExpressions.LocalVariable rec: localVariableValues.keySet()) {
+			applyAssign(rec, replace, n.toString());
+		}
+		// update all field info
+		for (FieldAccess rec: fieldValues.keySet()) {
+			applyAssign(rec, replace, n.toString());
+		}
+		// put those update in to the store
+		for (Receiver rec: replace.keySet()) {
+			replaceValue(rec, replace.get(rec));
+		}
+	}
+	
+	// get a type receiver the map that holds the changes we want to make, and the name of the target
+	// we want to change any annotations that are connected to what we are reassign
+	private void applyAssign(Receiver rec, Map<Receiver, IndexValue> replace, String name) {
+		IndexAnnotatedTypeFactory atypeFactory = ((IndexAnalysis)this.analysis).atypeFactory;
+		IndexValue value = this.getValue(rec);
+		AnnotatedTypeMirror atm = value.getType();
+		boolean InF = atm.hasAnnotation(IndexFor.class);
+		boolean IOH = atm.hasAnnotation(IndexOrHigh.class);
+		boolean IOL = atm.hasAnnotation(IndexOrLow.class);
+		boolean LTL = atm.hasAnnotation(LTLength.class);
+		// if this rec has a type connected to an array
+		if (InF || IOH || IOL || LTL) {
+			String val = IndexTransfer.getValue(atm.getAnnotationInHierarchy(atypeFactory.IndexFor));
+			// if that array has the same name as the thing being assinged
+			if (val.equals(name)) {
+				// treat this as a clearing on value(retain only info about nonneg)
+				applyTransfer(rec, replace, true);
+			}
+		}
 	}
 }
