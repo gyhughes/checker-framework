@@ -72,7 +72,7 @@ public class IndexStore extends CFAbstractStore<IndexValue, IndexStore> {
 		boolean NN = atm.hasAnnotation(NonNegative.class);
 		if (!isClear) {
 			if (InF || IOL) {
-				String name = IndexTransfer.getValue(atm.getAnnotationInHierarchy(atypeFactory.IndexFor));
+				String name = IndexUtils.getValue(atm.getAnnotationInHierarchy(IndexAnnotatedTypeFactory.indexFor));
 				IndexValue val = analysis.createSingleAnnotationValue(atypeFactory.createIndexOrHighAnnotation(name), rec.getType());
 				replace.put(rec, val);
 			} else if (NN || IOH) {
@@ -96,15 +96,17 @@ public class IndexStore extends CFAbstractStore<IndexValue, IndexStore> {
 	@Override
 	public void updateForAssignment(Node n ,IndexValue val) {
 		super.updateForAssignment(n, val);
+		String[] classes = n.toString().split("//.");
+		String name = classes[classes.length -1];
 		// make a map to store all the update we want to make
 		Map<Receiver, IndexValue> replace = new HashMap<Receiver, IndexValue>();
 		// update all local variable info
 		for (FlowExpressions.LocalVariable rec: localVariableValues.keySet()) {
-			applyAssign(rec, replace, n.toString());
+			applyAssign(rec, replace, name);
 		}
 		// update all field info
 		for (FieldAccess rec: fieldValues.keySet()) {
-			applyAssign(rec, replace, n.toString());
+			applyAssign(rec, replace, name);
 		}
 		// put those update in to the store
 		for (Receiver rec: replace.keySet()) {
@@ -115,7 +117,6 @@ public class IndexStore extends CFAbstractStore<IndexValue, IndexStore> {
 	// get a type receiver the map that holds the changes we want to make, and the name of the target
 	// we want to change any annotations that are connected to what we are reassign
 	private void applyAssign(Receiver rec, Map<Receiver, IndexValue> replace, String name) {
-		IndexAnnotatedTypeFactory atypeFactory = ((IndexAnalysis)this.analysis).atypeFactory;
 		IndexValue value = this.getValue(rec);
 		AnnotatedTypeMirror atm = value.getType();
 		boolean InF = atm.hasAnnotation(IndexFor.class);
@@ -124,9 +125,9 @@ public class IndexStore extends CFAbstractStore<IndexValue, IndexStore> {
 		boolean LTL = atm.hasAnnotation(LTLength.class);
 		// if this rec has a type connected to an array
 		if (InF || IOH || IOL || LTL) {
-			String val = IndexTransfer.getValue(atm.getAnnotationInHierarchy(atypeFactory.IndexFor));
-			// if that array has the same name as the thing being assinged
-			if (val.equals(name)) {
+			String val = IndexUtils.getValue(atm.getAnnotationInHierarchy(IndexAnnotatedTypeFactory.indexFor));
+			// if that array has the same name as the thing being assigned
+			if (val.equals(name) || val.contains(name + '.')) {
 				// treat this as a clearing on value(retain only info about nonneg)
 				applyTransfer(rec, replace, true);
 			}

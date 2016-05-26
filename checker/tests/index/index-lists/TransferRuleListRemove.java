@@ -10,7 +10,7 @@ class TransferRuleListRemove {
 		if (i < lst.size()) {
 			result = lst.get(i);
 			lst.remove(0);
-			//:: warning: (list.access.unsafe)
+			//:: warning: (list.access.unsafe.high)
 			result = lst.get(i);	
 		}
 	}
