@@ -8,22 +8,22 @@ class TypeRuleListAccess {
 	}
 	
 	void accessIndexOrHigh(List<Integer> lst, @IndexOrHigh("lst") int i) {
-		//:: warning: (list.access.unsafe)
+		//:: warning: (list.access.unsafe.high)
 		Integer result = lst.get(i);
 	}
 	
 	void accessIndexOrLow(List<Integer> lst, @IndexOrLow("lst") int i) {
-		//:: warning: (list.access.unsafe)
+		//:: warning: (list.access.unsafe.low)
 		Integer result = lst.get(i);
 	}
 	
 	void accessNonNegative(List<Integer> lst, @NonNegative int i) {
-		//:: warning: (list.access.unsafe)
+		//:: warning: (list.access.unsafe.high)
 		Integer result = lst.get(i);
 	}
 	
 	void accessLTLength(List<Integer> lst, @LTLength("lst") int i) {
-		//:: warning: (list.access.unsafe)
+		//:: warning: (list.access.unsafe.low)
 		Integer result = lst.get(i);
 	}
 	
