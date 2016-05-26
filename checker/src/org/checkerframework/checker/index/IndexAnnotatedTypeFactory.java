@@ -125,7 +125,7 @@ extends GenericAnnotatedTypeFactory<IndexValue, IndexStore, IndexTransfer, Index
 			switch (tree.getKind()) {
 			// call both directions for commutativity
 			case PLUS:
-				plusHelper(left, right, type, true);
+				plusHelper(left, right, type);
 				break;
 			case MINUS:
 				minusHelper(left, right, type);
@@ -140,18 +140,20 @@ extends GenericAnnotatedTypeFactory<IndexValue, IndexStore, IndexTransfer, Index
 		}
 
 		// do addition between types
-		public void plusHelper(ExpressionTree leftExpr, ExpressionTree rightExpr, AnnotatedTypeMirror type, boolean first) {
+		public void plusHelper(ExpressionTree leftExpr, ExpressionTree rightExpr, AnnotatedTypeMirror type) {
 			AnnotatedTypeMirror leftType = getAnnotatedType(leftExpr);
 			AnnotatedTypeMirror rightType = getAnnotatedType(rightExpr);
-			// if left is literal 1/0 swap sides because we can handle that.
-			if (leftExpr.getKind() == Tree.Kind.INT_LITERAL && first) {
+			// if left is literal 1/0 and right is not a literal swap them because we already handle the transfer for that
+			// and it would be redundant to repeat it all again
+			// we don't want right to be a literal too b/c we could be swapping forever
+			if (leftExpr.getKind() == Tree.Kind.INT_LITERAL && !(rightExpr.getKind() == Tree.Kind.INT_LITERAL)) {
 				int val = (int)((LiteralTree)leftExpr).getValue();
 				if (val == 1 || val == 0) {
-					plusHelper(rightExpr, leftExpr, type, false);
+					plusHelper(rightExpr, leftExpr, type);
 					return;
 				}
 			}
-			// if the right side is a literal we do some special stuff(specifically for 1 an d0)
+			// if the right side is a literal we do some special stuff(specifically for 1 and 0)
 			if (rightExpr.getKind() == Tree.Kind.INT_LITERAL) {
 				int val = (int)((LiteralTree)rightExpr).getValue();
 				if (val == 1) {
