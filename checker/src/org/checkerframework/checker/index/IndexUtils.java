@@ -36,8 +36,12 @@ public class IndexUtils {
 
 	/**
 	 * returns the String value of an annotation in the IndexFor Hierarchy
+	 * if anno does not have a value method throws IllegalArgumentException
 	 */
 	public static String getValue(AnnotationMirror anno) {
+		if (!hasValueMethod(anno)) {
+			throw new IllegalArgumentException("anno must have a value method");
+		}
 		return getIndexValue(anno, getValueMethod(anno));
 	}
 
@@ -53,5 +57,13 @@ public class IndexUtils {
 			return val == -1;
 		}
 		return false;
+	}
+	
+	public static boolean hasValueMethod(AnnotationMirror anno) {
+		boolean nonNeg = AnnotationUtils.areSameIgnoringValues(anno, IndexAnnotatedTypeFactory.nonNegative);
+		boolean unknown = AnnotationUtils.areSameIgnoringValues(anno, IndexAnnotatedTypeFactory.unknown);
+		boolean bottom = AnnotationUtils.areSameIgnoringValues(anno, IndexAnnotatedTypeFactory.indexBottom);
+		return !(nonNeg || unknown || bottom);
+		
 	}
 }
