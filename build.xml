@@ -12,7 +12,11 @@
   containing all its documentation.
 -->
 <project name="checkerframework" default="dist"
-        basedir=".">
+         basedir=".">
+
+  <taskdef uri="antlib:org.jacoco.ant" resource="org/jacoco/ant/antlib.xml">
+    <classpath path="checker/lib/jacocoant.jar"/>
+  </taskdef>
 
   <target name="dist"
           description="Compile and jar all subprojects">
