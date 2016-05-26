@@ -123,7 +123,7 @@ public class IndexTransfer extends CFAbstractTransfer<IndexValue, IndexStore, In
 			UnknownGreaterThan(leftRec, right, thenStore, false);
 		}
 		if (leftType.hasAnnotation(IndexOrLow.class) || leftType.hasAnnotation(LTLength.class)) {
-			AnnotationMirror leftAnno = leftType.getAnnotationInHierarchy(IndexAnnotatedTypeFactory.IndexOrLow);
+			AnnotationMirror leftAnno = leftType.getAnnotationInHierarchy(IndexAnnotatedTypeFactory.indexOrLow);
 			String name = IndexUtils.getValue(leftAnno);
 			IndexOrLowGreaterThan(leftRec, right, thenStore, name, false);
 		}
@@ -171,7 +171,7 @@ public class IndexTransfer extends CFAbstractTransfer<IndexValue, IndexStore, In
 			UnknownGreaterThan(leftRec, right, thenStore, true);
 		}
 		if (leftType.hasAnnotation(IndexOrLow.class) || leftType.hasAnnotation(LTLength.class)) {
-			AnnotationMirror leftAnno = leftType.getAnnotationInHierarchy(IndexAnnotatedTypeFactory.IndexOrLow);
+			AnnotationMirror leftAnno = leftType.getAnnotationInHierarchy(IndexAnnotatedTypeFactory.indexOrLow);
 			String name = IndexUtils.getValue(leftAnno);
 			IndexOrLowGreaterThan(leftRec, right, thenStore, name, true);
 		}
@@ -393,7 +393,7 @@ public class IndexTransfer extends CFAbstractTransfer<IndexValue, IndexStore, In
 	 */
 	private void IOLEqual(Receiver leftRec, Receiver rightRec, AnnotatedTypeMirror leftType,
 			AnnotatedTypeMirror rightType, IndexStore thenStore) {
-		String leftName = IndexUtils.getValue(leftType.getAnnotationInHierarchy(IndexAnnotatedTypeFactory.IndexFor));
+		String leftName = IndexUtils.getValue(leftType.getAnnotationInHierarchy(IndexAnnotatedTypeFactory.indexFor));
 		boolean InF = rightType.hasAnnotation(IndexFor.class);
 		boolean IOH = rightType.hasAnnotation(IndexOrHigh.class);
 		boolean NN = rightType.hasAnnotation(NonNegative.class);
@@ -419,12 +419,12 @@ public class IndexTransfer extends CFAbstractTransfer<IndexValue, IndexStore, In
 		boolean IOL = rightType.hasAnnotation(IndexOrLow.class);
 		boolean LTL = rightType.hasAnnotation(LTLength.class);
 		if (InF || IOL || LTL) {
-			String name = IndexUtils.getValue(rightType.getAnnotationInHierarchy(IndexAnnotatedTypeFactory.IndexFor));
+			String name = IndexUtils.getValue(rightType.getAnnotationInHierarchy(IndexAnnotatedTypeFactory.indexFor));
 			thenStore.insertValue(leftRec, atypeFactory.createIndexForAnnotation(name));
 		}
 		// if right is indexOrHigh left should be too
 		if (rightType.hasAnnotation(IndexOrHigh.class)) {
-			String name = IndexUtils.getValue(rightType.getAnnotationInHierarchy(IndexAnnotatedTypeFactory.IndexFor));
+			String name = IndexUtils.getValue(rightType.getAnnotationInHierarchy(IndexAnnotatedTypeFactory.indexFor));
 			thenStore.insertValue(leftRec, atypeFactory.createIndexOrHighAnnotation(name));
 		}
 	}
@@ -444,7 +444,7 @@ public class IndexTransfer extends CFAbstractTransfer<IndexValue, IndexStore, In
 		boolean LTL = rightType.hasAnnotation(LTLength.class);
 		if (IOH || InF || IOL || LTL) {
 			thenStore.clearValue(rec);
-			String aValue = IndexUtils.getValue(rightType.getAnnotationInHierarchy(IndexAnnotatedTypeFactory.IndexFor));
+			String aValue = IndexUtils.getValue(rightType.getAnnotationInHierarchy(IndexAnnotatedTypeFactory.indexFor));
 			AnnotationMirror anno = atypeFactory.createLTLengthAnnotation(aValue);
 			thenStore.insertValue(rec, anno);
 		}	
@@ -462,12 +462,12 @@ public class IndexTransfer extends CFAbstractTransfer<IndexValue, IndexStore, In
 		boolean LTL = rightType.hasAnnotation(LTLength.class);
 		if (IOH || InF || IOL || LTL) {
 			thenStore.clearValue(rec);
-			String name = IndexUtils.getValue(rightType.getAnnotationInHierarchy(IndexAnnotatedTypeFactory.IndexOrHigh));
+			String name = IndexUtils.getValue(rightType.getAnnotationInHierarchy(IndexAnnotatedTypeFactory.indexOrHigh));
 			thenStore.insertValue(rec, atypeFactory.createIndexForAnnotation(name));
 		}
 		// if left wasnt an indexOrhigh it should be now
 		if (rightType.hasAnnotation(IndexOrHigh.class) && orEqual) {
-			String name = IndexUtils.getValue(rightType.getAnnotationInHierarchy(IndexAnnotatedTypeFactory.IndexOrHigh));
+			String name = IndexUtils.getValue(rightType.getAnnotationInHierarchy(IndexAnnotatedTypeFactory.indexOrHigh));
 			thenStore.insertValue(rec, atypeFactory.createIndexOrHighAnnotation(name));
 		}
 

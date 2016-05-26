@@ -72,7 +72,7 @@ public class IndexStore extends CFAbstractStore<IndexValue, IndexStore> {
 		boolean NN = atm.hasAnnotation(NonNegative.class);
 		if (!isClear) {
 			if (InF || IOL) {
-				String name = IndexUtils.getValue(atm.getAnnotationInHierarchy(IndexAnnotatedTypeFactory.IndexFor));
+				String name = IndexUtils.getValue(atm.getAnnotationInHierarchy(IndexAnnotatedTypeFactory.indexFor));
 				IndexValue val = analysis.createSingleAnnotationValue(atypeFactory.createIndexOrHighAnnotation(name), rec.getType());
 				replace.put(rec, val);
 			} else if (NN || IOH) {
@@ -123,7 +123,7 @@ public class IndexStore extends CFAbstractStore<IndexValue, IndexStore> {
 		boolean LTL = atm.hasAnnotation(LTLength.class);
 		// if this rec has a type connected to an array
 		if (InF || IOH || IOL || LTL) {
-			String val = IndexUtils.getValue(atm.getAnnotationInHierarchy(IndexAnnotatedTypeFactory.IndexFor));
+			String val = IndexUtils.getValue(atm.getAnnotationInHierarchy(IndexAnnotatedTypeFactory.indexFor));
 			// if that array has the same name as the thing being assinged
 			if (val.equals(name)) {
 				// treat this as a clearing on value(retain only info about nonneg)

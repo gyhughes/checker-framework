@@ -14,16 +14,16 @@ public class IndexUtils {
 
 	// returns the value method specific to the class of the anno passed in
 	static ExecutableElement getValueMethod(AnnotationMirror anno) {
-		if (AnnotationUtils.areSameIgnoringValues(anno, IndexAnnotatedTypeFactory.IndexFor)) {
+		if (AnnotationUtils.areSameIgnoringValues(anno, IndexAnnotatedTypeFactory.indexFor)) {
 			return TreeUtils.getMethod("org.checkerframework.checker.index.qual.IndexFor", "value", 0, IndexAnnotatedTypeFactory.env);
 		}
-		if (AnnotationUtils.areSameIgnoringValues(anno, IndexAnnotatedTypeFactory.IndexOrLow)) {
+		if (AnnotationUtils.areSameIgnoringValues(anno, IndexAnnotatedTypeFactory.indexOrLow)) {
 			return TreeUtils.getMethod("org.checkerframework.checker.index.qual.IndexOrLow", "value", 0, IndexAnnotatedTypeFactory.env);
 		}
-		if (AnnotationUtils.areSameIgnoringValues(anno, IndexAnnotatedTypeFactory.IndexOrHigh)) {
+		if (AnnotationUtils.areSameIgnoringValues(anno, IndexAnnotatedTypeFactory.indexOrHigh)) {
 			return TreeUtils.getMethod("org.checkerframework.checker.index.qual.IndexOrHigh", "value", 0, IndexAnnotatedTypeFactory.env);
 		}
-		if (AnnotationUtils.areSameIgnoringValues(anno, IndexAnnotatedTypeFactory.LTLength)) {
+		if (AnnotationUtils.areSameIgnoringValues(anno, IndexAnnotatedTypeFactory.lTLength)) {
 			return TreeUtils.getMethod("org.checkerframework.checker.index.qual.LTLength", "value", 0, IndexAnnotatedTypeFactory.env);
 		}
 		return null;
