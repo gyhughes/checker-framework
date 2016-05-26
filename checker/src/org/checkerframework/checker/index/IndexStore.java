@@ -96,15 +96,17 @@ public class IndexStore extends CFAbstractStore<IndexValue, IndexStore> {
 	@Override
 	public void updateForAssignment(Node n ,IndexValue val) {
 		super.updateForAssignment(n, val);
+		String[] classes = n.toString().split("//.");
+		String name = classes[classes.length -1];
 		// make a map to store all the update we want to make
 		Map<Receiver, IndexValue> replace = new HashMap<Receiver, IndexValue>();
 		// update all local variable info
 		for (FlowExpressions.LocalVariable rec: localVariableValues.keySet()) {
-			applyAssign(rec, replace, n.toString());
+			applyAssign(rec, replace, name);
 		}
 		// update all field info
 		for (FieldAccess rec: fieldValues.keySet()) {
-			applyAssign(rec, replace, n.toString());
+			applyAssign(rec, replace, name);
 		}
 		// put those update in to the store
 		for (Receiver rec: replace.keySet()) {
@@ -124,8 +126,8 @@ public class IndexStore extends CFAbstractStore<IndexValue, IndexStore> {
 		// if this rec has a type connected to an array
 		if (InF || IOH || IOL || LTL) {
 			String val = IndexUtils.getValue(atm.getAnnotationInHierarchy(IndexAnnotatedTypeFactory.indexFor));
-			// if that array has the same name as the thing being assinged
-			if (val.equals(name)) {
+			// if that array has the same name as the thing being assigned
+			if (val.equals(name) || val.contains(name + '.')) {
 				// treat this as a clearing on value(retain only info about nonneg)
 				applyTransfer(rec, replace, true);
 			}
