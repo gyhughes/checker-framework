@@ -46,16 +46,16 @@ public class IndexAnnotatedTypeFactory
 extends GenericAnnotatedTypeFactory<IndexValue, IndexStore, IndexTransfer, IndexAnalysis> {
 
 	// base annotations
-	protected final AnnotationMirror IndexFor;
-	protected final AnnotationMirror IndexBottom;
-	protected final AnnotationMirror IndexOrLow;
-	protected final AnnotationMirror IndexOrHigh;
-	protected final AnnotationMirror LTLength;
-	protected final AnnotationMirror NonNegative;
-	protected final AnnotationMirror Unknown;
+	protected static AnnotationMirror IndexFor;
+	protected static AnnotationMirror IndexBottom;
+	protected static AnnotationMirror IndexOrLow;
+	protected static AnnotationMirror IndexOrHigh;
+	protected static AnnotationMirror LTLength;
+	protected static AnnotationMirror NonNegative;
+	protected static AnnotationMirror Unknown;
 
 	// methods to get values
-	protected final ProcessingEnvironment env;
+	protected static ProcessingEnvironment env;
 
 	public IndexAnnotatedTypeFactory(BaseTypeChecker checker) {
 		super(checker);
@@ -159,7 +159,7 @@ extends GenericAnnotatedTypeFactory<IndexValue, IndexStore, IndexTransfer, Index
 					int val = (int)((LiteralTree)rightExpr).getValue();
 					if (val == 1) {
 						if (left.hasAnnotation(IndexOrLow.class) || left.hasAnnotation(IndexFor.class)) {
-							String value = IndexTransfer.getValue(left.getAnnotationInHierarchy(IndexOrLow));
+							String value = IndexUtils.getValue(left.getAnnotationInHierarchy(IndexOrLow));
 							type.addAnnotation(createIndexOrHighAnnotation(value));						
 						}
 						else if (left.hasAnnotation(NonNegative.class) || left.hasAnnotation(IndexOrHigh.class)) {
@@ -195,12 +195,12 @@ extends GenericAnnotatedTypeFactory<IndexValue, IndexStore, IndexTransfer, Index
 					if (val == 1) {
 						// if left sub IOH it becomes IOL
 						if (hierarchy.isSubtypeRelaxed(anno, IndexOrHigh)) {
-							String value = IndexVisitor.getIndexValue(anno, getValueMethod(anno));
+							String value = IndexUtils.getIndexValue(anno, IndexUtils.getValueMethod(anno));
 							type.addAnnotation(createIndexOrLowAnnotation(value));						
 						}
 						// if left subtype LTLength
 						else if (hierarchy.isSubtypeRelaxed(anno, LTLength)) {
-							String value = IndexVisitor.getIndexValue(anno, getValueMethod(anno));
+							String value = IndexUtils.getIndexValue(anno, IndexUtils.getValueMethod(anno));
 							type.addAnnotation(createLTLengthAnnotation(value));	
 						}
 						return;
@@ -213,7 +213,7 @@ extends GenericAnnotatedTypeFactory<IndexValue, IndexStore, IndexTransfer, Index
 				// if right is sub of NonNeg
 				if (right.hasAnnotationRelaxed(IndexFor) || right.hasAnnotationRelaxed(IndexOrHigh) || right.hasAnnotation(NonNegative)) {
 					if (hierarchy.isSubtypeRelaxed(anno, LTLength) || left.hasAnnotation(IndexOrHigh.class)) {
-						String value = IndexVisitor.getIndexValue(anno, getValueMethod(anno));
+						String value = IndexUtils.getIndexValue(anno, IndexUtils.getValueMethod(anno));
 						type.addAnnotation(createLTLengthAnnotation(value));
 					}
 				}
@@ -251,7 +251,7 @@ extends GenericAnnotatedTypeFactory<IndexValue, IndexStore, IndexTransfer, Index
 		// else -> Unknown
 		protected void preInc(AnnotatedTypeMirror left, AnnotatedTypeMirror type) {
 			if (left.hasAnnotation(IndexOrLow.class) || left.hasAnnotation(IndexFor.class)) {
-				String value = IndexTransfer.getValue(left.getAnnotationInHierarchy(IndexOrLow));
+				String value = IndexUtils.getValue(left.getAnnotationInHierarchy(IndexOrLow));
 				type.addAnnotation(createIndexOrHighAnnotation(value));						
 			}
 			else if (left.hasAnnotation(NonNegative.class) || left.hasAnnotation(IndexOrHigh.class)) {
@@ -265,11 +265,11 @@ extends GenericAnnotatedTypeFactory<IndexValue, IndexStore, IndexTransfer, Index
 		// NonNeg or Unknown -> Unknown
 		private void preDec(AnnotatedTypeMirror ATM, AnnotatedTypeMirror type) {
 			if (ATM.hasAnnotation(IndexOrHigh.class) || ATM.hasAnnotation(IndexFor.class)) {
-				String value = IndexTransfer.getValue(ATM.getAnnotationInHierarchy(IndexFor));
+				String value = IndexUtils.getValue(ATM.getAnnotationInHierarchy(IndexFor));
 				type.addAnnotation(createIndexOrLowAnnotation(value));						
 			}
 			else if (ATM.hasAnnotation(LTLength.class) || ATM.hasAnnotation(IndexOrLow.class)) {
-				String value = IndexTransfer.getValue(ATM.getAnnotationInHierarchy(IndexFor));
+				String value = IndexUtils.getValue(ATM.getAnnotationInHierarchy(IndexFor));
 				type.addAnnotation(createLTLengthAnnotation(value));
 			}
 		}
@@ -319,8 +319,8 @@ extends GenericAnnotatedTypeFactory<IndexValue, IndexStore, IndexTransfer, Index
 			boolean leftBottom = AnnotationUtils.areSameIgnoringValues(lhs, IndexBottom);
 			boolean leftHasValueMethod = !(leftNonNeg || leftUnknown || leftBottom);
 			if (rightHasValueMethod && leftHasValueMethod) {
-				String valueRight = IndexVisitor.getIndexValue(rhs, getValueMethod(rhs));
-				String valueLeft  = IndexVisitor.getIndexValue(lhs, getValueMethod(lhs));
+				String valueRight = IndexUtils.getIndexValue(rhs, IndexUtils.getValueMethod(rhs));
+				String valueLeft  = IndexUtils.getIndexValue(lhs, IndexUtils.getValueMethod(lhs));
 				if (!valueRight.equals(valueLeft)) {
 					return false;
 				}
@@ -392,23 +392,4 @@ extends GenericAnnotatedTypeFactory<IndexValue, IndexStore, IndexTransfer, Index
 		builder.setValue("value", name);
 		return builder.build();
 	}
-
-	// returns the value method specific to the class of the anno passed in
-	protected ExecutableElement getValueMethod(AnnotationMirror anno) {
-		if (AnnotationUtils.areSameIgnoringValues(anno, IndexFor)) {
-			return TreeUtils.getMethod("org.checkerframework.checker.index.qual.IndexFor", "value", 0, env);
-		}
-		if (AnnotationUtils.areSameIgnoringValues(anno, IndexOrLow)) {
-			return TreeUtils.getMethod("org.checkerframework.checker.index.qual.IndexOrLow", "value", 0, env);
-		}
-		if (AnnotationUtils.areSameIgnoringValues(anno, IndexOrHigh)) {
-			return TreeUtils.getMethod("org.checkerframework.checker.index.qual.IndexOrHigh", "value", 0, env);
-		}
-		if (AnnotationUtils.areSameIgnoringValues(anno, LTLength)) {
-			return TreeUtils.getMethod("org.checkerframework.checker.index.qual.LTLength", "value", 0, env);
-		}
-		return null;
-	}
-
-
 }

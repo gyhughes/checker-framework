@@ -110,14 +110,14 @@ public class IndexTransfer extends CFAbstractTransfer<IndexValue, IndexStore, In
 		return newResult;
 	}
 	/**
-	 * 
-	 * @param left 
+	 *
+	 * @param left
 	 * 			the node that is the left side of the comparison
-	 * @param right 
+	 * @param right
 	 * 			the right side node
 	 * @param thenStore
 	 * 			the store that the refinement is placed in
-	 * 
+	 *
 	 * refines the types of the left side node and puts result into passed store
 	 */
 	private void greaterThanHelper(Node left, Node right, IndexStore thenStore) {
@@ -128,7 +128,7 @@ public class IndexTransfer extends CFAbstractTransfer<IndexValue, IndexStore, In
 		}
 		if (leftType.hasAnnotation(IndexOrLow.class) || leftType.hasAnnotation(LTLength.class)) {
 			AnnotationMirror leftAnno = leftType.getAnnotationInHierarchy(atypeFactory.IndexOrLow);
-			String name = getValue(leftAnno);
+			String name = IndexUtils.getValue(leftAnno);
 			IndexOrLowGreaterThan(leftRec, right, thenStore, name, false);
 		}
 	}
@@ -158,14 +158,14 @@ public class IndexTransfer extends CFAbstractTransfer<IndexValue, IndexStore, In
 	}
 	
 	/**
-	 * 
-	 * @param left 
+	 *
+	 * @param left
 	 * 			the node that is the left side of the comparison
-	 * @param right 
+	 * @param right
 	 * 			the right side node
 	 * @param thenStore
 	 * 			the store that the refinement is placed in
-	 * 
+	 *
 	 * refines the types of the left side node and puts result into passed store
 	 */
 	private void greaterThanOrEqualHelper(Node left, Node right, IndexStore thenStore) {
@@ -176,7 +176,7 @@ public class IndexTransfer extends CFAbstractTransfer<IndexValue, IndexStore, In
 		}
 		if (leftType.hasAnnotation(IndexOrLow.class) || leftType.hasAnnotation(LTLength.class)) {
 			AnnotationMirror leftAnno = leftType.getAnnotationInHierarchy(atypeFactory.IndexOrLow);
-			String name = getValue(leftAnno);
+			String name = IndexUtils.getValue(leftAnno);
 			IndexOrLowGreaterThan(leftRec, right, thenStore, name, true);
 		}
 
@@ -206,14 +206,14 @@ public class IndexTransfer extends CFAbstractTransfer<IndexValue, IndexStore, In
 	}
 	
 	/**
-	 * 
-	 * @param left 
+	 *
+	 * @param left
 	 * 			the node that is the left side of the comparison
-	 * @param right 
+	 * @param right
 	 * 			the right side node
 	 * @param thenStore
 	 * 			the store that the refinement is placed in
-	 * 
+	 *
 	 * refines the types of the left side node and puts result into passed store
 	 */
 	public void NotEqualHelper(Node left, Node right,IndexStore thenStore) {
@@ -238,8 +238,8 @@ public class IndexTransfer extends CFAbstractTransfer<IndexValue, IndexStore, In
 		// have to check exactly -1 because indexorlow could be different
 		else if (leftType.hasAnnotation(IndexOrLow.class)) {
 			AnnotationMirror leftAnno = leftType.getAnnotation(IndexOrLow.class);
-			String name = getValue(leftAnno);
-			if (right.getTree().getKind().equals(Tree.Kind.INT_LITERAL) && (int)((LiteralTree)right.getTree()).getValue() == -1) {
+			String name = IndexUtils.getValue(leftAnno);
+			if (IndexUtils.isNegOne(right)) {
 				AnnotationMirror anno = atypeFactory.createIndexForAnnotation(name);
 				thenStore.insertValue(leftRec, anno);
 			}
@@ -271,14 +271,14 @@ public class IndexTransfer extends CFAbstractTransfer<IndexValue, IndexStore, In
 	}
 
 	/**
-	 * 
-	 * @param left 
+	 *
+	 * @param left
 	 * 			the node that is the left side of the comparison
-	 * @param right 
+	 * @param right
 	 * 			the right side node
 	 * @param thenStore
 	 * 			the store that the refinement is placed in
-	 * 
+	 *
 	 * refines the types of the left side node and puts result into passed store
 	 */
 	private void lessThanHelper(Node left, Node right, IndexStore thenStore) {
@@ -317,14 +317,14 @@ public class IndexTransfer extends CFAbstractTransfer<IndexValue, IndexStore, In
 	}
 
 	/**
-	 * 
-	 * @param left 
+	 *
+	 * @param left
 	 * 			the node that is the left side of the comparison
-	 * @param right 
+	 * @param right
 	 * 			the right side node
 	 * @param thenStore
 	 * 			the store that the refinement is placed in
-	 * 
+	 *
 	 * refines the types of the left side node and puts result into passed store
 	 */
 	private void lessThanOrEqualHelper(Node left, Node right, IndexStore thenStore) {
@@ -365,14 +365,14 @@ public class IndexTransfer extends CFAbstractTransfer<IndexValue, IndexStore, In
 	}
 
 	/**
-	 * 
-	 * @param left 
+	 *
+	 * @param left
 	 * 			the node that is the left side of the comparison
-	 * @param right 
+	 * @param right
 	 * 			the right side node
 	 * @param thenStore
 	 * 			the store that the refinement is placed in
-	 * 
+	 *
 	 * refines the types of the left side node and puts result into passed store
 	 */
 	private void equalsToHelper(Node left, Node right, IndexStore thenStore) {
@@ -397,7 +397,7 @@ public class IndexTransfer extends CFAbstractTransfer<IndexValue, IndexStore, In
 	 */
 	private void IOLEqual(Receiver leftRec, Receiver rightRec, AnnotatedTypeMirror leftType,
 			AnnotatedTypeMirror rightType, IndexStore thenStore) {
-		String leftName = getValue(leftType.getAnnotationInHierarchy(atypeFactory.IndexFor));
+		String leftName = IndexUtils.getValue(leftType.getAnnotationInHierarchy(atypeFactory.IndexFor));
 		boolean InF = rightType.hasAnnotation(IndexFor.class);
 		boolean IOH = rightType.hasAnnotation(IndexOrHigh.class);
 		boolean NN = rightType.hasAnnotation(NonNegative.class);
@@ -406,7 +406,7 @@ public class IndexTransfer extends CFAbstractTransfer<IndexValue, IndexStore, In
 			thenStore.insertValue(leftRec, atypeFactory.createIndexForAnnotation(leftName));
 			if (InF) {
 				// add to both left and right operands
-				String rightName = getValue(rightType.getAnnotation(IndexFor.class));
+				String rightName = IndexUtils.getValue(rightType.getAnnotation(IndexFor.class));
 				thenStore.insertValue(leftRec, atypeFactory.createIndexForAnnotation(rightName));
 			}
 		}
@@ -423,12 +423,12 @@ public class IndexTransfer extends CFAbstractTransfer<IndexValue, IndexStore, In
 		boolean IOL = rightType.hasAnnotation(IndexOrLow.class);
 		boolean LTL = rightType.hasAnnotation(LTLength.class);
 		if (InF || IOL || LTL) {
-			String name = getValue(rightType.getAnnotationInHierarchy(atypeFactory.IndexFor));
+			String name = IndexUtils.getValue(rightType.getAnnotationInHierarchy(atypeFactory.IndexFor));
 			thenStore.insertValue(leftRec, atypeFactory.createIndexForAnnotation(name));
 		}
 		// if right is indexOrHigh left should be too
 		if (rightType.hasAnnotation(IndexOrHigh.class)) {
-			String name = getValue(rightType.getAnnotationInHierarchy(atypeFactory.IndexFor));
+			String name = IndexUtils.getValue(rightType.getAnnotationInHierarchy(atypeFactory.IndexFor));
 			thenStore.insertValue(leftRec, atypeFactory.createIndexOrHighAnnotation(name));
 		}
 	}
@@ -448,7 +448,7 @@ public class IndexTransfer extends CFAbstractTransfer<IndexValue, IndexStore, In
 		boolean LTL = rightType.hasAnnotation(LTLength.class);
 		if (IOH || InF || IOL || LTL) {
 			thenStore.clearValue(rec);
-			String aValue = getValue(rightType.getAnnotationInHierarchy(atypeFactory.IndexFor));
+			String aValue = IndexUtils.getValue(rightType.getAnnotationInHierarchy(atypeFactory.IndexFor));
 			AnnotationMirror anno = atypeFactory.createLTLengthAnnotation(aValue);
 			thenStore.insertValue(rec, anno);
 		}	
@@ -466,12 +466,12 @@ public class IndexTransfer extends CFAbstractTransfer<IndexValue, IndexStore, In
 		boolean LTL = rightType.hasAnnotation(LTLength.class);
 		if (IOH || InF || IOL || LTL) {
 			thenStore.clearValue(rec);
-			String name = getValue(rightType.getAnnotationInHierarchy(atypeFactory.IndexOrHigh));
+			String name = IndexUtils.getValue(rightType.getAnnotationInHierarchy(atypeFactory.IndexOrHigh));
 			thenStore.insertValue(rec, atypeFactory.createIndexForAnnotation(name));
 		}
 		// if left wasnt an indexOrhigh it should be now
 		if (rightType.hasAnnotation(IndexOrHigh.class) && orEqual) {
-			String name = getValue(rightType.getAnnotationInHierarchy(atypeFactory.IndexOrHigh));
+			String name = IndexUtils.getValue(rightType.getAnnotationInHierarchy(atypeFactory.IndexOrHigh));
 			thenStore.insertValue(rec, atypeFactory.createIndexOrHighAnnotation(name));
 		}
 
@@ -489,7 +489,7 @@ public class IndexTransfer extends CFAbstractTransfer<IndexValue, IndexStore, In
 	private void UnknownGreaterThan(Receiver rec, Node right, IndexStore thenStore, boolean orEqual) {
 		AnnotatedTypeMirror rightType = atypeFactory.getAnnotatedType(right.getTree());
 		// booleans to see if the type is any in the heirarchy we want to refine
-		boolean IOL = (rightType.hasAnnotation(IndexOrLow.class) || isNegOne(right)) && !orEqual;
+		boolean IOL = (rightType.hasAnnotation(IndexOrLow.class) || IndexUtils.isNegOne(right)) && !orEqual;
 		boolean NN = rightType.hasAnnotation(NonNegative.class);
 		boolean IOH = rightType.hasAnnotation(IndexOrHigh.class);
 		boolean IF = rightType.hasAnnotation(IndexFor.class);
@@ -500,44 +500,22 @@ public class IndexTransfer extends CFAbstractTransfer<IndexValue, IndexStore, In
 		}
 		
 	}
-	/**
-	 *  given a node this returns whether the node is the literal -1
-	 * @param right
-	 * 		a node we wish to test
-	 * @return whether it represents -1 literal
-	 */
-	private boolean isNegOne(Node right) {
-		if (right.getTree().getKind().equals(Tree.Kind.INT_LITERAL)) {
-			int val = (int)((LiteralTree)right.getTree()).getValue();
-			return val == -1;
-		}
-		return false;
-	}
-
 	//IndexOrLow(a) > IndexOrLow, Nonnegative, IndexOrHigh, IndexFor -> IndexFor(a)
 	/**
 	 * once we know that the left node is IndexOrLow, we go here to refine.
 	 */
 	private void IndexOrLowGreaterThan(Receiver rec, Node right, IndexStore thenStore, String name, boolean orEqual) {
 		AnnotatedTypeMirror rightType = atypeFactory.getAnnotatedType(right.getTree());
-		boolean IOL = (rightType.hasAnnotation(IndexOrLow.class) || isNegOne(right)) && !orEqual;
+		boolean IOL = (rightType.hasAnnotation(IndexOrLow.class) || IndexUtils.isNegOne(right)) && !orEqual;
 		boolean NN = rightType.hasAnnotation(NonNegative.class);
 		boolean IOH = rightType.hasAnnotation(IndexOrHigh.class);
 		boolean InF = rightType.hasAnnotation(IndexFor.class);
 		if (IOL || InF || NN || IOH) {
 			thenStore.insertValue(rec, atypeFactory.createIndexForAnnotation(name));
 		}
-		else if ((rightType.hasAnnotation(IndexOrLow.class) || isNegOne(right))  && orEqual) {
+		else if ((rightType.hasAnnotation(IndexOrLow.class) || IndexUtils.isNegOne(right))  && orEqual) {
 			thenStore.insertValue(rec, atypeFactory.createIndexOrLowAnnotation(name));
 		}
-	}
-
-	// uses a helper method in the visitor and the factory to get the value of the annotation
-	/**
-	 * returns the String value of an annotation in the IndexFor Hierarchy
-	 */
-	public static String getValue(AnnotationMirror anno) {
-		return IndexVisitor.getIndexValue(anno, atypeFactory.getValueMethod(anno));
 	}
 }
 

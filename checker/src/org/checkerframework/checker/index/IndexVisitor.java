@@ -1,7 +1,6 @@
 package org.checkerframework.checker.index;
 
 import javax.annotation.processing.ProcessingEnvironment;
-import javax.lang.model.element.AnnotationMirror;
 import javax.lang.model.element.ExecutableElement;
 
 import org.checkerframework.checker.index.qual.*;
@@ -9,7 +8,6 @@ import org.checkerframework.common.basetype.BaseTypeChecker;
 import org.checkerframework.common.basetype.BaseTypeVisitor;
 import org.checkerframework.framework.source.Result;
 import org.checkerframework.framework.type.AnnotatedTypeMirror;
-import org.checkerframework.javacutil.AnnotationUtils;
 import org.checkerframework.javacutil.TreeUtils;
 import org.checkerframework.checker.compilermsgs.qual.CompilerMessageKey;
 
@@ -62,7 +60,7 @@ public class IndexVisitor extends BaseTypeVisitor<IndexAnnotatedTypeFactory> {
 			}
 		}
 		// warn if it is IndexFor nut not the right array
-		else if (!(getIndexValue(indexType.getAnnotation(IndexFor.class), IndexValueElement).equals(name))) {
+		else if (!(IndexUtils.getValue(indexType.getAnnotation(IndexFor.class)).equals(name))) {
 			checker.report(Result.warning(ARRAY_NAME, name, indexType.toString()), index);
 		}
 		return super.visitArrayAccess(tree, type);
@@ -81,7 +79,7 @@ public class IndexVisitor extends BaseTypeVisitor<IndexAnnotatedTypeFactory> {
 			if (!indexType.hasAnnotation(IndexFor.class)) {
 				checker.report(Result.warning(LIST_UNSAFE, listName, indexType.toString()), index);
 			}
-			else if (!(getIndexValue(indexType.getAnnotation(IndexFor.class), IndexValueElement).equals(listName))) {
+			else if (!(IndexUtils.getValue(indexType.getAnnotation(IndexFor.class)).equals(listName))) {
 				checker.report(Result.warning(LIST_UNSAFE_NAME, listName, indexType.toString()), index);
 			}
 			
@@ -94,17 +92,12 @@ public class IndexVisitor extends BaseTypeVisitor<IndexAnnotatedTypeFactory> {
 			if (!indexType.hasAnnotation(IndexFor.class)) {
 				checker.report(Result.warning(STRING_UNSAFE, listName, indexType.toString()), index);
 			}
-			else if (!(getIndexValue(indexType.getAnnotation(IndexFor.class), IndexValueElement).equals(listName))) {
+			else if (!(IndexUtils.getValue(indexType.getAnnotation(IndexFor.class)).equals(listName))) {
 				checker.report(Result.warning(STRING_UNSAFE_NAME, listName, indexType.toString()), index);
 			}
 		}
 		return super.visitMethodInvocation(tree, type);
 		
-	}
-	
-	// returns the value of an IndexFor annotation, given the annotation and Value method
-	protected static String getIndexValue(AnnotationMirror indexType, ExecutableElement IndexValueElement) {
-		return (String) AnnotationUtils.getElementValuesWithDefaults(indexType).get(IndexValueElement).getValue();
 	}
 
 }
