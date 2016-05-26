@@ -93,14 +93,13 @@ extends GenericAnnotatedTypeFactory<IndexValue, IndexStore, IndexTransfer, Index
 
 		@Override
 		public Void visitLiteral(LiteralTree tree, AnnotatedTypeMirror type) {
-			if (!type.isAnnotatedInHierarchy(AnnotationUtils.fromClass(elements, NonNegative.class))) {
-				if (tree.getKind() == Tree.Kind.INT_LITERAL) {
-					int val = (int) tree.getValue();
-					if (val >= 0) {
-						type.addAnnotation(createNonNegAnnotation());
-					}
+			// if this is an Integer specifically
+			if (tree.getKind() == Tree.Kind.INT_LITERAL) {
+				int val = (int) tree.getValue();
+				if (val >= 0) {
+					type.addAnnotation(createNonNegAnnotation());
 				}
-			}
+			} // no else, only annotate Integers
 			return super.visitLiteral(tree, type);
 		}
 
