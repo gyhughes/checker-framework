@@ -54,7 +54,6 @@ extends GenericAnnotatedTypeFactory<IndexValue, IndexStore, IndexTransfer, Index
 	protected static AnnotationMirror nonNegative;
 	protected static AnnotationMirror unknown;
 
-	// methods to get values
 	protected static ProcessingEnvironment env;
 
 	public IndexAnnotatedTypeFactory(BaseTypeChecker checker) {
@@ -141,8 +140,12 @@ extends GenericAnnotatedTypeFactory<IndexValue, IndexStore, IndexTransfer, Index
 
 		// do addition between types
 		public void plusHelper(ExpressionTree leftExpr, ExpressionTree rightExpr, AnnotatedTypeMirror type) {
+			IndexQualifierHierarchy hierarchy = (IndexQualifierHierarchy) qualHierarchy;
 			AnnotatedTypeMirror leftType = getAnnotatedType(leftExpr);
 			AnnotatedTypeMirror rightType = getAnnotatedType(rightExpr);
+			AnnotationMirror leftAnno = leftType.getAnnotationInHierarchy(indexFor);
+			AnnotationMirror rightAnno = rightType.getAnnotationInHierarchy(indexFor);
+
 			// if left is literal 1/0 and right is not a literal swap them because we already handle the transfer for that
 			// and it would be redundant to repeat it all again
 			// we don't want right to be a literal too b/c we could be swapping forever
@@ -157,26 +160,25 @@ extends GenericAnnotatedTypeFactory<IndexValue, IndexStore, IndexTransfer, Index
 			if (rightExpr.getKind() == Tree.Kind.INT_LITERAL) {
 				int val = (int)((LiteralTree)rightExpr).getValue();
 				if (val == 1) {
-					if (leftType.hasAnnotation(IndexOrLow.class) || leftType.hasAnnotation(IndexFor.class)) {
+					if (hierarchy.isSubtypeRelaxed(leftAnno, indexOrLow)) {
 						String value = IndexUtils.getValue(leftType.getAnnotationInHierarchy(indexOrLow));
 						type.addAnnotation(createIndexOrHighAnnotation(value));						
 					}
-					else if (leftType.hasAnnotation(NonNegative.class) || leftType.hasAnnotation(IndexOrHigh.class)) {
+					else if (hierarchy.isSubtypeRelaxed(leftAnno, nonNegative)) {
 						type.addAnnotation(createNonNegAnnotation());
 					}
 					return;
 				}
-				// if we are adding 0 change nothing
+				// if we are adding 0 dont change type
 				else if (val == 0) {
+					// add back whatever annotation it already had
 					type.addAnnotation(leftType.getAnnotationInHierarchy(indexFor));
 					return;
 				}
 			}
 			// anything a subtype of nonneg + subtype nonneg = nonnegative
-			if (rightType.hasAnnotationRelaxed(indexFor) || rightType.hasAnnotationRelaxed(indexOrHigh) || rightType.hasAnnotation(nonNegative)) {
-				if (leftType.hasAnnotation(NonNegative.class) || leftType.hasAnnotation(IndexOrHigh.class)|| leftType.hasAnnotation(IndexFor.class)) {
-					type.addAnnotation(createNonNegAnnotation());
-				}
+			if (hierarchy.isSubtypeRelaxed(rightAnno, nonNegative) && hierarchy.isSubtypeRelaxed(leftAnno, nonNegative)) {
+				type.addAnnotation(createNonNegAnnotation());
 			}
 		}
 
@@ -185,32 +187,34 @@ extends GenericAnnotatedTypeFactory<IndexValue, IndexStore, IndexTransfer, Index
 			IndexQualifierHierarchy hierarchy = (IndexQualifierHierarchy) qualHierarchy;
 			AnnotatedTypeMirror leftType = getAnnotatedType(leftExpr);
 			AnnotatedTypeMirror rightType = getAnnotatedType(rightExpr);
-			AnnotationMirror anno = leftType.getAnnotationInHierarchy(indexFor);
+			AnnotationMirror leftAnno = leftType.getAnnotationInHierarchy(indexFor);
+			AnnotationMirror rightAnno = rightType.getAnnotationInHierarchy(indexFor);
+
 			// if right side is 1
 			if (rightExpr.getKind() == Tree.Kind.INT_LITERAL) {
 				int val = (int)((LiteralTree)rightExpr).getValue();
 				if (val == 1) {
 					// if left sub IOH it becomes IOL
-					if (hierarchy.isSubtypeRelaxed(anno, indexOrHigh)) {
-						String value = IndexUtils.getIndexValue(anno, IndexUtils.getValueMethod(anno));
+					if (hierarchy.isSubtypeRelaxed(leftAnno, indexOrHigh)) {
+						String value = IndexUtils.getIndexValue(leftAnno, IndexUtils.getValueMethod(leftAnno));
 						type.addAnnotation(createIndexOrLowAnnotation(value));						
 					}
 					// if left subtype LTLength
-					else if (hierarchy.isSubtypeRelaxed(anno, lTLength)) {
-						String value = IndexUtils.getIndexValue(anno, IndexUtils.getValueMethod(anno));
+					else if (hierarchy.isSubtypeRelaxed(leftAnno, lTLength)) {
+						String value = IndexUtils.getIndexValue(leftAnno, IndexUtils.getValueMethod(leftAnno));
 						type.addAnnotation(createLTLengthAnnotation(value));	
 					}
 					return;
 				}
 				if (val == 0) {
-					type.addAnnotation(anno);
+					type.addAnnotation(leftAnno);
 					return ;
 				}
 			}
 			// if right is sub of NonNeg
-			if (rightType.hasAnnotationRelaxed(indexFor) || rightType.hasAnnotationRelaxed(indexOrHigh) || rightType.hasAnnotation(nonNegative)) {
-				if (hierarchy.isSubtypeRelaxed(anno, lTLength) || leftType.hasAnnotation(IndexOrHigh.class)) {
-					String value = IndexUtils.getIndexValue(anno, IndexUtils.getValueMethod(anno));
+			if (hierarchy.isSubtypeRelaxed(rightAnno, nonNegative)) {
+				if (hierarchy.isSubtypeRelaxed(leftAnno, lTLength) || leftType.hasAnnotation(IndexOrHigh.class)) {
+					String value = IndexUtils.getIndexValue(leftAnno, IndexUtils.getValueMethod(leftAnno));
 					type.addAnnotation(createLTLengthAnnotation(value));
 				}
 			}
@@ -246,11 +250,13 @@ extends GenericAnnotatedTypeFactory<IndexValue, IndexStore, IndexTransfer, Index
 		// NonNeg || IndexOrHigh -> NonNeg
 		// else -> Unknown
 		protected void prefixIncrementHelper(AnnotatedTypeMirror atm, AnnotatedTypeMirror type) {
-			if (atm.hasAnnotation(IndexOrLow.class) || atm.hasAnnotation(IndexFor.class)) {
-				String value = IndexUtils.getValue(atm.getAnnotationInHierarchy(indexOrLow));
+			IndexQualifierHierarchy hierarchy = (IndexQualifierHierarchy) qualHierarchy;
+			AnnotationMirror anno = atm.getAnnotationInHierarchy(indexFor);
+			if (hierarchy.isSubtypeRelaxed(anno, indexOrLow)) {
+				String value = IndexUtils.getValue(anno);
 				type.addAnnotation(createIndexOrHighAnnotation(value));						
 			}
-			else if (atm.hasAnnotation(NonNegative.class) || atm.hasAnnotation(IndexOrHigh.class)) {
+			else if (hierarchy.isSubtypeRelaxed(anno, nonNegative)) {
 				type.addAnnotation(createNonNegAnnotation());
 			}
 		}
@@ -260,12 +266,14 @@ extends GenericAnnotatedTypeFactory<IndexValue, IndexStore, IndexTransfer, Index
 		// LTLength or IndexOrLow -> LTLength
 		// NonNeg or Unknown -> Unknown
 		private void prefixDecrementHelper(AnnotatedTypeMirror atm, AnnotatedTypeMirror type) {
-			if (atm.hasAnnotation(IndexOrHigh.class) || atm.hasAnnotation(IndexFor.class)) {
-				String value = IndexUtils.getValue(atm.getAnnotationInHierarchy(indexFor));
+			IndexQualifierHierarchy hierarchy = (IndexQualifierHierarchy) qualHierarchy;
+			AnnotationMirror anno = atm.getAnnotationInHierarchy(indexFor);
+			if (hierarchy.isSubtypeRelaxed(anno, indexOrHigh)) {
+				String value = IndexUtils.getValue(anno);
 				type.addAnnotation(createIndexOrLowAnnotation(value));						
 			}
-			else if (atm.hasAnnotation(LTLength.class) || atm.hasAnnotation(IndexOrLow.class)) {
-				String value = IndexUtils.getValue(atm.getAnnotationInHierarchy(indexFor));
+			else if (hierarchy.isSubtypeRelaxed(anno, lTLength)) {
+				String value = IndexUtils.getValue(anno);
 				type.addAnnotation(createLTLengthAnnotation(value));
 			}
 		}
