@@ -53,7 +53,7 @@ public class IndexTransfer extends CFAbstractTransfer<IndexValue, IndexStore, In
 				String[] objs = name.split("\\.");
 				name = objs[objs.length -1];
 			}
-			store.insertValue(rec, atypeFactory.createIndexOrHighAnnotation(name));
+			store.insertValue(rec, IndexAnnotatedTypeFactory.createIndexOrHighAnnotation(name));
 		}
 		return result;
 	}
@@ -69,7 +69,7 @@ public class IndexTransfer extends CFAbstractTransfer<IndexValue, IndexStore, In
 				String[] objs = arrName.split("\\.");
 				arrName = objs[objs.length -1];
 			}
-			AnnotationMirror anno = atypeFactory.createIndexOrHighAnnotation(arrName);
+			AnnotationMirror anno = IndexAnnotatedTypeFactory.createIndexOrHighAnnotation(arrName);
 			IndexValue newResultValue = analysis.createSingleAnnotationValue(anno, result.getResultValue().getType().getUnderlyingType());
 			return new RegularTransferResult<>(newResultValue, result.getRegularStore());
 		}
@@ -225,7 +225,7 @@ public class IndexTransfer extends CFAbstractTransfer<IndexValue, IndexStore, In
 						String[] objs = arrName.split("\\.");
 						arrName = objs[objs.length -1];
 					}
-					AnnotationMirror anno = atypeFactory.createIndexForAnnotation(arrName);
+					AnnotationMirror anno = IndexAnnotatedTypeFactory.createIndexForAnnotation(arrName);
 					thenStore.insertValue(leftRec, anno);
 				}
 			}
@@ -236,7 +236,7 @@ public class IndexTransfer extends CFAbstractTransfer<IndexValue, IndexStore, In
 			AnnotationMirror leftAnno = leftType.getAnnotation(IndexOrLow.class);
 			String name = IndexUtils.getValue(leftAnno);
 			if (IndexUtils.isNegOne(right)) {
-				AnnotationMirror anno = atypeFactory.createIndexForAnnotation(name);
+				AnnotationMirror anno = IndexAnnotatedTypeFactory.createIndexForAnnotation(name);
 				thenStore.insertValue(leftRec, anno);
 			}
 		}
@@ -399,15 +399,15 @@ public class IndexTransfer extends CFAbstractTransfer<IndexValue, IndexStore, In
 		boolean NN = rightType.hasAnnotation(NonNegative.class);
 		if (IOH || NN || InF) {
 			// they are both a valid index for just IOL array
-			thenStore.insertValue(leftRec, atypeFactory.createIndexForAnnotation(leftName));
+			thenStore.insertValue(leftRec, IndexAnnotatedTypeFactory.createIndexForAnnotation(leftName));
 			if (InF) {
 				// add to both left and right operands
 				String rightName = IndexUtils.getValue(rightType.getAnnotation(IndexFor.class));
-				thenStore.insertValue(leftRec, atypeFactory.createIndexForAnnotation(rightName));
+				thenStore.insertValue(leftRec, IndexAnnotatedTypeFactory.createIndexForAnnotation(rightName));
 			}
 		}
 		if (rightType.hasAnnotation(IndexOrLow.class)) {
-			thenStore.insertValue(leftRec, atypeFactory.createIndexOrLowAnnotation(leftName));
+			thenStore.insertValue(leftRec, IndexAnnotatedTypeFactory.createIndexOrLowAnnotation(leftName));
 		}
 	}
 	
@@ -420,12 +420,12 @@ public class IndexTransfer extends CFAbstractTransfer<IndexValue, IndexStore, In
 		boolean LTL = rightType.hasAnnotation(LTLength.class);
 		if (InF || IOL || LTL) {
 			String name = IndexUtils.getValue(rightType.getAnnotationInHierarchy(IndexAnnotatedTypeFactory.indexFor));
-			thenStore.insertValue(leftRec, atypeFactory.createIndexForAnnotation(name));
+			thenStore.insertValue(leftRec, IndexAnnotatedTypeFactory.createIndexForAnnotation(name));
 		}
 		// if right is indexOrHigh left should be too
 		if (rightType.hasAnnotation(IndexOrHigh.class)) {
 			String name = IndexUtils.getValue(rightType.getAnnotationInHierarchy(IndexAnnotatedTypeFactory.indexFor));
-			thenStore.insertValue(leftRec, atypeFactory.createIndexOrHighAnnotation(name));
+			thenStore.insertValue(leftRec, IndexAnnotatedTypeFactory.createIndexOrHighAnnotation(name));
 		}
 	}
 
@@ -445,7 +445,7 @@ public class IndexTransfer extends CFAbstractTransfer<IndexValue, IndexStore, In
 		if (IOH || InF || IOL || LTL) {
 			thenStore.clearValue(rec);
 			String aValue = IndexUtils.getValue(rightType.getAnnotationInHierarchy(IndexAnnotatedTypeFactory.indexFor));
-			AnnotationMirror anno = atypeFactory.createLTLengthAnnotation(aValue);
+			AnnotationMirror anno = IndexAnnotatedTypeFactory.createLTLengthAnnotation(aValue);
 			thenStore.insertValue(rec, anno);
 		}	
 	}
@@ -463,12 +463,12 @@ public class IndexTransfer extends CFAbstractTransfer<IndexValue, IndexStore, In
 		if (IOH || InF || IOL || LTL) {
 			thenStore.clearValue(rec);
 			String name = IndexUtils.getValue(rightType.getAnnotationInHierarchy(IndexAnnotatedTypeFactory.indexOrHigh));
-			thenStore.insertValue(rec, atypeFactory.createIndexForAnnotation(name));
+			thenStore.insertValue(rec, IndexAnnotatedTypeFactory.createIndexForAnnotation(name));
 		}
 		// if left wasnt an indexOrhigh it should be now
 		if (rightType.hasAnnotation(IndexOrHigh.class) && orEqual) {
 			String name = IndexUtils.getValue(rightType.getAnnotationInHierarchy(IndexAnnotatedTypeFactory.indexOrHigh));
-			thenStore.insertValue(rec, atypeFactory.createIndexOrHighAnnotation(name));
+			thenStore.insertValue(rec, IndexAnnotatedTypeFactory.createIndexOrHighAnnotation(name));
 		}
 
 	}
@@ -491,7 +491,7 @@ public class IndexTransfer extends CFAbstractTransfer<IndexValue, IndexStore, In
 		boolean IF = rightType.hasAnnotation(IndexFor.class);
 
 		if (IOL || NN || IOH || IF) {
-			AnnotationMirror anno = atypeFactory.createNonNegAnnotation();
+			AnnotationMirror anno = IndexAnnotatedTypeFactory.createNonNegAnnotation();
 			thenStore.insertValue(rec, anno);
 		}
 		
@@ -507,10 +507,10 @@ public class IndexTransfer extends CFAbstractTransfer<IndexValue, IndexStore, In
 		boolean IOH = rightType.hasAnnotation(IndexOrHigh.class);
 		boolean InF = rightType.hasAnnotation(IndexFor.class);
 		if (IOL || InF || NN || IOH) {
-			thenStore.insertValue(rec, atypeFactory.createIndexForAnnotation(name));
+			thenStore.insertValue(rec, IndexAnnotatedTypeFactory.createIndexForAnnotation(name));
 		}
 		else if ((rightType.hasAnnotation(IndexOrLow.class) || IndexUtils.isNegOne(right))  && orEqual) {
-			thenStore.insertValue(rec, atypeFactory.createIndexOrLowAnnotation(name));
+			thenStore.insertValue(rec, IndexAnnotatedTypeFactory.createIndexOrLowAnnotation(name));
 		}
 	}
 }

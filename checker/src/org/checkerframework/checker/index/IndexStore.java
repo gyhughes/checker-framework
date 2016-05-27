@@ -63,7 +63,6 @@ public class IndexStore extends CFAbstractStore<IndexValue, IndexStore> {
 	// and based on whether or not the method is a call to clear we get the new value for it
 	// then put it in the map
 	private void applyTransfer(Receiver rec, Map<Receiver, IndexValue> replace, boolean isClear) {
-		IndexAnnotatedTypeFactory atypeFactory = ((IndexAnalysis)this.analysis).atypeFactory;
 		IndexValue value = this.getValue(rec);
 		AnnotatedTypeMirror atm = value.getType();
 		boolean InF = atm.hasAnnotation(IndexFor.class);
@@ -73,21 +72,21 @@ public class IndexStore extends CFAbstractStore<IndexValue, IndexStore> {
 		if (!isClear) {
 			if (InF || IOL) {
 				String name = IndexUtils.getValue(atm.getAnnotationInHierarchy(IndexAnnotatedTypeFactory.indexFor));
-				IndexValue val = analysis.createSingleAnnotationValue(atypeFactory.createIndexOrHighAnnotation(name), rec.getType());
+				IndexValue val = analysis.createSingleAnnotationValue(IndexAnnotatedTypeFactory.createIndexOrHighAnnotation(name), rec.getType());
 				replace.put(rec, val);
 			} else if (NN || IOH) {
-				IndexValue val = analysis.createSingleAnnotationValue(atypeFactory.createNonNegAnnotation(), rec.getType());
+				IndexValue val = analysis.createSingleAnnotationValue(IndexAnnotatedTypeFactory.createNonNegAnnotation(), rec.getType());
 				replace.put(rec, val);
 			} else {
-				IndexValue val = analysis.createSingleAnnotationValue(atypeFactory.createUnknownAnnotation(), rec.getType());
+				IndexValue val = analysis.createSingleAnnotationValue(IndexAnnotatedTypeFactory.createUnknownAnnotation(), rec.getType());
 				replace.put(rec, val);
 			}
 		} else {
 			if (InF || IOL || NN) {
-				IndexValue val = analysis.createSingleAnnotationValue(atypeFactory.createNonNegAnnotation(), rec.getType());
+				IndexValue val = analysis.createSingleAnnotationValue(IndexAnnotatedTypeFactory.createNonNegAnnotation(), rec.getType());
 				replace.put(rec, val);
 			} else {
-				IndexValue val = analysis.createSingleAnnotationValue(atypeFactory.createUnknownAnnotation(), rec.getType());
+				IndexValue val = analysis.createSingleAnnotationValue(IndexAnnotatedTypeFactory.createUnknownAnnotation(), rec.getType());
 				replace.put(rec, val);
 			}
 		}

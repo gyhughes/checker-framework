@@ -351,40 +351,40 @@ extends GenericAnnotatedTypeFactory<IndexValue, IndexStore, IndexTransfer, Index
 	//********************************************************************************//	
 
 	//returns a new @NonNegative annotation
-	AnnotationMirror createNonNegAnnotation() {
-		AnnotationBuilder builder = new AnnotationBuilder(processingEnv, NonNegative.class);
+	static AnnotationMirror createNonNegAnnotation() {
+		AnnotationBuilder builder = new AnnotationBuilder(env, NonNegative.class);
 		return builder.build();
 	}
 	//returns a new @Unknown annotation
-	AnnotationMirror createUnknownAnnotation() {
-		AnnotationBuilder builder = new AnnotationBuilder(processingEnv, Unknown.class);
+	static AnnotationMirror createUnknownAnnotation() {
+		AnnotationBuilder builder = new AnnotationBuilder(env, Unknown.class);
 		return builder.build();
 	}
 
 	//returns a new @IndexOrLow annotation
-	AnnotationMirror createIndexOrLowAnnotation(String name) {
-		AnnotationBuilder builder = new AnnotationBuilder(processingEnv, IndexOrLow.class);
+	static AnnotationMirror createIndexOrLowAnnotation(String name) {
+		AnnotationBuilder builder = new AnnotationBuilder(env, IndexOrLow.class);
 		builder.setValue("value", name);
 		return builder.build();
 	}
 
 	//returns a new @IndexOrHigh annotation
-	AnnotationMirror createIndexOrHighAnnotation(String name) {
-		AnnotationBuilder builder = new AnnotationBuilder(processingEnv, IndexOrHigh.class);
+	static AnnotationMirror createIndexOrHighAnnotation(String name) {
+		AnnotationBuilder builder = new AnnotationBuilder(env, IndexOrHigh.class);
 		builder.setValue("value", name);
 		return builder.build();
 	}
 
 	//returns a new @LTLength annotation
-	AnnotationMirror createLTLengthAnnotation(String name) {
-		AnnotationBuilder builder = new AnnotationBuilder(processingEnv, LTLength.class);
+	static AnnotationMirror createLTLengthAnnotation(String name) {
+		AnnotationBuilder builder = new AnnotationBuilder(env, LTLength.class);
 		builder.setValue("value", name);
 		return builder.build();
 	}
 
 	//returns a new @IndexFor annotation
-	AnnotationMirror createIndexForAnnotation(String name) {
-		AnnotationBuilder builder = new AnnotationBuilder(processingEnv, IndexFor.class);
+	static AnnotationMirror createIndexForAnnotation(String name) {
+		AnnotationBuilder builder = new AnnotationBuilder(env, IndexFor.class);
 		builder.setValue("value", name);
 		return builder.build();
 	}
