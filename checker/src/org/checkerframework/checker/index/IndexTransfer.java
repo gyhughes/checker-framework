@@ -1,5 +1,7 @@
 package org.checkerframework.checker.index;
 
+import java.util.List;
+
 import javax.lang.model.element.AnnotationMirror;
 
 import org.checkerframework.checker.index.qual.IndexFor;
@@ -46,6 +48,11 @@ public class IndexTransfer extends CFAbstractTransfer<IndexValue, IndexStore, In
 		if (node.getExpression() instanceof ArrayCreationNode) {
 			ArrayCreationNode ACNode = (ArrayCreationNode)node.getExpression();
 			IndexStore store = result.getRegularStore();
+			List<Node> nodeList = ACNode.getDimensions();
+			// dont know if returns empty list or null if no dimension
+			if (nodeList == null || nodeList.size() < 1) {
+				return result;
+			}
 			Node dim = ACNode.getDimension(0);
 			Receiver rec = FlowExpressions.internalReprOf(analysis.getTypeFactory(), dim);
 			String name = node.getTarget().toString();
