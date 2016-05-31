@@ -297,7 +297,18 @@ extends GenericAnnotatedTypeFactory<IndexValue, IndexStore, IndexTransfer, Index
 		public IndexQualifierHierarchy(MultiGraphFactory f, AnnotationMirror bottom) {
 			super(f, bottom);
 		}
-
+		
+		@Override
+		public AnnotationMirror greatestLowerBound(AnnotationMirror anno1, AnnotationMirror anno2){
+			if (isSubtype(anno1, anno2)) {
+				return anno1;
+			}
+			if (isSubtype(anno2, anno1)) {
+				return anno2;
+			}
+			return indexBottom;
+		}
+		
 		@Override
 		public AnnotationMirror leastUpperBound(AnnotationMirror anno1, AnnotationMirror anno2) {
 			if (isSubtype(anno1, anno2)) {
