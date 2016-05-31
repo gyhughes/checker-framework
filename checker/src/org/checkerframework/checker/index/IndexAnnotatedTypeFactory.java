@@ -106,13 +106,41 @@ extends GenericAnnotatedTypeFactory<IndexValue, IndexStore, IndexTransfer, Index
 		public Void visitMethodInvocation(MethodInvocationTree tree, AnnotatedTypeMirror type) {
 			ExecutableElement ListSize = TreeUtils.getMethod("java.util.List", "size", 0, env);
 			ExecutableElement StrLen = TreeUtils.getMethod("java.lang.String", "length", 0, env);
+
 			String name = tree.getMethodSelect().toString();
 			if (TreeUtils.isMethodInvocation(tree, ListSize, env) || TreeUtils.isMethodInvocation(tree, StrLen, env)) {
 				String listName = name.split("\\.")[0];
 				type.removeAnnotationInHierarchy(indexFor);
 				type.addAnnotation(createIndexOrHighAnnotation(listName));
 			}
+			// add IndexOrLow if you use IndexOf Methods (could be -1)
+			if (isIndexOfMethod(tree)) {
+				String listName = name.split("\\.")[0];
+				type.removeAnnotationInHierarchy(indexFor);
+				type.addAnnotation(createIndexOrLowAnnotation(listName));
+			}
 			return super.visitMethodInvocation(tree, type);
+		}
+		
+		/**
+		 * 
+		 * @param tree
+		 * @return if the method of the tree is an indexof method for list or string
+		 */
+		private boolean isIndexOfMethod(MethodInvocationTree tree) {
+			ExecutableElement strIndexOf = TreeUtils.getMethod("java.lang.String", "indexOf", 1, env);
+			ExecutableElement listIndexOf = TreeUtils.getMethod("java.util.List", "indexOf",1 , env);
+			ExecutableElement strLastIndexOf = TreeUtils.getMethod("java.lang.String", "lastIndexOf", 1, env);
+			ExecutableElement listLastIndexOf = TreeUtils.getMethod("java.util.List", "lastIndexOf", 1, env);
+			ExecutableElement strIndexOf2 = TreeUtils.getMethod("java.lang.String", "indexOf", 2, env);
+			ExecutableElement strLastIndexOf2 = TreeUtils.getMethod("java.lang.String", "lastIndexOf", 2, env);
+			boolean IO1 = TreeUtils.isMethodInvocation(tree, strIndexOf, env);
+			boolean IO2 = TreeUtils.isMethodInvocation(tree, listIndexOf, env);
+			boolean IO3 = TreeUtils.isMethodInvocation(tree, strLastIndexOf, env);
+			boolean IO4 = TreeUtils.isMethodInvocation(tree, listLastIndexOf, env);
+			boolean IO5 = TreeUtils.isMethodInvocation(tree, strIndexOf2, env);
+			boolean IO6 = TreeUtils.isMethodInvocation(tree, strLastIndexOf2, env);
+			return (IO1 || IO2 || IO3 || IO4 || IO5 || IO6);
 		}
 
 		//*****************************************************************//
