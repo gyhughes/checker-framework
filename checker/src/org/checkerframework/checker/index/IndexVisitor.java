@@ -59,16 +59,16 @@ public class IndexVisitor extends BaseTypeVisitor<IndexAnnotatedTypeFactory> {
 		// warn if not IndexFor
 		if (!indexType.hasAnnotation(IndexFor.class)) {
 			if (indexType.hasAnnotation(NonNegative.class) || indexType.hasAnnotation(IndexOrHigh.class)) {
-				checker.report(Result.warning(ARRAY_HIGH, arrName, indexType.toString()), index);
+				checker.report(Result.warning(ARRAY_HIGH, indexType.toString(), arrName), index);
 			} else if (indexType.hasAnnotation(LTLength.class) || indexType.hasAnnotation(IndexOrLow.class)) {
-				checker.report(Result.warning(ARRAY_LOW, arrName, indexType.toString()), index);
+				checker.report(Result.warning(ARRAY_LOW, indexType.toString(), arrName), index);
 			} else {	// is unknown
-				checker.report(Result.warning(ARRAY_UNSAFE, arrName, indexType.toString()), index);
+				checker.report(Result.warning(ARRAY_UNSAFE, indexType.toString(), arrName), index);
 			}
 		}
 		// warn if it is IndexFor but not the right array
 		else if (!(IndexUtils.getValue(indexType.getAnnotation(IndexFor.class)).equals(arrName))) {
-			checker.report(Result.warning(ARRAY_NAME, arrName, indexType.toString()), index);
+			checker.report(Result.warning(ARRAY_NAME, indexType.toString(), arrName), index);
 		}
 		return super.visitArrayAccess(tree, type);
 	}
@@ -84,14 +84,14 @@ public class IndexVisitor extends BaseTypeVisitor<IndexAnnotatedTypeFactory> {
 			AnnotatedTypeMirror indexType = atypeFactory.getAnnotatedType(index);
 			if (!indexType.hasAnnotation(IndexFor.class)) {
 				if (indexType.hasAnnotation(NonNegative.class) || indexType.hasAnnotation(IndexOrHigh.class)) {
-					checker.report(Result.warning(LIST_HIGH, listName, indexType.toString()), index);
+					checker.report(Result.warning(LIST_HIGH, indexType.toString(), listName), index);
 				} else if (indexType.hasAnnotation(LTLength.class) || indexType.hasAnnotation(IndexOrLow.class)) {
-					checker.report(Result.warning(LIST_LOW, listName, indexType.toString()), index);
+					checker.report(Result.warning(LIST_LOW, indexType.toString(), listName), index);
 				} else {	// is unknown
-					checker.report(Result.warning(LIST_UNSAFE, listName, indexType.toString()), index);
+					checker.report(Result.warning(LIST_UNSAFE, indexType.toString(), listName), index);
 				}			}
 			else if (!(IndexUtils.getValue(indexType.getAnnotation(IndexFor.class)).equals(listName))) {
-				checker.report(Result.warning(LIST_UNSAFE_NAME, listName, indexType.toString()), index);
+				checker.report(Result.warning(LIST_UNSAFE_NAME, indexType.toString(), listName), index);
 			}
 		} else if (TreeUtils.isMethodInvocation(tree, charAt, env)) {
 			ExpressionTree index = tree.getArguments().get(0);
@@ -100,15 +100,15 @@ public class IndexVisitor extends BaseTypeVisitor<IndexAnnotatedTypeFactory> {
 			AnnotatedTypeMirror indexType = atypeFactory.getAnnotatedType(index);
 			if (!indexType.hasAnnotation(IndexFor.class)) {
 				if (indexType.hasAnnotation(NonNegative.class) || indexType.hasAnnotation(IndexOrHigh.class)) {
-					checker.report(Result.warning(STRING_HIGH, strName, indexType.toString()), index);
+					checker.report(Result.warning(STRING_HIGH, indexType.toString(), strName), index);
 				} else if (indexType.hasAnnotation(LTLength.class) || indexType.hasAnnotation(IndexOrLow.class)) {
-					checker.report(Result.warning(STRING_LOW, strName, indexType.toString()), index);
+					checker.report(Result.warning(STRING_LOW, indexType.toString(), strName), index);
 				} else {	// is unknown
-					checker.report(Result.warning(STRING_UNSAFE, strName, indexType.toString()), index);
+					checker.report(Result.warning(STRING_UNSAFE, indexType.toString(), strName), index);
 				}
 			}
 			else if (!(IndexUtils.getValue(indexType.getAnnotation(IndexFor.class)).equals(strName))) {
-				checker.report(Result.warning(STRING_UNSAFE_NAME, strName, indexType.toString()), index);
+				checker.report(Result.warning(STRING_UNSAFE_NAME, indexType.toString(), strName), index);
 			}
 		}
 		return super.visitMethodInvocation(tree, type);
