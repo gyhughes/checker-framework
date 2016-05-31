@@ -8,6 +8,7 @@ import org.checkerframework.dataflow.cfg.node.Node;
 import org.checkerframework.javacutil.AnnotationUtils;
 import org.checkerframework.javacutil.TreeUtils;
 
+import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.LiteralTree;
 import com.sun.source.tree.Tree;
 
@@ -56,6 +57,19 @@ public class IndexUtils {
 		if (right.getTree().getKind().equals(Tree.Kind.INT_LITERAL)) {
 			int val = (int)((LiteralTree)right.getTree()).getValue();
 			return val == -1;
+		}
+		return false;
+	}
+	/**
+	 *  given a node this returns whether the node is > 0
+	 * @param right
+	 * 		a node we wish to test
+	 * @return whether it is > 0
+	 */
+	public static boolean isGTZero(Node node) {
+		if (node.getTree().getKind().equals(Tree.Kind.INT_LITERAL)) {
+			int val = (int)((LiteralTree)node.getTree()).getValue();
+			return val > 0;
 		}
 		return false;
 	}

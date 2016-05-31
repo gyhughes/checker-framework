@@ -26,8 +26,14 @@ import org.checkerframework.dataflow.cfg.node.LessThanNode;
 import org.checkerframework.dataflow.cfg.node.LessThanOrEqualNode;
 import org.checkerframework.dataflow.cfg.node.Node;
 import org.checkerframework.dataflow.cfg.node.NotEqualNode;
+import org.checkerframework.dataflow.cfg.node.NumericalAdditionNode;
 import org.checkerframework.framework.flow.CFAbstractTransfer;
 import org.checkerframework.framework.type.AnnotatedTypeMirror;
+
+import com.sun.source.tree.BinaryTree;
+import com.sun.source.tree.Tree;
+
+import jdk.nashorn.internal.ir.BinaryNode;
 
 
 public class IndexTransfer extends CFAbstractTransfer<IndexValue, IndexStore, IndexTransfer> {
@@ -60,9 +66,34 @@ public class IndexTransfer extends CFAbstractTransfer<IndexValue, IndexStore, In
 				String[] objs = name.split("\\.");
 				name = objs[objs.length -1];
 			}
+			if (dim instanceof NumericalAdditionNode) {
+				if (isVarPlusOne((NumericalAdditionNode)dim, store, name)) {
+					return result;
+				}
+			}
 			store.insertValue(rec, IndexAnnotatedTypeFactory.createIndexOrHighAnnotation(name));
 		}
 		return result;
+	}
+	
+	/**
+	 * if the dimension of an array a is a var + 1
+	 * @param dim the dimension Node
+	 * @param store the store to put the new type in 
+	 * @param name the name of the connected array
+	 */
+	private boolean isVarPlusOne(NumericalAdditionNode dim, IndexStore store, String name) {
+		if (IndexUtils.isGTZero(dim.getRightOperand())) {
+			Receiver rec = FlowExpressions.internalReprOf(analysis.getTypeFactory(), dim.getLeftOperand());
+			store.insertValue(rec, IndexAnnotatedTypeFactory.createIndexForAnnotation(name));
+			return true;
+		}
+		if (IndexUtils.isGTZero(dim.getLeftOperand())) {
+			Receiver rec = FlowExpressions.internalReprOf(analysis.getTypeFactory(), dim.getRightOperand());
+			store.insertValue(rec, IndexAnnotatedTypeFactory.createIndexForAnnotation(name));
+			return true;
+		}
+		return false;
 	}
 
 	// annotate arr.length to be IndexOrHigh("arr")
