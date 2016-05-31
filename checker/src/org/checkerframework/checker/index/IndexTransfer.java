@@ -30,11 +30,9 @@ import org.checkerframework.dataflow.cfg.node.NumericalAdditionNode;
 import org.checkerframework.framework.flow.CFAbstractTransfer;
 import org.checkerframework.framework.type.AnnotatedTypeMirror;
 
-import com.sun.source.tree.BinaryTree;
 import com.sun.source.tree.LiteralTree;
 import com.sun.source.tree.Tree;
 
-import jdk.nashorn.internal.ir.BinaryNode;
 
 
 public class IndexTransfer extends CFAbstractTransfer<IndexValue, IndexStore, IndexTransfer> {
