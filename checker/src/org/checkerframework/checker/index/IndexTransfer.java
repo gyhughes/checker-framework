@@ -79,7 +79,7 @@ public class IndexTransfer extends CFAbstractTransfer<IndexValue, IndexStore, In
 	/**
 	 * if the dimension of an array a is a var + 1
 	 * @param dim the dimension Node
-	 * @param store the store to put the new type in 
+	 * @param store the store to put the new type in
 	 * @param name the name of the connected array
 	 */
 	private boolean isVarPlusOne(NumericalAdditionNode dim, IndexStore store, String name) {
