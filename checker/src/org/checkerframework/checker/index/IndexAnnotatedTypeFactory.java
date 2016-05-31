@@ -299,7 +299,7 @@ extends GenericAnnotatedTypeFactory<IndexValue, IndexStore, IndexTransfer, Index
 		}
 		
 		@Override
-		public AnnotationMirror greatestLowerBound(AnnotationMirror anno1, AnnotationMirror anno2){
+		public AnnotationMirror greatestLowerBound(AnnotationMirror anno1, AnnotationMirror anno2) {
 			if (isSubtype(anno1, anno2)) {
 				return anno1;
 			}
