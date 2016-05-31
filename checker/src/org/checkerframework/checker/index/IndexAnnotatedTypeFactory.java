@@ -14,6 +14,7 @@ import org.checkerframework.checker.index.qual.IndexFor;
 import org.checkerframework.checker.index.qual.IndexOrHigh;
 import org.checkerframework.checker.index.qual.IndexOrLow;
 import org.checkerframework.checker.index.qual.LTLength;
+import org.checkerframework.checker.index.qual.MinLen;
 import org.checkerframework.checker.index.qual.NonNegative;
 import org.checkerframework.checker.index.qual.Unknown;
 import org.checkerframework.common.basetype.BaseTypeChecker;
@@ -53,6 +54,8 @@ extends GenericAnnotatedTypeFactory<IndexValue, IndexStore, IndexTransfer, Index
 	protected static AnnotationMirror lTLength;
 	protected static AnnotationMirror nonNegative;
 	protected static AnnotationMirror unknown;
+	protected static AnnotationMirror minLen;
+
 
 	protected static ProcessingEnvironment env;
 
@@ -65,7 +68,9 @@ extends GenericAnnotatedTypeFactory<IndexValue, IndexStore, IndexTransfer, Index
 		lTLength = AnnotationUtils.fromClass(elements, LTLength.class);
 		nonNegative = AnnotationUtils.fromClass(elements, NonNegative.class);
 		unknown = AnnotationUtils.fromClass(elements, Unknown.class);
+		minLen = AnnotationUtils.fromClass(elements, MinLen.class);
 
+		
 		env = checker.getProcessingEnvironment();
 		this.postInit();
 	}
@@ -425,6 +430,9 @@ extends GenericAnnotatedTypeFactory<IndexValue, IndexStore, IndexTransfer, Index
 			if (AnnotationUtils.areSame(type, nonNegative)) {
 				return nonNegative;
 			}
+			if (AnnotationUtils.areSame(type, minLen)) {
+				return minLen;
+			}
 			else if (AnnotationUtils.areSameIgnoringValues(type, lTLength)) {
 				return lTLength;
 			}
@@ -486,4 +494,10 @@ extends GenericAnnotatedTypeFactory<IndexValue, IndexStore, IndexTransfer, Index
 		builder.setValue("value", name);
 		return builder.build();
 	}
+
+	 static AnnotationMirror createMinLen(int val) {
+		 AnnotationBuilder builder = new AnnotationBuilder(env, MinLen.class);
+		 builder.setValue("value", val);
+		 return builder.build();
+	 }
 }

@@ -31,6 +31,7 @@ import org.checkerframework.framework.flow.CFAbstractTransfer;
 import org.checkerframework.framework.type.AnnotatedTypeMirror;
 
 import com.sun.source.tree.BinaryTree;
+import com.sun.source.tree.LiteralTree;
 import com.sun.source.tree.Tree;
 
 import jdk.nashorn.internal.ir.BinaryNode;
@@ -45,7 +46,22 @@ public class IndexTransfer extends CFAbstractTransfer<IndexValue, IndexStore, In
 		this.analysis = analysis;
 		atypeFactory = (IndexAnnotatedTypeFactory) analysis.getTypeFactory();
 	}
-	
+	public TransferResult<IndexValue, IndexStore> visitArrayCreation(ArrayCreationNode node, TransferInput<IndexValue, IndexStore> in) {
+		TransferResult<IndexValue, IndexStore> result = super.visitArrayCreation(node, in);
+		IndexStore store = result.getRegularStore();
+		List<Node> nodeList = node.getDimensions();
+		// dont know if returns empty list or null if no dimension
+		if (nodeList == null || nodeList.size() < 1) {
+			return result;
+		}
+		Node dim = node.getDimension(0);
+		if (dim.getTree().getKind().equals(Tree.Kind.INT_LITERAL)) {
+			int val = (int)((LiteralTree)dim.getTree()).getValue();
+			Receiver rec = FlowExpressions.internalReprOf(analysis.getTypeFactory(), node);
+			store.insertValue(rec, IndexAnnotatedTypeFactory.createMinLen(val));
+		}
+		return result;
+	}
 	// this transfer makes a variable used in the creation of an array as its length
 	// become an IndexOrHigh for the array it intialized
 	@Override

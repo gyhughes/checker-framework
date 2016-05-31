@@ -8,6 +8,7 @@ import org.checkerframework.checker.index.qual.IndexFor;
 import org.checkerframework.checker.index.qual.IndexOrHigh;
 import org.checkerframework.checker.index.qual.IndexOrLow;
 import org.checkerframework.checker.index.qual.LTLength;
+import org.checkerframework.checker.index.qual.MinLen;
 import org.checkerframework.checker.index.qual.NonNegative;
 import org.checkerframework.common.basetype.BaseTypeChecker;
 import org.checkerframework.common.basetype.BaseTypeVisitor;
@@ -17,7 +18,9 @@ import org.checkerframework.javacutil.TreeUtils;
 
 import com.sun.source.tree.ArrayAccessTree;
 import com.sun.source.tree.ExpressionTree;
+import com.sun.source.tree.LiteralTree;
 import com.sun.source.tree.MethodInvocationTree;
+import com.sun.source.tree.Tree;
 
 //**************************************************************************//
 //a visitor that enforces the type rules for our system
@@ -56,6 +59,16 @@ public class IndexVisitor extends BaseTypeVisitor<IndexAnnotatedTypeFactory> {
 		ExpressionTree index = tree.getIndex();
 		String arrName = tree.getExpression().toString();
 		AnnotatedTypeMirror indexType = atypeFactory.getAnnotatedType(index);
+		AnnotatedTypeMirror arrType = atypeFactory.getAnnotatedType(tree);
+		if (arrType.hasAnnotation(MinLen.class)) {
+			if (tree.getIndex().getKind().equals(Tree.Kind.INT_LITERAL)) {
+				int val = (int)((LiteralTree)tree.getIndex()).getValue();
+				int minLen = IndexUtils.getMinLen(arrType.getAnnotation(MinLen.class));
+				if (val < minLen) {
+					return super.visitArrayAccess(tree, type);
+				}
+			}
+		}
 		// warn if not IndexFor
 		if (!indexType.hasAnnotation(IndexFor.class)) {
 			if (indexType.hasAnnotation(NonNegative.class) || indexType.hasAnnotation(IndexOrHigh.class)) {

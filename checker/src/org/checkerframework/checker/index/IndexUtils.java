@@ -82,5 +82,10 @@ public class IndexUtils {
 		return (InF || IOH || IOL || LTL);
 		
 	}
+	
+	public static int getMinLen(AnnotationMirror annotation) {
+		ExecutableElement valueMethod = TreeUtils.getMethod("org.checkerframework.checker.index.qual.MinLen", "value", 0, IndexAnnotatedTypeFactory.env);
+		return (int) AnnotationUtils.getElementValuesWithDefaults(annotation).get(valueMethod).getValue();
+	}
 
 }
