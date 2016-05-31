@@ -61,10 +61,10 @@ public class IndexUtils {
 		return false;
 	}
 	/**
-	 *  given a node this returns whether the node is > 0
-	 * @param right
+	 *  given a node this returns whether the node is greater than 0
+	 * @param node
 	 * 		a node we wish to test
-	 * @return whether it is > 0
+	 * @return whether it is Greater than 0
 	 */
 	public static boolean isGTZero(Node node) {
 		if (node.getTree().getKind().equals(Tree.Kind.INT_LITERAL)) {
@@ -82,4 +82,5 @@ public class IndexUtils {
 		return (InF || IOH || IOL || LTL);
 		
 	}
+
 }
