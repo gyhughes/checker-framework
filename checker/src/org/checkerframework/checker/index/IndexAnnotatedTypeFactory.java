@@ -341,7 +341,10 @@ extends GenericAnnotatedTypeFactory<IndexValue, IndexStore, IndexTransfer, Index
 
 		// get the type annotation without the value
 		private AnnotationMirror removeValue(AnnotationMirror type) {
-			if (AnnotationUtils.areSameIgnoringValues(type, lTLength)) {
+			if(AnnotationUtils.areSame(type, nonNegative)) {
+				return nonNegative;
+			}
+			else if (AnnotationUtils.areSameIgnoringValues(type, lTLength)) {
 				return lTLength;
 			}
 			else if (AnnotationUtils.areSameIgnoringValues(type, indexFor)) {
@@ -353,7 +356,10 @@ extends GenericAnnotatedTypeFactory<IndexValue, IndexStore, IndexTransfer, Index
 			else if (AnnotationUtils.areSameIgnoringValues(type, indexOrLow)) {
 				return indexOrLow;
 			}
-			return type;
+			else if(AnnotationUtils.areSame(type, indexBottom)) {
+				return indexBottom;
+			}
+			return unknown;
 		}
 	}
 
