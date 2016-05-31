@@ -3,6 +3,7 @@ package org.checkerframework.checker.index;
 import javax.lang.model.element.AnnotationMirror;
 import javax.lang.model.element.ExecutableElement;
 
+import org.checkerframework.checker.index.qual.*;
 import org.checkerframework.dataflow.cfg.node.Node;
 import org.checkerframework.javacutil.AnnotationUtils;
 import org.checkerframework.javacutil.TreeUtils;
@@ -60,10 +61,11 @@ public class IndexUtils {
 	}
 	
 	public static boolean hasValueMethod(AnnotationMirror anno) {
-		boolean nonNeg = AnnotationUtils.areSameIgnoringValues(anno, IndexAnnotatedTypeFactory.nonNegative);
-		boolean unknown = AnnotationUtils.areSameIgnoringValues(anno, IndexAnnotatedTypeFactory.unknown);
-		boolean bottom = AnnotationUtils.areSameIgnoringValues(anno, IndexAnnotatedTypeFactory.indexBottom);
-		return !(nonNeg || unknown || bottom);
+		boolean InF = AnnotationUtils.areSameByClass(anno, IndexFor.class);
+		boolean IOH = AnnotationUtils.areSameByClass(anno, IndexOrHigh.class);
+		boolean IOL = AnnotationUtils.areSameByClass(anno, IndexOrLow.class);
+		boolean LTL = AnnotationUtils.areSameByClass(anno, LTLength.class);
+		return (InF || IOH || IOL || LTL);
 		
 	}
 }

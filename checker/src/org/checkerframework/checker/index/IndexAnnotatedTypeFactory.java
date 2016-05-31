@@ -315,8 +315,8 @@ extends GenericAnnotatedTypeFactory<IndexValue, IndexStore, IndexTransfer, Index
 		public boolean isSubtype(AnnotationMirror rhs, AnnotationMirror lhs) {
 			// if both sides have value method they must have same value to be subtypes
 			if (IndexUtils.hasValueMethod(lhs) && IndexUtils.hasValueMethod(rhs)) {
-				String valueRight = IndexUtils.getIndexValue(rhs, IndexUtils.getValueMethod(rhs));
-				String valueLeft  = IndexUtils.getIndexValue(lhs, IndexUtils.getValueMethod(lhs));
+				String valueRight = IndexUtils.getValue(rhs);
+				String valueLeft  = IndexUtils.getValue(lhs);
 				if (!valueRight.equals(valueLeft)) {
 					return false;
 				}
