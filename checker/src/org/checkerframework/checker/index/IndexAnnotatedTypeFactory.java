@@ -106,7 +106,8 @@ extends GenericAnnotatedTypeFactory<IndexValue, IndexStore, IndexTransfer, Index
 		public Void visitMethodInvocation(MethodInvocationTree tree, AnnotatedTypeMirror type) {
 			ExecutableElement ListSize = TreeUtils.getMethod("java.util.List", "size", 0, env);
 			ExecutableElement StrLen = TreeUtils.getMethod("java.lang.String", "length", 0, env);
-
+			ExecutableElement min = TreeUtils.getMethod("java.lang.Math", "min", 2, env);
+			
 			String name = tree.getMethodSelect().toString();
 			if (TreeUtils.isMethodInvocation(tree, ListSize, env) || TreeUtils.isMethodInvocation(tree, StrLen, env)) {
 				String listName = name.split("\\.")[0];
@@ -119,11 +120,63 @@ extends GenericAnnotatedTypeFactory<IndexValue, IndexStore, IndexTransfer, Index
 				type.removeAnnotationInHierarchy(indexFor);
 				type.addAnnotation(createIndexOrLowAnnotation(listName));
 			}
+			if (TreeUtils.isMethodInvocation(tree, min, env)) {
+				ExpressionTree left = tree.getArguments().get(0);
+				ExpressionTree right = tree.getArguments().get(1);
+				type.removeAnnotationInHierarchy(indexFor);
+				type.addAnnotation(minHelper(left, right));
+			}
 			return super.visitMethodInvocation(tree, type);
 		}
 		
+		// returns the type found from refining a math.min call
+		private AnnotationMirror minHelper(ExpressionTree left, ExpressionTree right) {
+			AnnotatedTypeMirror leftType = getAnnotatedType(left);
+			AnnotatedTypeMirror rightType = getAnnotatedType(right);
+			AnnotationMirror leftAnno = leftType.getAnnotationInHierarchy(indexFor);
+			AnnotationMirror rightAnno = rightType.getAnnotationInHierarchy(indexFor);
+			// if both the type are the same return that type
+			if (AnnotationUtils.areSameIgnoringValues(leftAnno, rightAnno)) {
+				return leftAnno;
+			}
+			// if either are LTLength, the lowest it can be is LTLength
+			else if (AnnotationUtils.areSameIgnoringValues(leftAnno, lTLength)) {
+				return leftAnno;
+			}
+			else if (AnnotationUtils.areSameIgnoringValues(rightAnno, lTLength)) {
+				return rightAnno;
+			}
+			// if either is Unknown we dont know anything about the bound
+			else if (AnnotationUtils.areSameIgnoringValues(leftAnno, unknown) || AnnotationUtils.areSameIgnoringValues(rightAnno, unknown)) {
+				return unknown;
+			}
+			// if either is indexorLow the lowest it can be it that
+			else if (AnnotationUtils.areSameIgnoringValues(leftAnno, indexOrLow)) {
+				return leftAnno;
+			}
+			else if (AnnotationUtils.areSameIgnoringValues(rightAnno, indexOrLow)) {
+				return rightAnno;
+			}
+			// now if eiter is indexFor that is the lowest
+			else if (AnnotationUtils.areSameIgnoringValues(leftAnno, indexFor)) {
+				return leftAnno;
+			}
+			else if (AnnotationUtils.areSameIgnoringValues(rightAnno, indexFor)) {
+				return rightAnno;
+			}
+			// moving on to index or high
+			else if (AnnotationUtils.areSameIgnoringValues(leftAnno, indexOrHigh)) {
+				return leftAnno;
+			}
+			else if (AnnotationUtils.areSameIgnoringValues(rightAnno, indexOrHigh)) {
+				return rightAnno;
+			}
+			// and at this point it must be a nonnegative value
+			return nonNegative;
+		}
+
 		/**
-		 * 
+		 *
 		 * @param tree
 		 * @return if the method of the tree is an indexof method for list or string
 		 */
