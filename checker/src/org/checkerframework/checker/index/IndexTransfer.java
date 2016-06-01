@@ -160,7 +160,7 @@ public class IndexTransfer extends CFAbstractTransfer<IndexValue, IndexStore, In
 //			FieldAccessNode FANode = (FieldAccessNode) left;
 //			if (FANode.getFieldName().equals("length")) {
 //				Receiver rec = FlowExpressions.internalReprOf(analysis.getTypeFactory(), FANode.getReceiver());
-//				if (atypeFactory.getAnnotatedType(FANode.getReceiver().getTree()).hasAnnotation(MinLen.class)){
+//				if (atypeFactory.getAnnotatedType(FANode.getReceiver().getTree()).hasAnnotation(MinLen.class)) {
 //					if (right.getTree().getKind().equals(Tree.Kind.INT_LITERAL)) {
 //						int val = (int)((LiteralTree)right.getTree()).getValue();
 //						if (IndexUtils.getMinLen(atypeFactory.getAnnotatedType(FANode.getReceiver().getTree()).getAnnotation(MinLen.class)) < val) {
@@ -271,7 +271,7 @@ public class IndexTransfer extends CFAbstractTransfer<IndexValue, IndexStore, In
 //			FieldAccessNode FANode = (FieldAccessNode) left;
 //			if (FANode.getFieldName().equals("length")) {
 //				Receiver rec = FlowExpressions.internalReprOf(analysis.getTypeFactory(), FANode);
-//				if (atypeFactory.getAnnotatedType(FANode.getTree()).hasAnnotation(MinLen.class)){
+//				if (atypeFactory.getAnnotatedType(FANode.getTree()).hasAnnotation(MinLen.class)) {
 //					if (right.getTree().getKind().equals(Tree.Kind.INT_LITERAL)) {
 //						int val = (int)((LiteralTree)right.getTree()).getValue();
 //						if (val == 0) {
