@@ -18,6 +18,9 @@ import org.checkerframework.checker.index.qual.MinLen;
 import org.checkerframework.checker.index.qual.NonNegative;
 import org.checkerframework.checker.index.qual.Unknown;
 import org.checkerframework.common.basetype.BaseTypeChecker;
+import org.checkerframework.dataflow.analysis.FlowExpressions;
+import org.checkerframework.dataflow.analysis.FlowExpressions.Receiver;
+import org.checkerframework.dataflow.cfg.node.Node;
 import org.checkerframework.framework.type.AnnotatedTypeFactory;
 import org.checkerframework.framework.type.AnnotatedTypeMirror;
 import org.checkerframework.framework.type.GenericAnnotatedTypeFactory;
@@ -37,6 +40,7 @@ import com.sun.source.tree.BinaryTree;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.LiteralTree;
 import com.sun.source.tree.MethodInvocationTree;
+import com.sun.source.tree.NewArrayTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.UnaryTree;
 
@@ -94,7 +98,21 @@ extends GenericAnnotatedTypeFactory<IndexValue, IndexStore, IndexTransfer, Index
 		public IndexTreeAnnotator(AnnotatedTypeFactory atypeFactory) {
 			super(atypeFactory);
 		}
-
+		
+		@Override
+		public Void visitNewArray(NewArrayTree tree, AnnotatedTypeMirror type) {
+			if (tree.getDimensions().size() == 0) {
+				return super.visitNewArray(tree, type);
+			}
+			ExpressionTree dim = tree.getDimensions().get(0);
+			if (dim.getKind().equals(Tree.Kind.INT_LITERAL)) {
+				int val = (int)((LiteralTree)dim).getValue();
+				type.clearAnnotations();
+				type.addAnnotation(createMinLen(val));
+			}
+			return super.visitNewArray(tree, type);
+		}
+		
 		@Override
 		public Void visitLiteral(LiteralTree tree, AnnotatedTypeMirror type) {
 			// if this is an Integer specifically

@@ -59,7 +59,7 @@ public class IndexVisitor extends BaseTypeVisitor<IndexAnnotatedTypeFactory> {
 		ExpressionTree index = tree.getIndex();
 		String arrName = tree.getExpression().toString();
 		AnnotatedTypeMirror indexType = atypeFactory.getAnnotatedType(index);
-		AnnotatedTypeMirror arrType = atypeFactory.getAnnotatedType(tree);
+		AnnotatedTypeMirror arrType = atypeFactory.getAnnotatedType(tree.getExpression());
 		if (arrType.hasAnnotation(MinLen.class)) {
 			if (tree.getIndex().getKind().equals(Tree.Kind.INT_LITERAL)) {
 				int val = (int)((LiteralTree)tree.getIndex()).getValue();

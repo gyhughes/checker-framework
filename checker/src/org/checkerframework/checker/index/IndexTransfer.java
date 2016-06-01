@@ -8,6 +8,7 @@ import org.checkerframework.checker.index.qual.IndexFor;
 import org.checkerframework.checker.index.qual.IndexOrHigh;
 import org.checkerframework.checker.index.qual.IndexOrLow;
 import org.checkerframework.checker.index.qual.LTLength;
+import org.checkerframework.checker.index.qual.MinLen;
 import org.checkerframework.checker.index.qual.NonNegative;
 import org.checkerframework.checker.index.qual.Unknown;
 import org.checkerframework.dataflow.analysis.ConditionalTransferResult;
@@ -44,22 +45,7 @@ public class IndexTransfer extends CFAbstractTransfer<IndexValue, IndexStore, In
 		this.analysis = analysis;
 		atypeFactory = (IndexAnnotatedTypeFactory) analysis.getTypeFactory();
 	}
-	public TransferResult<IndexValue, IndexStore> visitArrayCreation(ArrayCreationNode node, TransferInput<IndexValue, IndexStore> in) {
-		TransferResult<IndexValue, IndexStore> result = super.visitArrayCreation(node, in);
-		IndexStore store = result.getRegularStore();
-		List<Node> nodeList = node.getDimensions();
-		// dont know if returns empty list or null if no dimension
-		if (nodeList == null || nodeList.size() < 1) {
-			return result;
-		}
-		Node dim = node.getDimension(0);
-		if (dim.getTree().getKind().equals(Tree.Kind.INT_LITERAL)) {
-			int val = (int)((LiteralTree)dim.getTree()).getValue();
-			Receiver rec = FlowExpressions.internalReprOf(analysis.getTypeFactory(), node);
-			store.insertValue(rec, IndexAnnotatedTypeFactory.createMinLen(val));
-		}
-		return result;
-	}
+	
 	// this transfer makes a variable used in the creation of an array as its length
 	// become an IndexOrHigh for the array it intialized
 	@Override
@@ -114,7 +100,6 @@ public class IndexTransfer extends CFAbstractTransfer<IndexValue, IndexStore, In
 	@Override
 	public TransferResult<IndexValue, IndexStore> visitFieldAccess(FieldAccessNode node, TransferInput<IndexValue, IndexStore> in) {
 		TransferResult<IndexValue, IndexStore> result = super.visitFieldAccess(node, in);
-		
 		if (node.getFieldName().equals("length")) {
 			String arrName = node.getReceiver().toString();
 			if (arrName.contains(".")) {
@@ -171,6 +156,21 @@ public class IndexTransfer extends CFAbstractTransfer<IndexValue, IndexStore, In
 	private void greaterThanHelper(Node left, Node right, IndexStore thenStore) {
 		Receiver leftRec = FlowExpressions.internalReprOf(analysis.getTypeFactory(), left);
 		AnnotatedTypeMirror leftType = atypeFactory.getAnnotatedType(left.getTree());
+//		if (left instanceof FieldAccessNode) {
+//			FieldAccessNode FANode = (FieldAccessNode) left;
+//			if (FANode.getFieldName().equals("length")) {
+//				Receiver rec = FlowExpressions.internalReprOf(analysis.getTypeFactory(), FANode.getReceiver());
+//				if (atypeFactory.getAnnotatedType(FANode.getReceiver().getTree()).hasAnnotation(MinLen.class)){
+//					if (right.getTree().getKind().equals(Tree.Kind.INT_LITERAL)) {
+//						int val = (int)((LiteralTree)right.getTree()).getValue();
+//						if (IndexUtils.getMinLen(atypeFactory.getAnnotatedType(FANode.getReceiver().getTree()).getAnnotation(MinLen.class)) < val) {
+//							thenStore.insertValue(rec, IndexAnnotatedTypeFactory.createMinLen(val));
+//						}
+//					}
+//					return;
+//				}
+//			}
+//		}
 		if (leftType.hasAnnotation(Unknown.class)) {
 			UnknownGreaterThan(leftRec, right, thenStore, false);
 		}
@@ -267,7 +267,23 @@ public class IndexTransfer extends CFAbstractTransfer<IndexValue, IndexStore, In
 	public void NotEqualHelper(Node left, Node right,IndexStore thenStore) {
 		Receiver leftRec = FlowExpressions.internalReprOf(analysis.getTypeFactory(), left);
 		AnnotatedTypeMirror leftType = atypeFactory.getAnnotatedType(left.getTree());
-		
+//		if (left instanceof FieldAccessNode) {
+//			FieldAccessNode FANode = (FieldAccessNode) left;
+//			if (FANode.getFieldName().equals("length")) {
+//				Receiver rec = FlowExpressions.internalReprOf(analysis.getTypeFactory(), FANode);
+//				if (atypeFactory.getAnnotatedType(FANode.getTree()).hasAnnotation(MinLen.class)){
+//					if (right.getTree().getKind().equals(Tree.Kind.INT_LITERAL)) {
+//						int val = (int)((LiteralTree)right.getTree()).getValue();
+//						if (val == 0) {
+//							if (IndexUtils.getMinLen(leftType.getAnnotation(MinLen.class)) <= val) {
+//								thenStore.insertValue(rec, IndexAnnotatedTypeFactory.createMinLen(1));
+//							}
+//						}
+//					}
+//				}
+//			}
+//		}
+
 		if (leftType.hasAnnotation(IndexOrHigh.class)) {
 			if (right instanceof FieldAccessNode) {
 				FieldAccessNode FANode = (FieldAccessNode) right;
