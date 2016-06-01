@@ -7,6 +7,7 @@ import org.checkerframework.checker.index.qual.IndexFor;
 import org.checkerframework.checker.index.qual.IndexOrHigh;
 import org.checkerframework.checker.index.qual.IndexOrLow;
 import org.checkerframework.checker.index.qual.LTLength;
+import org.checkerframework.checker.index.qual.MinLen;
 import org.checkerframework.dataflow.cfg.node.Node;
 import org.checkerframework.javacutil.AnnotationUtils;
 import org.checkerframework.javacutil.TreeUtils;
@@ -88,6 +89,10 @@ public class IndexUtils {
 	public static int getMinLen(AnnotationMirror annotation) {
 		ExecutableElement valueMethod = TreeUtils.getMethod("org.checkerframework.checker.index.qual.MinLen", "value", 0, IndexAnnotatedTypeFactory.env);
 		return (int) AnnotationUtils.getElementValuesWithDefaults(annotation).get(valueMethod).getValue();
+	}
+
+	public static boolean isMinLen(AnnotationMirror rhs) {
+		return AnnotationUtils.areSameByClass(rhs, MinLen.class);
 	}
 
 }
