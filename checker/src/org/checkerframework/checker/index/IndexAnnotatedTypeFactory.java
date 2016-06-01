@@ -102,6 +102,8 @@ extends GenericAnnotatedTypeFactory<IndexValue, IndexStore, IndexTransfer, Index
 		@Override
 		public Void visitNewArray(NewArrayTree tree, AnnotatedTypeMirror type) {
 			if (tree.getDimensions().size() == 0) {
+				type.clearAnnotations();
+				type.addAnnotation(createMinLen(tree.getInitializers().size()));
 				return super.visitNewArray(tree, type);
 			}
 			ExpressionTree dim = tree.getDimensions().get(0);

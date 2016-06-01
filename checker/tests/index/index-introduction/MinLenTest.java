@@ -28,4 +28,8 @@ class MinLenTest {
 				int m = arr[0];
 		 }
 	 }
+	 void foo4() {
+		 int[] arr = new int[] {1,2,3};
+		 int m = arr[1];
+	 }
 }
