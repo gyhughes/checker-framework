@@ -19,4 +19,14 @@ class MinLenTest {
 			int m = arr[0]; 
 		 }
 	 }
+	 void foo4(int[] param) {
+		 int[] arr = param;
+		 if (arr.length == 0) {
+			 //:: warning:(array.access.unsafe.high)
+			int m = arr[0]; 
+		 }
+		 else {
+				int m = arr[0];
+		 }
+	 }
 }
