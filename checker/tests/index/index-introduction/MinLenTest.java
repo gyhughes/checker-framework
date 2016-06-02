@@ -21,7 +21,7 @@ class MinLenTest {
 	 void foo4(int[] param) {
 		 int[] arr = param;
 		 if (arr.length == 0) {
-			 //:: warning:(array.access.unsafe.high)
+			 //:: warning:(array.access.unsafe.literal)
 			int m = arr[0];
 		 }
 		 else {
