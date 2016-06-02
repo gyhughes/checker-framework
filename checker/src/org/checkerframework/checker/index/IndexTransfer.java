@@ -453,6 +453,20 @@ public class IndexTransfer extends CFAbstractTransfer<IndexValue, IndexStore, In
 		Receiver rightRec = FlowExpressions.internalReprOf(analysis.getTypeFactory(), right);
 		AnnotatedTypeMirror leftType = atypeFactory.getAnnotatedType(left.getTree());
 		AnnotatedTypeMirror rightType = atypeFactory.getAnnotatedType(right.getTree());
+		if (left instanceof FieldAccessNode) {
+			FieldAccessNode FANode = (FieldAccessNode) left;
+			if (FANode.getFieldName().equals("length")) {
+				Receiver rec = FlowExpressions.internalReprOf(analysis.getTypeFactory(), FANode.getReceiver());
+				if (right.getTree().getKind().equals(Tree.Kind.INT_LITERAL)) {
+					int val = (int)((LiteralTree)right.getTree()).getValue();
+					// if it already has a minlen use the higher of the two
+					if (atypeFactory.getAnnotatedType(FANode.getReceiver().getTree()).hasAnnotation(MinLen.class)) {
+						val = Math.max(val, IndexUtils.getMinLen(atypeFactory.getAnnotatedType(FANode.getReceiver().getTree()).getAnnotation(MinLen.class)));
+					}
+					thenStore.insertValue(rec, IndexAnnotatedTypeFactory.createMinLen(val));
+				}
+			}
+		}
 		if (leftType.hasAnnotation(IndexOrLow.class) || leftType.hasAnnotation(LTLength.class) || leftType.hasAnnotation(IndexFor.class)) {
 			IOLEqual(leftRec, rightRec, leftType, rightType, thenStore);
 		}
