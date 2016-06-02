@@ -16,7 +16,7 @@ import org.checkerframework.checker.index.qual.IndexOrLow;
 import org.checkerframework.checker.index.qual.LTLength;
 import org.checkerframework.checker.index.qual.MinLen;
 import org.checkerframework.checker.index.qual.NonNegative;
-import org.checkerframework.checker.index.qual.Unknown;
+import org.checkerframework.checker.index.qual.UnknownIndex;
 import org.checkerframework.common.basetype.BaseTypeChecker;
 import org.checkerframework.framework.type.AnnotatedTypeFactory;
 import org.checkerframework.framework.type.AnnotatedTypeMirror;
@@ -68,7 +68,7 @@ extends GenericAnnotatedTypeFactory<IndexValue, IndexStore, IndexTransfer, Index
 		indexOrHigh = AnnotationUtils.fromClass(elements, IndexOrHigh.class);
 		lTLength = AnnotationUtils.fromClass(elements, LTLength.class);
 		nonNegative = AnnotationUtils.fromClass(elements, NonNegative.class);
-		unknown = AnnotationUtils.fromClass(elements, Unknown.class);
+		unknown = AnnotationUtils.fromClass(elements, UnknownIndex.class);
 		minLen = AnnotationUtils.fromClass(elements, MinLen.class);
 
 		
@@ -529,7 +529,7 @@ extends GenericAnnotatedTypeFactory<IndexValue, IndexStore, IndexTransfer, Index
 	}
 	//returns a new @Unknown annotation
 	static AnnotationMirror createUnknownAnnotation() {
-		AnnotationBuilder builder = new AnnotationBuilder(env, Unknown.class);
+		AnnotationBuilder builder = new AnnotationBuilder(env, UnknownIndex.class);
 		return builder.build();
 	}
 

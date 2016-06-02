@@ -27,7 +27,7 @@ class TypeRuleListAccess {
 		Integer result = lst.get(i);
 	}
 	
-	void accessUnknown(List<Integer> lst, @Unknown int i) {
+	void accessUnknownIndex(List<Integer> lst, @UnknownIndex int i) {
 		//:: warning: (list.access.unsafe)
 		Integer result = lst.get(i);
 	}

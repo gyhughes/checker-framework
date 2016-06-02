@@ -8,7 +8,7 @@ class HierarchyIndexFor {
 	int[] arrB = new int[5];
 	List<Integer> lst = new ArrayList<Integer>();
 	
-	@Unknown int i;
+	@UnknownIndex int i;
 	
 	void assignIndexFor(@IndexFor("arr") int v) {
 		i = v;
@@ -30,7 +30,7 @@ class HierarchyIndexFor {
 		i = v;
 	}
 
-	void assignUnknown(@Unknown int v) {
+	void assignUnknownIndex(@UnknownIndex int v) {
 		i = v;
 	}
 

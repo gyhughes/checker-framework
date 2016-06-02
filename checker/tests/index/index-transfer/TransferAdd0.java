@@ -3,7 +3,7 @@ import org.checkerframework.checker.index.qual.IndexOrHigh;
 import org.checkerframework.checker.index.qual.IndexOrLow;
 import org.checkerframework.checker.index.qual.LTLength;
 import org.checkerframework.checker.index.qual.NonNegative;
-import org.checkerframework.checker.index.qual.Unknown;
+import org.checkerframework.checker.index.qual.UnknownIndex;
 
 class TransferAdd0 {
 
@@ -60,9 +60,9 @@ class TransferAdd0 {
 		@IndexOrHigh int indexOrHigh = 0 + v;
 	}
 
-	void addUnknown(@Unknown int v) {
-		// Show result is of type Unknown
-		@Unknown int nn1 = v + 0;
+	void addUnknownIndex(@UnknownIndex int v) {
+		// Show result is of type UnknownIndex
+		@UnknownIndex int nn1 = v + 0;
 		//:: error: (assignment.type.incompatible)
 		@NonNegative int nn = 0 + v;
 		//:: error: (assignment.type.incompatible)

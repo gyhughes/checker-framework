@@ -21,7 +21,7 @@ public class LUBIndexFor {
 	//:: error: (assignment.type.incompatible)
 	@LTLength("b") int LTLb = 6;
 
-	@Unknown int Unk = -4;
+	@UnknownIndex int Unk = -4;
 	@NonNegative int NN = 8;
 	boolean bool;
 	
@@ -38,7 +38,7 @@ public class LUBIndexFor {
 		Unk = i;
 	}
 	
-	// should be unknown
+	// should be UnknownIndex
 	void InFandIOLb() {
 		int i = bool ? InF : IOLb;
 		//:: error: (assignment.type.incompatible)

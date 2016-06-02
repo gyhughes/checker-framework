@@ -3,7 +3,7 @@ import org.checkerframework.checker.index.qual.IndexOrHigh;
 import org.checkerframework.checker.index.qual.IndexOrLow;
 import org.checkerframework.checker.index.qual.LTLength;
 import org.checkerframework.checker.index.qual.NonNegative;
-import org.checkerframework.checker.index.qual.Unknown;
+import org.checkerframework.checker.index.qual.UnknownIndex;
 
 class TransferSub1 {
 
@@ -12,8 +12,8 @@ class TransferSub1 {
 	int[] arrB = new int[5];
 
 	void subIndexFor(@IndexFor("arr") int v) {
-		// Show result is of type Unknown
-		@Unknown int nn1 = 1 - v;
+		// Show result is of type UnknownIndex
+		@UnknownIndex int nn1 = 1 - v;
 		//:: error: (assignment.type.incompatible)
 		@NonNegative int nn = 1 - v;
 		//:: error: (assignment.type.incompatible)
@@ -21,8 +21,8 @@ class TransferSub1 {
 	}
 
 	void subIndexOrLow(@IndexOrLow("arr") int v) {
-		// Show result is of type Unknown
-		@Unknown int nn1 = 1 - v;
+		// Show result is of type UnknownIndex
+		@UnknownIndex int nn1 = 1 - v;
 		//:: error: (assignment.type.incompatible)
 		@NonNegative int nn = 1 - v;
 		//:: error: (assignment.type.incompatible)
@@ -30,8 +30,8 @@ class TransferSub1 {
 	}
 	
 	void subIndexOrHigh(@IndexOrHigh("arr") int v) {
-		// Show result is of type Unknown
-		@Unknown int nn1 = 1 - v;
+		// Show result is of type UnknownIndex
+		@UnknownIndex int nn1 = 1 - v;
 		//:: error: (assignment.type.incompatible)
 		@NonNegative int nn = 1 - v;
 		//:: error: (assignment.type.incompatible)
@@ -54,8 +54,8 @@ class TransferSub1 {
 	}
 	
 	void subLTLength(@LTLength("arr") int v) {
-		// Show result is of type Unknown
-		@Unknown int nn1 = 1 - v;
+		// Show result is of type UnknownIndex
+		@UnknownIndex int nn1 = 1 - v;
 		//:: error: (assignment.type.incompatible)
 		@NonNegative int nn = 1 - v;
 		//:: error: (assignment.type.incompatible)
@@ -63,17 +63,17 @@ class TransferSub1 {
 	}
 	
 	void subNonNegative(@NonNegative int v) {
-		// Show result is of type Unknown
-		@Unknown int nn1 = 1 - v;
+		// Show result is of type UnknownIndex
+		@UnknownIndex int nn1 = 1 - v;
 		//:: error: (assignment.type.incompatible)
 		@NonNegative int nn = 1 - v;
 		//:: error: (assignment.type.incompatible)
 		@LTLength("arr") int lTLength = 1 - v;
 	}
 
-	void subUnknown(@Unknown int v) {
-		// Show result is of type Unknown
-		@Unknown int nn1 = 1 - v;
+	void subUnknownIndex(@UnknownIndex int v) {
+		// Show result is of type UnknownIndex
+		@UnknownIndex int nn1 = 1 - v;
 		//:: error: (assignment.type.incompatible)
 		@NonNegative int nn = 1 - v;
 		//:: error: (assignment.type.incompatible)
@@ -81,8 +81,8 @@ class TransferSub1 {
 	}
 
 	void subIndexForB(@IndexFor("arrB") int v) {
-		// Show result is of type Unknown
-		@Unknown int nn1 = 1 - v;
+		// Show result is of type UnknownIndex
+		@UnknownIndex int nn1 = 1 - v;
 		//:: error: (assignment.type.incompatible)
 		@NonNegative int nn = 1 - v;
 		//:: error: (assignment.type.incompatible)
@@ -90,8 +90,8 @@ class TransferSub1 {
 	}
 	
 	void subIndexOrLowB(@IndexOrLow("arrB") int v) {
-		// Show result is of type Unknown
-		@Unknown int nn1 = 1 - v;
+		// Show result is of type UnknownIndex
+		@UnknownIndex int nn1 = 1 - v;
 		//:: error: (assignment.type.incompatible)
 		@NonNegative int nn = 1 - v;
 		//:: error: (assignment.type.incompatible)
@@ -99,8 +99,8 @@ class TransferSub1 {
 	}
 
 	void subIndexOrHighB(@IndexOrHigh("arrB") int v) {
-		// Show result is of type Unknown
-		@Unknown int nn1 = 1 - v;
+		// Show result is of type UnknownIndex
+		@UnknownIndex int nn1 = 1 - v;
 		//:: error: (assignment.type.incompatible)
 		@NonNegative int nn = 1 - v;
 		//:: error: (assignment.type.incompatible)
@@ -108,8 +108,8 @@ class TransferSub1 {
 	}
 
 	void subLTLengthB(@LTLength("arrB") int v) {
-		// Show result is of type Unknown
-		@Unknown int nn1 = 1 - v;
+		// Show result is of type UnknownIndex
+		@UnknownIndex int nn1 = 1 - v;
 		//:: error: (assignment.type.incompatible)
 		@NonNegative int nn = 1 - v;
 		//:: error: (assignment.type.incompatible)

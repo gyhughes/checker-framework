@@ -3,7 +3,7 @@ import org.checkerframework.checker.index.qual.IndexOrHigh;
 import org.checkerframework.checker.index.qual.IndexOrLow;
 import org.checkerframework.checker.index.qual.LTLength;
 import org.checkerframework.checker.index.qual.NonNegative;
-import org.checkerframework.checker.index.qual.Unknown;
+import org.checkerframework.checker.index.qual.UnknownIndex;
 
 class DataFlowIndexOrHigh {
 

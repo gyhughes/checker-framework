@@ -3,7 +3,7 @@ import org.checkerframework.checker.index.qual.IndexOrHigh;
 import org.checkerframework.checker.index.qual.IndexOrLow;
 import org.checkerframework.checker.index.qual.LTLength;
 import org.checkerframework.checker.index.qual.NonNegative;
-import org.checkerframework.checker.index.qual.Unknown;
+import org.checkerframework.checker.index.qual.UnknownIndex;
 
 class DataFlowIndexFor {
 
@@ -539,10 +539,10 @@ class DataFlowIndexFor {
 		}
 	}
 	
-	void compareUnknown(@Unknown int unknownComparison, @IndexOrLow("arr") int indexOrLowReset, @IndexFor("arr") int indexForReset) {
+	void compareUnknownIndex(@UnknownIndex int UnknownIndexComparison, @IndexOrLow("arr") int indexOrLowReset, @IndexFor("arr") int indexForReset) {
 		@IndexFor("arr") int indexForResult;
 		@IndexOrLow("arr") int indexOrLowResult;
-		if (i < unknownComparison) {
+		if (i < UnknownIndexComparison) {
 			// Show result is of type IndexOrLow
 			indexOrLowResult = i;
 			//:: error: (assignment.type.incompatible)
@@ -556,7 +556,7 @@ class DataFlowIndexFor {
 		i = indexOrLowReset;
 		indexOrLowResult = indexOrLowReset;
 		indexForResult = indexForReset;
-		if (i <= unknownComparison) {
+		if (i <= UnknownIndexComparison) {
 			// Show result is of type IndexOrLow
 			indexOrLowResult = i;
 			//:: error: (assignment.type.incompatible)
@@ -570,7 +570,7 @@ class DataFlowIndexFor {
 		i = indexOrLowReset;
 		indexOrLowResult = indexOrLowReset;
 		indexForResult = indexForReset;
-		if (i > unknownComparison) {
+		if (i > UnknownIndexComparison) {
 			// Show result is of type IndexOrLow
 			indexOrLowResult = i;
 			//:: error: (assignment.type.incompatible)
@@ -584,7 +584,7 @@ class DataFlowIndexFor {
 		i = indexOrLowReset;
 		indexOrLowResult = indexOrLowReset;
 		indexForResult = indexForReset;
-		if (i >= unknownComparison) {
+		if (i >= UnknownIndexComparison) {
 			// Show result is of type IndexOrLow
 			indexOrLowResult = i;
 			//:: error: (assignment.type.incompatible)
@@ -598,7 +598,7 @@ class DataFlowIndexFor {
 		i = indexOrLowReset;
 		indexOrLowResult = indexOrLowReset;
 		indexForResult = indexForReset;
-		if (i != unknownComparison) {
+		if (i != UnknownIndexComparison) {
 			// Show result is of type IndexOrLow
 			indexOrLowResult = i;
 			//:: error: (assignment.type.incompatible)
@@ -612,7 +612,7 @@ class DataFlowIndexFor {
 		i = indexOrLowReset;
 		indexOrLowResult = indexOrLowReset;
 		indexForResult = indexForReset;
-		if (i == unknownComparison) {
+		if (i == UnknownIndexComparison) {
 			// Show result is of type IndexOrLow
 			indexOrLowResult = i;
 			//:: error: (assignment.type.incompatible)

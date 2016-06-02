@@ -3,7 +3,7 @@ import org.checkerframework.checker.index.qual.IndexOrHigh;
 import org.checkerframework.checker.index.qual.IndexOrLow;
 import org.checkerframework.checker.index.qual.LTLength;
 import org.checkerframework.checker.index.qual.NonNegative;
-import org.checkerframework.checker.index.qual.Unknown;
+import org.checkerframework.checker.index.qual.UnknownIndex;
 
 class DataFlowLTLength {
 
@@ -584,11 +584,11 @@ class DataFlowLTLength {
 		}
 	}
 	
-	void compareUnknown(@Unknown int unknownComparison, @IndexFor("arr") int indexForReset, @LTLength("arr") int lTLengthReset, @IndexOrLow("arr") int indexOrLowReset) {
+	void compareUnknownIndex(@UnknownIndex int UnknownIndexComparison, @IndexFor("arr") int indexForReset, @LTLength("arr") int lTLengthReset, @IndexOrLow("arr") int indexOrLowReset) {
 	@LTLength("arr") int lTLengthResult;
 	@IndexOrLow("arr") int indexOrLowResult;
 	@IndexFor("arr") int indexForResult;
-		if (i < unknownComparison) {
+		if (i < UnknownIndexComparison) {
 			// Show result is of type LTLength
 	        lTLengthResult = i;
 			//:: error: (assignment.type.incompatible)
@@ -603,7 +603,7 @@ class DataFlowLTLength {
 		lTLengthResult = lTLengthReset;
 		indexOrLowResult = indexOrLowReset;
 		indexForResult = indexForReset;
-		if (i <= unknownComparison) {
+		if (i <= UnknownIndexComparison) {
 			// Show result is of type LTLength
 	        lTLengthResult = i;
 			//:: error: (assignment.type.incompatible)
@@ -618,7 +618,7 @@ class DataFlowLTLength {
 		lTLengthResult = lTLengthReset;
 		indexOrLowResult = indexOrLowReset;
 		indexForResult = indexForReset;
-		if (i > unknownComparison) {
+		if (i > UnknownIndexComparison) {
 			// Show result is of type LTLength
 	        lTLengthResult = i;
 			//:: error: (assignment.type.incompatible)
@@ -633,7 +633,7 @@ class DataFlowLTLength {
 		lTLengthResult = lTLengthReset;
 		indexOrLowResult = indexOrLowReset;
 		indexForResult = indexForReset;
-		if (i >= unknownComparison) {
+		if (i >= UnknownIndexComparison) {
 			// Show result is of type LTLength
 	        lTLengthResult = i;
 			//:: error: (assignment.type.incompatible)
@@ -648,7 +648,7 @@ class DataFlowLTLength {
 		lTLengthResult = lTLengthReset;
 		indexOrLowResult = indexOrLowReset;
 		indexForResult = indexForReset;
-		if (i != unknownComparison) {
+		if (i != UnknownIndexComparison) {
 			// Show result is of type LTLength
 	        lTLengthResult = i;
 			//:: error: (assignment.type.incompatible)
@@ -663,7 +663,7 @@ class DataFlowLTLength {
 		lTLengthResult = lTLengthReset;
 		indexOrLowResult = indexOrLowReset;
 		indexForResult = indexForReset;
-		if (i == unknownComparison) {
+		if (i == UnknownIndexComparison) {
 			// Show result is of type LTLength
 	        lTLengthResult = i;
 			//:: error: (assignment.type.incompatible)

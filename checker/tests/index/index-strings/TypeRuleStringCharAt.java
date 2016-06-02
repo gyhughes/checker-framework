@@ -27,7 +27,7 @@ class StringAccess {
 		char result = str.charAt(i);
 	}
 	
-	void accessUnknown(String str, @Unknown int i) {
+	void accessUnknownIndex(String str, @UnknownIndex int i) {
 		//:: warning: (string.access.unsafe)
 		char result = str.charAt(i);
 	}

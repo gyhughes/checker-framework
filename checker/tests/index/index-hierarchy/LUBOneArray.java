@@ -8,7 +8,7 @@ public class LUBOneArray {
 	@IndexOrLow("arr") int IOL = 4;
 	//:: error: (assignment.type.incompatible)
 	@IndexOrHigh("arr") int IOH = 2;
-	@Unknown int Unk = -4;
+	@UnknownIndex int Unk = -4;
 	@NonNegative int NN = 8;
 	//:: error: (assignment.type.incompatible)
 	@LTLength("arr") int LTL = 6;
@@ -24,7 +24,7 @@ public class LUBOneArray {
 		LTL = index;
 		//:: error: (assignment.type.incompatible)
 		NN = index;
-		// should be unknown
+		// should be UnknownIndex
 		Unk = index;
 	}
 	void IOLandIOL() {
@@ -35,7 +35,7 @@ public class LUBOneArray {
 		LTL = index;
 		//:: error: (assignment.type.incompatible)
 		NN = index;
-		// should be unknown
+		// should be UnknownIndex
 		Unk = index;
 	}
 	void IOHandIOH() {
@@ -46,7 +46,7 @@ public class LUBOneArray {
 		//:: error: (assignment.type.incompatible)
 		LTL = index;
 		NN = index;
-		// should be unknown
+		// should be UnknownIndex
 		Unk = index;
 	}
 	void InFandIOL() {
@@ -57,7 +57,7 @@ public class LUBOneArray {
 		LTL = index;
 		//:: error: (assignment.type.incompatible)
 		NN = index;
-		// should be unknown
+		// should be UnknownIndex
 		Unk = index;
 	}
 

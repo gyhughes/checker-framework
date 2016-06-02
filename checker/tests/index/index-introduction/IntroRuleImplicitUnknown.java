@@ -2,7 +2,7 @@ import java.util.ArrayList;
 
 import org.checkerframework.checker.index.qual.*;
 
-class IntroRuleImplicitUnknown {
+class IntroRuleImplicitUnknownIndex {
 	
 	int[] arr = new int[5];
 	
@@ -15,10 +15,10 @@ class IntroRuleImplicitUnknown {
 		int v4 = (int) f;
 		
 		// Idea: prove type of variable v by assigning it to a variable of type t and assigning a variable of type t to v
-		@Unknown int u1 = -20;
-		@Unknown int u2 = -20;
+		@UnknownIndex int u1 = -20;
+		@UnknownIndex int u2 = -20;
 		
-		// Prove type of v1,v2,v2 is subtype of Unknown
+		// Prove type of v1,v2,v2 is subtype of UnknownIndex
 		u1 = v1;
 		u1 = v2;
 		u1 = v3;
@@ -45,8 +45,8 @@ class IntroRuleImplicitUnknown {
 	}
 	
 	void list(ArrayList<Integer> lst) {
-		@Unknown int unknown1 = lst.size();
-		@Unknown int unknown2 = lst.size() - 1;
+		@UnknownIndex int UnknownIndex1 = lst.size();
+		@UnknownIndex int UnknownIndex2 = lst.size() - 1;
 	}
 	
 }

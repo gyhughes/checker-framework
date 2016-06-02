@@ -32,7 +32,7 @@ class HiearchyNonNegative {
 		i = v;
 	}
 
-	void assignUnknown(@Unknown int v) {
+	void assignUnknownIndex(@UnknownIndex int v) {
 		//:: error: (assignment.type.incompatible)
 		i = v;
 	}

@@ -3,7 +3,7 @@ import org.checkerframework.checker.index.qual.IndexOrHigh;
 import org.checkerframework.checker.index.qual.IndexOrLow;
 import org.checkerframework.checker.index.qual.LTLength;
 import org.checkerframework.checker.index.qual.NonNegative;
-import org.checkerframework.checker.index.qual.Unknown;
+import org.checkerframework.checker.index.qual.UnknownIndex;
 
 class DataFlowIndexFor {
 
@@ -384,9 +384,9 @@ class DataFlowIndexFor {
 		}
 	}
 
-	void compareUnknown(@Unknown int UnknownComparison, @IndexFor("arr") int indexForReset, @Unknown int UnknownReset) {
+	void compareUnknownIndex(@UnknownIndex int UnknownIndexComparison, @IndexFor("arr") int indexForReset, @UnknownIndex int UnknownIndexReset) {
 		@IndexFor("arr") int indexForResult;
-		if (i < UnknownComparison) {
+		if (i < UnknownIndexComparison) {
 			// Show i is of type indexForResult
 			indexForResult = i;
 		} else {
@@ -394,8 +394,8 @@ class DataFlowIndexFor {
 			indexForResult = i;
 		}
 		i = indexForReset;
-		UnknownComparison = UnknownReset;
-		if (i <= UnknownComparison) {
+		UnknownIndexComparison = UnknownIndexReset;
+		if (i <= UnknownIndexComparison) {
 			// Show result is of type indexForResult
 			indexForResult = i;
 		} else {
@@ -403,8 +403,8 @@ class DataFlowIndexFor {
 			indexForResult = i;
 		}
 		i = indexForReset;
-		UnknownComparison = UnknownReset;
-		if (i > UnknownComparison) {
+		UnknownIndexComparison = UnknownIndexReset;
+		if (i > UnknownIndexComparison) {
 			// Show result is of type indexForResult
 			indexForResult = i;
 		} else {
@@ -412,8 +412,8 @@ class DataFlowIndexFor {
 			indexForResult = i;
 		}
 		i = indexForReset;
-		UnknownComparison = UnknownReset;
-		if (i >= UnknownComparison) {
+		UnknownIndexComparison = UnknownIndexReset;
+		if (i >= UnknownIndexComparison) {
 			// Show result is of type indexForResult
 			indexForResult = i;
 		} else {
@@ -421,8 +421,8 @@ class DataFlowIndexFor {
 			indexForResult = i;
 		}
 		i = indexForReset;
-		UnknownComparison = UnknownReset;
-		if (i != UnknownComparison) {
+		UnknownIndexComparison = UnknownIndexReset;
+		if (i != UnknownIndexComparison) {
 			// Show result is of type indexForResult
 			indexForResult = i;
 		} else {
@@ -430,8 +430,8 @@ class DataFlowIndexFor {
 			indexForResult = i;
 		}
 		i = indexForReset;
-		UnknownComparison = UnknownReset;
-		if (i == UnknownComparison) {
+		UnknownIndexComparison = UnknownIndexReset;
+		if (i == UnknownIndexComparison) {
 			// Show result is of type indexForResult
 			indexForResult = i;
 		} else {

@@ -10,7 +10,7 @@ import org.checkerframework.checker.index.qual.IndexOrLow;
 import org.checkerframework.checker.index.qual.LTLength;
 import org.checkerframework.checker.index.qual.MinLen;
 import org.checkerframework.checker.index.qual.NonNegative;
-import org.checkerframework.checker.index.qual.Unknown;
+import org.checkerframework.checker.index.qual.UnknownIndex;
 import org.checkerframework.dataflow.analysis.ConditionalTransferResult;
 import org.checkerframework.dataflow.analysis.FlowExpressions;
 import org.checkerframework.dataflow.analysis.FlowExpressions.Receiver;
@@ -170,7 +170,7 @@ public class IndexTransfer extends CFAbstractTransfer<IndexValue, IndexStore, In
 				}
 			}
 		}
-		if (leftType.hasAnnotation(Unknown.class)) {
+		if (leftType.hasAnnotation(UnknownIndex.class)) {
 			UnknownGreaterThan(leftRec, right, thenStore, false);
 		}
 		if (leftType.hasAnnotation(IndexOrLow.class) || leftType.hasAnnotation(LTLength.class)) {
@@ -232,7 +232,7 @@ public class IndexTransfer extends CFAbstractTransfer<IndexValue, IndexStore, In
 				}
 			}
 		}
-		if (leftType.hasAnnotation(Unknown.class)) {
+		if (leftType.hasAnnotation(UnknownIndex.class)) {
 			UnknownGreaterThan(leftRec, right, thenStore, true);
 		}
 		if (leftType.hasAnnotation(IndexOrLow.class) || leftType.hasAnnotation(LTLength.class)) {
@@ -360,7 +360,7 @@ public class IndexTransfer extends CFAbstractTransfer<IndexValue, IndexStore, In
 		if (leftType.hasAnnotation(IndexOrHigh.class) || leftType.hasAnnotation(NonNegative.class)) {
 			IndexOrHighLessThan(rec, right, thenStore, false);
 		}
-		if (leftType.hasAnnotation(Unknown.class)) {
+		if (leftType.hasAnnotation(UnknownIndex.class)) {
 			UnknownLessThan(rec, right, thenStore, false);
 		}
 	}
@@ -403,7 +403,7 @@ public class IndexTransfer extends CFAbstractTransfer<IndexValue, IndexStore, In
 	private void lessThanOrEqualHelper(Node left, Node right, IndexStore thenStore) {
 		Receiver rec = FlowExpressions.internalReprOf(analysis.getTypeFactory(), left);
 		AnnotatedTypeMirror leftType = atypeFactory.getAnnotatedType(left.getTree());
-		if (leftType.hasAnnotation(Unknown.class)) {
+		if (leftType.hasAnnotation(UnknownIndex.class)) {
 			UnknownLessThan(rec, right, thenStore, true);
 		}
 		if (leftType.hasAnnotation(IndexOrHigh.class) || leftType.hasAnnotation(NonNegative.class)) {
