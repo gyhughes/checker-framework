@@ -25,6 +25,7 @@ aliasing-checker.tex \
 linear-checker.tex \
 reflection-checker.tex \
 reflection-inference-rules.tex \
+index-checker.tex \
 subtyping-checker.tex \
 external-checkers.tex \
 typestate-checker.tex \
