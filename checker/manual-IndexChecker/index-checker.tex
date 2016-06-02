@@ -5,18 +5,18 @@ TODO
 \section{Regex annotations\label{regex-annotations}}
 
 \begin{description}
-\item[\refqualclass{checker/index/qual}{IndexFor}]
-	TODO
-\item[\refqualclass{checker/index/qual}{IndexOrHigh}]
-	TODO
-\item[\refqualclass{checker/index/qual}{IndexOrLow}]
-	TODO
-\item[\refqualclass{checker/index/qual}{LTLength}]
-	TODO
+\item[\refqualclass{checker/index/qual}{IndexFor(String name)}]
+	indicates an int type that is within the bounds of the array with the given name (i >= 0 \&\& i < arr.length)
+\item[\refqualclass{checker/index/qual}{IndexOrHigh(String name)}]
+	indicates an int type that is possibly one over the bounds of the array with the given name (i >= 0 \&\& i < arr.length + 1)
+\item[\refqualclass{checker/index/qual}{IndexOrLow(String name)}]
+	indicates an int type that is possibly one under bounds of the array with the given name (i >= -1 \&\& i < arr.length)
+\item[\refqualclass{checker/index/qual}{LTLength(String name)}]
+	indicates an int type that is below the max bound of the array with the given name (i >= 0)
 \item[\refqualclass{checker/index/qual}{NonNegative}]
-	TODO
+	indicates an int type that is at least zero, which corresponds to being over the min bound of any array (i < arr.length)
 \item[\refqualclass{checker/index/qual}{MinLen}]
-	TODO
+	indicates an array type that TODO
 \end{description}
 
 \begin{figure}
