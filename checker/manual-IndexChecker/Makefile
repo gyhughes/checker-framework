@@ -15,7 +15,7 @@ figures-all:
 	${MAKE} -C figures all
 
 #manual.pdf: bib-update figures-all check-labels
-manual.pdf: check-labels figures-all 
+manual.pdf: check-labels figures-all
 	pdflatex manual.tex
 #	bibtex manual
 #	pdflatex manual.tex
