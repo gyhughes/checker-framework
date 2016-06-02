@@ -1,16 +1,19 @@
 %\htmlhr
 \chapter{Index Checker\label{index-checker}}
 
-TODO fix description to be a part of the checker manual
-
-Runtime exceptions can cause a lot of problems in code. They can crash entire systems
-and lose important data. One of these exceptions is an IndexOutOfBoundsException. The
-Index Checker shows you, at compile time, where IndexOutOfBoundsExceptions may be thrown
-at run-time. You run the Index Checker as a plugin to javac, and javac issues warnings
-about code that could throw an IndexOutOfBoundsException. This allows developers to
-detect and fix bugs early, which is cheaper and prevents run-time failures.
+%Runtime exceptions can cause a lot of problems in code. They can crash entire systems
+%and lose important data. One of these exceptions is an IndexOutOfBoundsException.
+Accessing an array or List may cause and IndexOutOfBoundsException to be thrown, as the index
+being passed in may not be valid for the given array/List.
+The Index Checker shows you, at compile time, what lines of code may throw an these exceptions.
+%You run the Index Checker as a plugin to javac, and javac issues warnings
+%about code that could throw an IndexOutOfBoundsException. This allows developers to
+%detect and fix bugs early, which is cheaper and prevents run-time failures.
 
 \section{Installation\label{index-installation}}
+
+As we are not completely integrated into the checker framework, special steps must be taken to
+install and use our checker. To install:
 
 \begin{enumerate}
 \item Download the distribution (one of the ones under downloads) at
@@ -22,7 +25,7 @@ Checker Framework on the classpath via instructions below:
 \item For javac:
 \begin{enumerate}
 \item If you are using the bash shell, one possible setup is to add the following
-%to your $\sim$\/.profile (or alternately $\sim$\/.bash_profle or $\sim$\/.bashrc) file:
+to your $\sim$/.profile (or alternatively $\sim$/.bash\_profile or $\sim$/.bashrc) file:
 (or just run in terminal for temporary use)
 
 \begin{Verbatim}
@@ -32,9 +35,8 @@ export PATH=\${CHECKERFRAMEWORK}/checker/bin:\${PATH}
 \end{Verbatim}
 
 \end{enumerate}
-\item For other versions check the
-\href{http://types.cs.washington.edu/checker-framework/current/checker-framework-manual.html#installation}
-{Checker Framework manual's installation section}
+\item For other compilers/IDEs, check the installation section (Section~\ref{installation}) keeping in mind the
+Index Checker's seperate distribution.
 \end{enumerate}
 \end{enumerate}
 
@@ -65,25 +67,25 @@ For troubleshooting, see the \href{http://types.cs.washington.edu/checker-framew
 \begin{description}
 \item[\refqualclass{checker/index/qual}{IndexFor(String name)}]
 	indicates an int type that is within the bounds of the array with the given
-	name (i >= 0 \&\& i < arr.length)
+	name (i >= 0 \&\& i < arr.length).
 \item[\refqualclass{checker/index/qual}{IndexOrHigh(String name)}]
 	indicates an int type that is possibly one over the bounds of the array with
-	the given name (i >= 0 \&\& i < arr.length + 1)
+	the given name (i >= 0 \&\& i < arr.length + 1).
 \item[\refqualclass{checker/index/qual}{IndexOrLow(String name)}]
 	indicates an int type that is possibly one under bounds of the array with the
-	given name (i >= -1 \&\& i < arr.length)
+	given name (i >= -1 \&\& i < arr.length).
 \item[\refqualclass{checker/index/qual}{LTLength(String name)}]
 	indicates an int type that is below the max bound of the array with the given
-	name (i >= 0)
+	name (i >= 0).
 \item[\refqualclass{checker/index/qual}{NonNegative}]
 	indicates an int type that is at least zero, which corresponds to being over
-	the min bound of any array (i < arr.length)
-\item[\refqualclass{checker/index/qual}{MinLen}]
-	indicates an array type that TODO
+	the min bound of any array (i < arr.length).
+\item[\refqualclass{checker/index/qual}{MinLen(int len)}]
+	indicates an array type that is at least of length len.
 \end{description}
 
 \begin{figure}
-%TODO include MinLength
+%TODO update name
 \includeimage{index-type-figure}{7cm}
 \caption{The range of values represented by each type.}
 \label{fig-index-figure}
