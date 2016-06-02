@@ -166,7 +166,7 @@ public class IndexTransfer extends CFAbstractTransfer<IndexValue, IndexStore, In
 					if (atypeFactory.getAnnotatedType(FANode.getReceiver().getTree()).hasAnnotation(MinLen.class)) {
 						val = Math.max(val, IndexUtils.getMinLen(atypeFactory.getAnnotatedType(FANode.getReceiver().getTree()).getAnnotation(MinLen.class)));
 					}
-					thenStore.insertValue(rec, IndexAnnotatedTypeFactory.createMinLen(val));
+					thenStore.insertValue(rec, IndexAnnotatedTypeFactory.createMinLen(val + 1));
 				}
 			}
 		}
@@ -218,6 +218,20 @@ public class IndexTransfer extends CFAbstractTransfer<IndexValue, IndexStore, In
 	private void greaterThanOrEqualHelper(Node left, Node right, IndexStore thenStore) {
 		Receiver leftRec = FlowExpressions.internalReprOf(analysis.getTypeFactory(), left);
 		AnnotatedTypeMirror leftType = atypeFactory.getAnnotatedType(left.getTree());
+		if (left instanceof FieldAccessNode) {
+			FieldAccessNode FANode = (FieldAccessNode) left;
+			if (FANode.getFieldName().equals("length")) {
+				Receiver rec = FlowExpressions.internalReprOf(analysis.getTypeFactory(), FANode.getReceiver());
+				if (right.getTree().getKind().equals(Tree.Kind.INT_LITERAL)) {
+					int val = (int)((LiteralTree)right.getTree()).getValue();
+					// if it already has a minlen use the higher of the two
+					if (atypeFactory.getAnnotatedType(FANode.getReceiver().getTree()).hasAnnotation(MinLen.class)) {
+						val = Math.max(val, IndexUtils.getMinLen(atypeFactory.getAnnotatedType(FANode.getReceiver().getTree()).getAnnotation(MinLen.class)));
+					}
+					thenStore.insertValue(rec, IndexAnnotatedTypeFactory.createMinLen(val));
+				}
+			}
+		}
 		if (leftType.hasAnnotation(Unknown.class)) {
 			UnknownGreaterThan(leftRec, right, thenStore, true);
 		}
