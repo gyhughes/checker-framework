@@ -1,5 +1,5 @@
 // Test case for issue #15:
-// https://github.com/gyhughes/checker-framework/issues/14
+// https://github.com/gyhughes/checker-framework/issues/15
 
 // @skip-test until it is fixed
 
