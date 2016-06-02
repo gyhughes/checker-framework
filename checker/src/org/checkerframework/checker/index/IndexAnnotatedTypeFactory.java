@@ -18,9 +18,6 @@ import org.checkerframework.checker.index.qual.MinLen;
 import org.checkerframework.checker.index.qual.NonNegative;
 import org.checkerframework.checker.index.qual.Unknown;
 import org.checkerframework.common.basetype.BaseTypeChecker;
-import org.checkerframework.dataflow.analysis.FlowExpressions;
-import org.checkerframework.dataflow.analysis.FlowExpressions.Receiver;
-import org.checkerframework.dataflow.cfg.node.Node;
 import org.checkerframework.framework.type.AnnotatedTypeFactory;
 import org.checkerframework.framework.type.AnnotatedTypeMirror;
 import org.checkerframework.framework.type.GenericAnnotatedTypeFactory;
@@ -412,9 +409,48 @@ extends GenericAnnotatedTypeFactory<IndexValue, IndexStore, IndexTransfer, Index
 			if (isSubtype(anno2, anno1)) {
 				return anno2;
 			}
+			// if they are on opposite sides of the hierarchy(with same value) they share IndexFor
+			if (oppositeSides(anno1, anno2)) {
+				String value;
+				if (IndexUtils.hasValueMethod(anno1)) {
+					value = IndexUtils.getValue(anno1);
+				} else {
+					value = IndexUtils.getValue(anno2);
+				}
+				return createIndexForAnnotation(value);
+			}
 			return indexBottom;
 		}
 		
+		// return if the types are on opposite sides of the hierarchy
+		// and also if they have the same values if they both have them
+		private boolean oppositeSides(AnnotationMirror anno1, AnnotationMirror anno2) {
+			boolean ltl1 = AnnotationUtils.areSameIgnoringValues(anno1, lTLength);
+			boolean ltl2 = AnnotationUtils.areSameIgnoringValues(anno2, lTLength);
+			boolean IOH1 = AnnotationUtils.areSameIgnoringValues(anno1, indexOrHigh);
+			boolean IOH2 = AnnotationUtils.areSameIgnoringValues(anno2, indexOrHigh);
+			boolean IOL1 = AnnotationUtils.areSameIgnoringValues(anno1, indexOrLow);
+			boolean IOL2 = AnnotationUtils.areSameIgnoringValues(anno2, indexOrLow);
+			boolean NN1 = AnnotationUtils.areSameIgnoringValues(anno1, nonNegative);
+			boolean NN2 = AnnotationUtils.areSameIgnoringValues(anno2, nonNegative);
+			if ((ltl1 || IOL1) && (IOH2 || NN2)) {
+				if (IndexUtils.hasValueMethod(anno1) && IndexUtils.hasValueMethod(anno2)) {
+					if (!IndexUtils.getValue(anno1).equals(IndexUtils.getValue(anno2))) {
+						return false;
+					}
+				}
+				return true;
+			}
+			if ((ltl2 || IOL2) && (IOH1 || NN1)) {
+				if (IndexUtils.hasValueMethod(anno1) && IndexUtils.hasValueMethod(anno2)) {
+					if (!IndexUtils.getValue(anno1).equals(IndexUtils.getValue(anno2))) {
+						return false;
+					}
+				}
+				return true;
+			}
+			return false;
+		}
 		@Override
 		public AnnotationMirror leastUpperBound(AnnotationMirror anno1, AnnotationMirror anno2) {
 			if (isSubtype(anno1, anno2)) {

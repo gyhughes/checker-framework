@@ -160,15 +160,14 @@ public class IndexTransfer extends CFAbstractTransfer<IndexValue, IndexStore, In
 			FieldAccessNode FANode = (FieldAccessNode) left;
 			if (FANode.getFieldName().equals("length")) {
 				Receiver rec = FlowExpressions.internalReprOf(analysis.getTypeFactory(), FANode.getReceiver());
-					if (right.getTree().getKind().equals(Tree.Kind.INT_LITERAL)) {
-						int val = (int)((LiteralTree)right.getTree()).getValue();
-						// if it already has a minlen use the higher of the two
-						if (atypeFactory.getAnnotatedType(FANode.getReceiver().getTree()).hasAnnotation(MinLen.class)) {
-							val = Math.max(val, IndexUtils.getMinLen(atypeFactory.getAnnotatedType(FANode.getReceiver().getTree()).getAnnotation(MinLen.class)));
-						}
-						thenStore.insertValue(rec, IndexAnnotatedTypeFactory.createMinLen(val));
+				if (right.getTree().getKind().equals(Tree.Kind.INT_LITERAL)) {
+					int val = (int)((LiteralTree)right.getTree()).getValue();
+					// if it already has a minlen use the higher of the two
+					if (atypeFactory.getAnnotatedType(FANode.getReceiver().getTree()).hasAnnotation(MinLen.class)) {
+						val = Math.max(val, IndexUtils.getMinLen(atypeFactory.getAnnotatedType(FANode.getReceiver().getTree()).getAnnotation(MinLen.class)));
 					}
-					return;
+					thenStore.insertValue(rec, IndexAnnotatedTypeFactory.createMinLen(val));
+				}
 			}
 		}
 		if (leftType.hasAnnotation(Unknown.class)) {
@@ -271,13 +270,12 @@ public class IndexTransfer extends CFAbstractTransfer<IndexValue, IndexStore, In
 			FieldAccessNode FANode = (FieldAccessNode) left;
 			if (FANode.getFieldName().equals("length")) {
 				Receiver rec = FlowExpressions.internalReprOf(analysis.getTypeFactory(), FANode.getReceiver());
-					if (right.getTree().getKind().equals(Tree.Kind.INT_LITERAL)) {
-						int val = (int)((LiteralTree)right.getTree()).getValue();
-						if (val == 0) {
-							thenStore.insertValue(rec, IndexAnnotatedTypeFactory.createMinLen(1));
-						}
+				if (right.getTree().getKind().equals(Tree.Kind.INT_LITERAL)) {
+					int val = (int)((LiteralTree)right.getTree()).getValue();
+					if (val == 0) {
+						thenStore.insertValue(rec, IndexAnnotatedTypeFactory.createMinLen(1));
 					}
-					return;
+				}
 			}
 		}
 
