@@ -1,6 +1,9 @@
 import java.util.ArrayList;
+import java.util.List;
 
 import org.checkerframework.checker.index.qual.*;
+
+import lubglb.quals.E;
 
 //Doesn't test anything yet.
 
@@ -31,6 +34,17 @@ class IntroRuleImplicitIndexOrLow {
 		
 		//:: error:(assignment.type.incompatible)
 		@IndexOrLow("lst") int indexOrLow2 = lst.size();
+	}
+	
+	void indexOf(List<E> lst, String str) {
+		int stri = str.indexOf('a');
+		if (stri != -1) {
+			char k = str.charAt(stri);
+		}
+		int lsti = lst.indexOf(str);
+		if (lsti != -1) {
+			Object o = lst.get(lsti);
+		}
 	}
 	
 }

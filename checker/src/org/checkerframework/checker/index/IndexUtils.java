@@ -3,6 +3,11 @@ package org.checkerframework.checker.index;
 import javax.lang.model.element.AnnotationMirror;
 import javax.lang.model.element.ExecutableElement;
 
+import org.checkerframework.checker.index.qual.IndexFor;
+import org.checkerframework.checker.index.qual.IndexOrHigh;
+import org.checkerframework.checker.index.qual.IndexOrLow;
+import org.checkerframework.checker.index.qual.LTLength;
+import org.checkerframework.checker.index.qual.MinLen;
 import org.checkerframework.dataflow.cfg.node.Node;
 import org.checkerframework.javacutil.AnnotationUtils;
 import org.checkerframework.javacutil.TreeUtils;
@@ -58,12 +63,36 @@ public class IndexUtils {
 		}
 		return false;
 	}
+	/**
+	 *  given a node this returns whether the node is greater than 0
+	 * @param node
+	 * 		a node we wish to test
+	 * @return whether it is Greater than 0
+	 */
+	public static boolean isGTZero(Node node) {
+		if (node.getTree().getKind().equals(Tree.Kind.INT_LITERAL)) {
+			int val = (int)((LiteralTree)node.getTree()).getValue();
+			return val > 0;
+		}
+		return false;
+	}
 	
 	public static boolean hasValueMethod(AnnotationMirror anno) {
-		boolean nonNeg = AnnotationUtils.areSameIgnoringValues(anno, IndexAnnotatedTypeFactory.nonNegative);
-		boolean unknown = AnnotationUtils.areSameIgnoringValues(anno, IndexAnnotatedTypeFactory.unknown);
-		boolean bottom = AnnotationUtils.areSameIgnoringValues(anno, IndexAnnotatedTypeFactory.indexBottom);
-		return !(nonNeg || unknown || bottom);
+		boolean InF = AnnotationUtils.areSameByClass(anno, IndexFor.class);
+		boolean IOH = AnnotationUtils.areSameByClass(anno, IndexOrHigh.class);
+		boolean IOL = AnnotationUtils.areSameByClass(anno, IndexOrLow.class);
+		boolean LTL = AnnotationUtils.areSameByClass(anno, LTLength.class);
+		return (InF || IOH || IOL || LTL);
 		
 	}
+	
+	public static int getMinLen(AnnotationMirror annotation) {
+		ExecutableElement valueMethod = TreeUtils.getMethod("org.checkerframework.checker.index.qual.MinLen", "value", 0, IndexAnnotatedTypeFactory.env);
+		return (int) AnnotationUtils.getElementValuesWithDefaults(annotation).get(valueMethod).getValue();
+	}
+
+	public static boolean isMinLen(AnnotationMirror rhs) {
+		return AnnotationUtils.areSameByClass(rhs, MinLen.class);
+	}
+
 }
