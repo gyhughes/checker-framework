@@ -201,21 +201,26 @@ extends GenericAnnotatedTypeFactory<IndexValue, IndexStore, IndexTransfer, Index
 		 *
 		 * @param tree
 		 * @return if the method of the tree is an indexof method for list or string
+		 *TODO: when method overloading of TreeUtils.getMethod is resolved this should be
+		 *		updated to look for specific methods not the name.
 		 */
+		
 		private boolean isIndexOfMethod(MethodInvocationTree tree) {
-			ExecutableElement strIndexOf = TreeUtils.getMethod("java.lang.String", "indexOf", 1, env);
-			ExecutableElement listIndexOf = TreeUtils.getMethod("java.util.List", "indexOf",1 , env);
-			ExecutableElement strLastIndexOf = TreeUtils.getMethod("java.lang.String", "lastIndexOf", 1, env);
-			ExecutableElement listLastIndexOf = TreeUtils.getMethod("java.util.List", "lastIndexOf", 1, env);
-			ExecutableElement strIndexOf2 = TreeUtils.getMethod("java.lang.String", "indexOf", 2, env);
-			ExecutableElement strLastIndexOf2 = TreeUtils.getMethod("java.lang.String", "lastIndexOf", 2, env);
-			boolean IO1 = TreeUtils.isMethodInvocation(tree, strIndexOf, env);
-			boolean IO2 = TreeUtils.isMethodInvocation(tree, listIndexOf, env);
-			boolean IO3 = TreeUtils.isMethodInvocation(tree, strLastIndexOf, env);
-			boolean IO4 = TreeUtils.isMethodInvocation(tree, listLastIndexOf, env);
-			boolean IO5 = TreeUtils.isMethodInvocation(tree, strIndexOf2, env);
-			boolean IO6 = TreeUtils.isMethodInvocation(tree, strLastIndexOf2, env);
-			return (IO1 || IO2 || IO3 || IO4 || IO5 || IO6);
+//			ExecutableElement strIndexOf = TreeUtils.getMethod("java.lang.String", "indexOf", 1, env);
+//			ExecutableElement listIndexOf = TreeUtils.getMethod("java.util.List", "indexOf",1 , env);
+//			ExecutableElement strLastIndexOf = TreeUtils.getMethod("java.lang.String", "lastIndexOf", 1, env);
+//			ExecutableElement listLastIndexOf = TreeUtils.getMethod("java.util.List", "lastIndexOf", 1, env);
+//			ExecutableElement strIndexOf2 = TreeUtils.getMethod("java.lang.String", "indexOf", 2, env);
+//			ExecutableElement strLastIndexOf2 = TreeUtils.getMethod("java.lang.String", "lastIndexOf", 2, env);
+//			boolean IO1 = TreeUtils.isMethodInvocation(tree, strIndexOf, env);
+//			boolean IO2 = TreeUtils.isMethodInvocation(tree, listIndexOf, env);
+//			boolean IO3 = TreeUtils.isMethodInvocation(tree, strLastIndexOf, env);
+//			boolean IO4 = TreeUtils.isMethodInvocation(tree, listLastIndexOf, env);
+//			boolean IO5 = TreeUtils.isMethodInvocation(tree, strIndexOf2, env);
+//			boolean IO6 = TreeUtils.isMethodInvocation(tree, strLastIndexOf2, env);
+//			return (IO1 || IO2 || IO3 || IO4 || IO5 || IO6);
+			String mName = TreeUtils.getMethodName(tree.getMethodSelect());
+			return mName.endsWith("indexOf");
 		}
 
 		//*****************************************************************//
