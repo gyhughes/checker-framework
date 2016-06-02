@@ -1,8 +1,49 @@
 %\htmlhr
 \chapter{Index Checker\label{index-checker}}
-TODO
 
-\section{Regex annotations\label{regex-annotations}}
+Runtime exceptions can cause a lot of problems in code. They can crash entire systems and lose important data. One of these exceptions is an IndexOutOfBoundsException. The Index Checker shows you, at compile time, where IndexOutOfBoundsExceptions may be thrown at run-time. You run the Index Checker as a plugin to javac, and javac issues warnings about code that could throw an IndexOutOfBoundsException. This allows developers to detect and fix bugs early, which is cheaper and prevents run-time failures.
+
+\section{Installation\label{index-installation}}
+
+\begin{enumerate}
+\item Download the distribution (one of the ones under downloads) at 
+https://github.com/gyhughes/checker-framework/releases
+\item Extract the files
+\item Configure your IDE, build system, or command shell to include the Checker Framework 
+on the classpath via instructions below:
+\begin{enumerate}
+\item For javac:
+\begin{enumerate}
+\item If you are using the bash shell, one possible setup is to add the following 
+%to your $\sim$\/.profile (or alternately $\sim$\/.bash_profle or $\sim$\/.bashrc) file: 
+(or just run in terminal for temporary use)
+
+\begin{Verbatim}
+// Note: you must put the path to the index checker in for PATH TO 
+export CHECKERFRAMEWORK=// PATH TO\ /index-checker-\IndexReleaseVersion\ HERE //
+export PATH=\${CHECKERFRAMEWORK}/checker/bin:\${PATH}
+\end{Verbatim}
+
+\end{enumerate}
+\item For other versions check the \href{http://types.cs.washington.edu/checker-framework/current/checker-framework-manual.html#installation}{Checker Framework manual's installation section}
+\end{enumerate}
+\end{enumerate}
+
+We highly recommend installing for javac, as it is the only installation we have tested our release on. We also lightly recommend taking the first option for setting up javac (moving to front of path), as the rest of this manual is written assuming that this option was taken. The commands can be altered easily if you prefer a different setup for javac.
+
+The rest of this manual assumes that you will be using javac and that the Index Checker's javac has been moved to the front of the path. If you have decided to install the tool in a different manner, please do not copy the commands listed below verbatim.
+
+\section{Running the Checker\label{index-running}}
+
+To run the IndexChecker, run the command
+
+\begin{Verbatim}
+javac -processor IndexChecker <JavaFileName>.java
+\end{Verbatim}
+
+For troubleshooting, see the \href{http://types.cs.washington.edu/checker-framework/current/checker-framework-manual.html#troubleshooting}{Checker Framework manual's trouble shooting section}.
+
+\section{Index annotations\label{index-annotations}}
 
 \begin{description}
 \item[\refqualclass{checker/index/qual}{IndexFor(String name)}]
