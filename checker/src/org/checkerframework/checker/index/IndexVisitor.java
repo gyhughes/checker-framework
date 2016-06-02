@@ -44,6 +44,8 @@ public class IndexVisitor extends BaseTypeVisitor<IndexAnnotatedTypeFactory> {
 	private static final /*@CompilerMessageKey*/ String STRING_LOW = "string.access.unsafe.low";
 	private static final /*@CompilerMessageKey*/ String STRING_UNSAFE = "string.access.unsafe";
 	private static final /*@CompilerMessageKey*/ String STRING_UNSAFE_NAME = "string.access.unsafe.name";
+	private static final /*@CompilerMessageKey*/ String ARRAY_HIGH_LITERAL = "array.access.unsafe.literal";
+
 
 	public IndexVisitor(BaseTypeChecker checker) {
 		super(checker);
@@ -64,9 +66,11 @@ public class IndexVisitor extends BaseTypeVisitor<IndexAnnotatedTypeFactory> {
 			if (tree.getIndex().getKind().equals(Tree.Kind.INT_LITERAL)) {
 				int val = (int)((LiteralTree)tree.getIndex()).getValue();
 				int minLen = IndexUtils.getMinLen(arrType.getAnnotation(MinLen.class));
-				if (val < minLen) {
-					return super.visitArrayAccess(tree, type);
+				if (val >= minLen) {
+					String sVal = "" + val;
+					checker.report(Result.warning(ARRAY_HIGH_LITERAL, arrType.toString(), sVal, minLen), index);
 				}
+				return super.visitArrayAccess(tree, type);
 			}
 		}
 		// warn if not IndexFor
