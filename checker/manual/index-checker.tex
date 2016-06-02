@@ -98,6 +98,36 @@ The types that are grayed out should not be written by the user.}
 \label{fig-index-heirarchy}
 \end{figure}
 
+\section{What the Index Checker checks\label{index-checks}}
+In order to get code to type check using the Index Checker, indices must have been
+compared against the low and high bounds of an array before accessing it. In terms
+of the annotation types, an index must gain the annotated type @IndexFor("arr") to access some
+arr/list. The Index Checker will issue a warning if any of the following rules are violated:
+\begin{itemize}
+\item Only an @IndexFor("arr") int i can be used access arr[i]
+\item Only an @IndexFor("lst") int i can be used to call lst.get(i) on some List lst
+\item Only an @IndexFor("msg") int i can be used to call msg.charAt(i) on some String msg
+\end{itemize}
+
+\begin{figure}
+\begin{Verbatim}
+int i = 0;                // @NonNegative
+int j = input.nextInt();  // @UnknownIndex, anything may be returned
+if (j >= 0 && j < arr.length) {
+                          // j is now @IndexFor("arr")
+                          // i is still @NonNegative
+    int after_j = j++;    // @IndexOrHigh("arr")
+
+    arr[j];               // legal
+    arr[after_j];         // illegal, may be one too high
+    arr[i];               // illegal, never checked against arr.length
+    // this is a legitimate error; arr could be an empty array
+}
+\end{Verbatim}
+\caption{An example piece of code that demonstrates how the IndexChecker uses these annotations.}
+\label{fig-index-heirarchy}
+\end{figure}
+
 \section{Bug Reports\label{index-bug-reports}}
 As the Index Checker still lives on a seperate fork the the Checker Framework,
 please log bugs on our \href{https://github.com/gyhughes/checker-framework/issues}
