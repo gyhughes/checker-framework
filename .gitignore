@@ -59,6 +59,11 @@ manual.out
 manual.pdf
 manual.ps
 manual.toc
+manual-dev.aux
+manual-dev.log
+manual-dev.out
+manual-dev.pdf
+manual-dev.toc
 manual001.gif
 manual001.png
 manual002.gif

@@ -20,6 +20,8 @@ manual.pdf: check-labels figures-all
 #	bibtex manual
 #	pdflatex manual.tex
 	while grep "Rerun to get" manual.log; do pdflatex manual.tex; done
+	pdflatex manual-dev.tex
+	while grep "Rerun to get" manual-dev.log; do pdflatex manual-dev.tex; done
 
 #html: manual.html
 #manual.html: manual.pdf CFLogo.png favicon-checkerframework.png
