@@ -35,7 +35,8 @@ export PATH=\${CHECKERFRAMEWORK}/checker/bin:\${PATH}
 \end{Verbatim}
 
 \end{enumerate}
-\item For other compilers/IDEs, check the installation section (Section~\ref{installation}) keeping in mind the
+\item For other compilers/IDEs, check the installation section
+(Section~\ref{installation}) keeping in mind the
 Index Checker's seperate distribution.
 \end{enumerate}
 \end{enumerate}
@@ -59,7 +60,8 @@ To run the IndexChecker, run the command
 javac -processor IndexChecker <JavaFileName>.java
 \end{Verbatim}
 
-For troubleshooting, see the \href{http://types.cs.washington.edu/checker-framework/current/checker-framework-manual.html#troubleshooting}
+For troubleshooting, see the \href
+{http://types.cs.washington.edu/checker-framework/current/checker-framework-manual.html#troubleshooting}
 {Checker Framework manual's trouble shooting section}.
 
 \section{Index Annotations\label{index-annotations}}
@@ -127,6 +129,22 @@ if (j >= 0 && j < arr.length) {
 \caption{An example piece of code that demonstrates how the IndexChecker uses these annotations.}
 \label{fig-index-heirarchy}
 \end{figure}
+
+\section{Side Effecting Lists\label{index-side-effects}}
+As indicies are tied to specific arrays/Lists, side-effecting a list will change type annotations
+in order to maintain as much information as possible. In particular:
+\begin{itemize}
+\item When a variable gets re-assigned, all annotated type with that variable's name as its value
+get changed to either @Unknown or @NonNegative depending on what we already know about the type.
+\item When elements are added to a list, nothing happens (no invariants about being in bounds are
+broken when the list grows).
+\item When a single element is removed from a list, we perform a transfer rule on all types as if
+we were adding 1 to that index's value.
+\item When a list is cleared, we clear all annotations to either @Unknown or @NonNegative (This is
+because lists can be aliased).
+\item We currently do not support Iterator usage. The use of Iterators cause this checker to become
+unsound and generate false negatives (missed errors).
+\end{itemize}
 
 \section{Bug Reports\label{index-bug-reports}}
 As the Index Checker still lives on a seperate fork the the Checker Framework,
