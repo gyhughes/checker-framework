@@ -4,7 +4,8 @@
 %Runtime exceptions can cause a lot of problems in code. They can crash entire systems
 %and lose important data. One of these exceptions is an IndexOutOfBoundsException.
 Accessing an array or List may cause and IndexOutOfBoundsException to be thrown, as the index
-being passed in may not be valid for the given array/List.
+being passed in may not be valid for the given array/List. Strings are also checked, as they
+are represented through an array of characters.
 The Index Checker shows you, at compile time, what lines of code may throw an these exceptions.
 %You run the Index Checker as a plugin to javac, and javac issues warnings
 %about code that could throw an IndexOutOfBoundsException. This allows developers to
@@ -111,6 +112,12 @@ arr/list. The Index Checker will issue a warning if any of the following rules a
 \item Only an @IndexFor("msg") int i can be used to call msg.charAt(i) on some String msg
 \end{itemize}
 
+This is accomplished through comparing an index the bounds of an array through if block
+comparisons. These are primarily against <array>.length, <array>.length-1, and int literals
+(or variables initiallized with them). See figure \ref{fig-index-hierarchy} for an example
+
+\textbf{NOTE}: Currently, we only refine the type of the left hand side of the comparison.
+
 \begin{figure}
 \begin{Verbatim}
 int i = 0;                // @NonNegative
@@ -126,8 +133,8 @@ if (j >= 0 && j < arr.length) {
     // this is a legitimate error; arr could be an empty array
 }
 \end{Verbatim}
-\caption{An example piece of code that demonstrates how the IndexChecker uses these annotations.}
-\label{fig-index-heirarchy}
+\caption{An example piece of code that demonstrates how the IndexChecker uses these annotations. \textbf{NOTE}: Currently, we only refine the type of the left hand side of the comparison.}
+\label{fig-index-hierarchy}
 \end{figure}
 
 \section{Side Effecting Lists\label{index-side-effects}}
@@ -144,6 +151,24 @@ we were adding 1 to that index's value.
 because lists can be aliased).
 \item We currently do not support Iterator usage. The use of Iterators cause this checker to become
 unsound and generate false negatives (missed errors).
+\end{itemize}
+
+\section{Multiple arrays/Lists\label{index-multiples}}
+\begin{itemize}
+\item @SomeType("a") int i > (or >=) @SomeType("b") int j:\\
+i gains the type @RefinedType("a"), where the @RefinedType is the resulting type as computed by our
+normal dataflow rules. The reason for this is that greater than comparisons are only good for
+asserting if you are within the lower bounds of an array/list. Therefore we want to keep whatever
+information about length comparisons already made.
+\item @SomeType("a") int i < (or <=) @SomeType("b") int j:\\
+i gains the type @RefinedType("b"). The
+reason for this is that less than comparisons are only good for asserting that we are within the
+higher bounds of an array/list. Therefore we want to inherit whatever new information we get out of
+this comparison.
+\item @SomeType("a") int i == @SomeType("b") int j:\\
+i gains either @RefinedType("a") or @RefinedType("b") depending on the exact comparison being made.
+Generally, the Index Checker will choose the annotation to which it knows most about. This may generate
+false warnings.
 \end{itemize}
 
 \section{Bug Reports\label{index-bug-reports}}
