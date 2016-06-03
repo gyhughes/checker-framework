@@ -95,7 +95,7 @@ For troubleshooting, see the \href
 \end{figure}
 
 \begin{figure}
-\includeimage{index-type-hierarchy}{7cm}
+\includeimage{index-type-heirarchy}{7cm}
 \caption{The type hierarchy of the Index Checker(subtype/supertype relationships)
 The types that are grayed out should not be written by the user.}
 \label{fig-index-heirarchy}
