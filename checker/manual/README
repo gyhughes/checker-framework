@@ -1,3 +1,9 @@
 On a standard Ubuntu 14.10 system, you will need to install the some
 additional packages to build the manual.  See the "Building from source"
 section of the manual for that list.
+
+For the Index Checker specifically, more documents can be found in the
+index-checker subdirectory.
+
+All of the Index Checker documentation can be found on a google drive directory,
+at https://drive.google.com/folderview?id=0ByNy04xRyVnXZWtCUEdPQ05BLU0&usp=sharing
