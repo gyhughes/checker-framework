@@ -605,4 +605,3 @@ public class IndexTransfer extends CFAbstractTransfer<IndexValue, IndexStore, In
 		}
 	}
 }
-
