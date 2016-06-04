@@ -199,7 +199,6 @@ extends GenericAnnotatedTypeFactory<IndexValue, IndexStore, IndexTransfer, Index
 
 		/**
 		 *
-		 * @param tree
 		 * @return if the method of the tree is an indexof method for list or string
 		 *TODO: when method overloading of TreeUtils.getMethod is resolved this should be
 		 *		updated to look for specific methods not the name.
