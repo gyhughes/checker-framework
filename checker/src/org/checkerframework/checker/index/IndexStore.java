@@ -155,4 +155,14 @@ public class IndexStore extends CFAbstractStore<IndexValue, IndexStore> {
 		}
 		return map;
 	}
+	@Override
+	public String toString(){
+		String res = "";
+		for (LocalVariable k: this.localVariableValues.keySet()) {
+			IndexValue anno = localVariableValues.get(k);
+			res += k.toString() + ": " + anno.toString();
+			res += "\n";
+		}
+		return res;
+	}
 }
