@@ -45,6 +45,9 @@ public class IndexVisitor extends BaseTypeVisitor<IndexAnnotatedTypeFactory> {
 	private static final /*@CompilerMessageKey*/ String STRING_UNSAFE = "string.access.unsafe";
 	private static final /*@CompilerMessageKey*/ String STRING_UNSAFE_NAME = "string.access.unsafe.name";
 	private static final /*@CompilerMessageKey*/ String ARRAY_HIGH_LITERAL = "array.access.unsafe.literal";
+	private static final /*@CompilerMessageKey*/ String LIST_HIGH_LITERAL = "list.access.unsafe.literal";
+	private static final /*@CompilerMessageKey*/ String STRING_HIGH_LITERAL = "string.access.unsafe.literal";
+
 
 
 	public IndexVisitor(BaseTypeChecker checker) {
@@ -94,11 +97,23 @@ public class IndexVisitor extends BaseTypeVisitor<IndexAnnotatedTypeFactory> {
 	@Override
 	public Void visitMethodInvocation(MethodInvocationTree tree, Void type) {
 		String name = tree.getMethodSelect().toString();
+		AnnotatedTypeMirror listType = atypeFactory.getAnnotatedType(tree.getMethodSelect());
 		if (TreeUtils.isMethodInvocation(tree, listGet, env)) {
 			ExpressionTree index = tree.getArguments().get(0);
 			// method is list.get, split to get name of list
 			String listName = name.split("\\.")[0];
 			AnnotatedTypeMirror indexType = atypeFactory.getAnnotatedType(index);
+			if (listType.hasAnnotation(MinLen.class)) {
+				if (index.getKind().equals(Tree.Kind.INT_LITERAL)) {
+					int val = (int)((LiteralTree)index).getValue();
+					int minLen = IndexUtils.getMinLen(listType.getAnnotation(MinLen.class));
+					if (val >= minLen) {
+						String sVal = "" + val;
+						checker.report(Result.warning(LIST_HIGH_LITERAL, listType.toString(), sVal, minLen), index);
+					}
+					return super.visitMethodInvocation(tree, type);
+				}
+			}
 			if (!indexType.hasAnnotation(IndexFor.class)) {
 				if (indexType.hasAnnotation(NonNegative.class) || indexType.hasAnnotation(IndexOrHigh.class)) {
 					checker.report(Result.warning(LIST_HIGH, indexType.toString(), listName), index);
@@ -115,6 +130,17 @@ public class IndexVisitor extends BaseTypeVisitor<IndexAnnotatedTypeFactory> {
 			// method is String.charAt split to get name
 			String strName = name.split("\\.")[0];
 			AnnotatedTypeMirror indexType = atypeFactory.getAnnotatedType(index);
+			if (listType.hasAnnotation(MinLen.class)) {
+				if (index.getKind().equals(Tree.Kind.INT_LITERAL)) {
+					int val = (int)((LiteralTree)index).getValue();
+					int minLen = IndexUtils.getMinLen(listType.getAnnotation(MinLen.class));
+					if (val >= minLen) {
+						String sVal = "" + val;
+						checker.report(Result.warning(STRING_HIGH_LITERAL, listType.toString(), sVal, minLen), index);
+					}
+					return super.visitMethodInvocation(tree, type);
+				}
+			}
 			if (!indexType.hasAnnotation(IndexFor.class)) {
 				if (indexType.hasAnnotation(NonNegative.class) || indexType.hasAnnotation(IndexOrHigh.class)) {
 					checker.report(Result.warning(STRING_HIGH, indexType.toString(), strName), index);

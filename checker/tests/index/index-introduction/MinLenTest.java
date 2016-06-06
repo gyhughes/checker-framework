@@ -1,4 +1,5 @@
 import org.checkerframework.checker.index.qual.*;
+import java.util.List;
 
 class MinLenTest {
 	
@@ -31,5 +32,13 @@ class MinLenTest {
 	 void foo4() {
 		 int[] arr = new int[] {1,2,3};
 		 int m = arr[1];
+	 }
+	 
+	 void list(@MinLen(2) List<Object> lst) {
+		 Object o = lst.get(0);
+	 }
+	 
+	 void String(@MinLen(2) String str) {
+		 char c = str.charAt(0);
 	 }
 }
