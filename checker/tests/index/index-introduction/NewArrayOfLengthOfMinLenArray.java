@@ -1,7 +1,6 @@
 // Test case for issue #21:
 // https://github.com/gyhughes/checker-framework/issues/21
 
-// @skip-test until it is fixed
 
 import org.checkerframework.checker.index.qual.MinLen;
 

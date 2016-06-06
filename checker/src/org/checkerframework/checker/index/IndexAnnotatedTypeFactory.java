@@ -36,6 +36,7 @@ import org.checkerframework.javacutil.TreeUtils;
 import com.sun.source.tree.BinaryTree;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.LiteralTree;
+import com.sun.source.tree.MemberSelectTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.NewArrayTree;
 import com.sun.source.tree.Tree;
@@ -109,6 +110,16 @@ extends GenericAnnotatedTypeFactory<IndexValue, IndexStore, IndexTransfer, Index
 				type.clearAnnotations();
 				type.addAnnotation(createMinLen(val));
 			}
+			AnnotationMirror ATM = getAnnotatedType(dim).getAnnotation(MinLen.class);
+			if (dim.getKind().equals(Tree.Kind.MEMBER_SELECT)) {
+				MemberSelectTree MST = (MemberSelectTree) dim;
+				AnnotationMirror dimType = getAnnotatedType(MST.getExpression()).getAnnotation(MinLen.class);
+				// if it doesnt have this annotation it will be null
+				if (type != null) {
+					type.addAnnotation(dimType);
+				}
+			}
+
 			return super.visitNewArray(tree, type);
 		}
 		
