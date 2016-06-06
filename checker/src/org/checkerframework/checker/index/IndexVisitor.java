@@ -19,6 +19,7 @@ import org.checkerframework.javacutil.TreeUtils;
 import com.sun.source.tree.ArrayAccessTree;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.LiteralTree;
+import com.sun.source.tree.MemberSelectTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.Tree;
 
@@ -98,6 +99,10 @@ public class IndexVisitor extends BaseTypeVisitor<IndexAnnotatedTypeFactory> {
 	public Void visitMethodInvocation(MethodInvocationTree tree, Void type) {
 		String name = tree.getMethodSelect().toString();
 		AnnotatedTypeMirror listType = atypeFactory.getAnnotatedType(tree.getMethodSelect());
+		if (tree.getMethodSelect().getKind() == Tree.Kind.MEMBER_SELECT) {
+			MemberSelectTree MSTree = (MemberSelectTree) tree.getMethodSelect();
+			listType = atypeFactory.getAnnotatedType(MSTree.getExpression());
+		}
 		if (TreeUtils.isMethodInvocation(tree, listGet, env)) {
 			ExpressionTree index = tree.getArguments().get(0);
 			// method is list.get, split to get name of list
