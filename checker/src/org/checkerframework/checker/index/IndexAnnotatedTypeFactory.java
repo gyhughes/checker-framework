@@ -34,11 +34,13 @@ import org.checkerframework.javacutil.Pair;
 import org.checkerframework.javacutil.TreeUtils;
 
 import com.sun.source.tree.BinaryTree;
+import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.LiteralTree;
 import com.sun.source.tree.MemberSelectTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.NewArrayTree;
+import com.sun.source.tree.NewClassTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.UnaryTree;
 
@@ -96,7 +98,10 @@ extends GenericAnnotatedTypeFactory<IndexValue, IndexStore, IndexTransfer, Index
 		public IndexTreeAnnotator(AnnotatedTypeFactory atypeFactory) {
 			super(atypeFactory);
 		}
-		
+
+		// visits newly made arrays to add minlen annotation to them based in dimesion or num of initializers
+		// also makes a variable used in the INdexorHigh
+		// or if new arr[i+1] i -> indexFor
 		@Override
 		public Void visitNewArray(NewArrayTree tree, AnnotatedTypeMirror type) {
 			if (tree.getDimensions().size() == 0) {

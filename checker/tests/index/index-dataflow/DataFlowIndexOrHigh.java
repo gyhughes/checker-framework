@@ -412,7 +412,3 @@ class DataFlowIndexOrHigh {
 		}
 	}
 }
-
-	
-	
-	
