@@ -141,7 +141,7 @@ public class IndexStore extends CFAbstractStore<IndexValue, IndexStore> {
 		}
 	}
 	/**
-	 * 
+	 *
 	 * @return a map of all receivers with MinLen annotations to the MinLen annotation
 	 */
 	
