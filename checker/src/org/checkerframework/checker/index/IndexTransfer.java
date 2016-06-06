@@ -1,6 +1,7 @@
 package org.checkerframework.checker.index;
 
 import java.util.List;
+import java.util.Map;
 
 import javax.lang.model.element.AnnotationMirror;
 
@@ -13,6 +14,7 @@ import org.checkerframework.checker.index.qual.NonNegative;
 import org.checkerframework.checker.index.qual.UnknownIndex;
 import org.checkerframework.dataflow.analysis.ConditionalTransferResult;
 import org.checkerframework.dataflow.analysis.FlowExpressions;
+import org.checkerframework.dataflow.analysis.FlowExpressions.LocalVariable;
 import org.checkerframework.dataflow.analysis.FlowExpressions.Receiver;
 import org.checkerframework.dataflow.analysis.RegularTransferResult;
 import org.checkerframework.dataflow.analysis.TransferInput;
@@ -23,6 +25,7 @@ import org.checkerframework.dataflow.cfg.node.EqualToNode;
 import org.checkerframework.dataflow.cfg.node.FieldAccessNode;
 import org.checkerframework.dataflow.cfg.node.GreaterThanNode;
 import org.checkerframework.dataflow.cfg.node.GreaterThanOrEqualNode;
+import org.checkerframework.dataflow.cfg.node.IntegerLiteralNode;
 import org.checkerframework.dataflow.cfg.node.LessThanNode;
 import org.checkerframework.dataflow.cfg.node.LessThanOrEqualNode;
 import org.checkerframework.dataflow.cfg.node.Node;
@@ -46,6 +49,34 @@ public class IndexTransfer extends CFAbstractTransfer<IndexValue, IndexStore, In
 		atypeFactory = (IndexAnnotatedTypeFactory) analysis.getTypeFactory();
 	}
 	
+	// if we see a minLen arr in the store make literals == arr.length indexOrHigh for it and < length > -1 IndexFor it
+	// TODO: if we implement multiple array support we could make it indexOrHigh for all previously declared arrays of higher length
+	@Override
+	public TransferResult<IndexValue, IndexStore> visitIntegerLiteral(IntegerLiteralNode node, TransferInput<IndexValue, IndexStore> in) {
+		TransferResult<IndexValue, IndexStore> result = super.visitIntegerLiteral(node, in);
+		Map<LocalVariable, AnnotationMirror> minLens = result.getRegularStore().getMinLens();
+		if (minLens.size() == 0) {
+			return result;
+		}
+		for (LocalVariable arr: minLens.keySet()) {
+			AnnotationMirror anno = minLens.get(arr);
+			int val = IndexUtils.getMinLen(anno);
+			Receiver rec = FlowExpressions.internalReprOf(analysis.getTypeFactory(), node);
+			int nodeVal = node.getValue();
+			if (nodeVal == val) {
+				AnnotationMirror AM = IndexAnnotatedTypeFactory.createIndexOrHighAnnotation(arr.toString());
+				IndexValue value = analysis.createSingleAnnotationValue(AM, rec.getType());
+				result.setResultValue(value);
+				return result;
+			} else if (nodeVal < val && nodeVal > -1) {
+				AnnotationMirror AM = IndexAnnotatedTypeFactory.createIndexForAnnotation(arr.toString());
+				IndexValue value = analysis.createSingleAnnotationValue(AM, rec.getType());
+				result.setResultValue(value);
+				return result;
+			}
+		}
+		return result;
+	}
 	// this transfer makes a variable used in the creation of an array as its length
 	// become an IndexOrHigh for the array it intialized
 	@Override

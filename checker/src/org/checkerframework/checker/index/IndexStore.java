@@ -1,15 +1,23 @@
 package org.checkerframework.checker.index;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+
+import javax.lang.model.element.AnnotationMirror;
 
 import org.checkerframework.checker.index.qual.IndexFor;
 import org.checkerframework.checker.index.qual.IndexOrHigh;
 import org.checkerframework.checker.index.qual.IndexOrLow;
 import org.checkerframework.checker.index.qual.LTLength;
+import org.checkerframework.checker.index.qual.MinLen;
 import org.checkerframework.checker.index.qual.NonNegative;
+import org.checkerframework.checker.nullness.qual.Nullable;
 import org.checkerframework.dataflow.analysis.FlowExpressions;
+import org.checkerframework.dataflow.analysis.FlowExpressions.ArrayAccess;
 import org.checkerframework.dataflow.analysis.FlowExpressions.FieldAccess;
+import org.checkerframework.dataflow.analysis.FlowExpressions.LocalVariable;
 import org.checkerframework.dataflow.analysis.FlowExpressions.Receiver;
 import org.checkerframework.dataflow.cfg.node.MethodInvocationNode;
 import org.checkerframework.dataflow.cfg.node.Node;
@@ -131,5 +139,20 @@ public class IndexStore extends CFAbstractStore<IndexValue, IndexStore> {
 				applyTransfer(rec, replace, true);
 			}
 		}
+	}
+	/**
+	 * 
+	 * @return a map of all receivers with MinLen annotations to the MinLen annotation
+	 */
+	
+	public Map<LocalVariable, AnnotationMirror> getMinLens() {
+		Map<LocalVariable, AnnotationMirror> map= new HashMap<>();
+		for (LocalVariable k: this.localVariableValues.keySet()) {
+			AnnotationMirror anno = localVariableValues.get(k).getType().getAnnotation(MinLen.class);
+			if (anno != null) {
+				map.put(k, anno);
+			}
+		}
+		return map;
 	}
 }
