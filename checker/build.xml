@@ -666,7 +666,6 @@
         </antcall>
     </target>
 	
-    <!-- Custom checker. -->
     <target name="index-tests" depends="jar,build-tests"
             description="Run tests for the Index Checker">
         <antcall target="-run-tests">
@@ -702,8 +701,6 @@
         </antcall>
     </target>
 
-	
-    <!-- Custom checker. -->
     <target name="nonneg-tests" depends="jar,build-tests"
             description="Run tests for the NonNeg Checker">
         <antcall target="-run-tests">
