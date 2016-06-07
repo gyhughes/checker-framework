@@ -3,7 +3,9 @@ package org.checkerframework.checker.index;
 import java.util.List;
 import java.util.Map;
 
+import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.AnnotationMirror;
+import javax.lang.model.element.ExecutableElement;
 
 import org.checkerframework.checker.index.qual.IndexFor;
 import org.checkerframework.checker.index.qual.IndexOrHigh;
@@ -28,11 +30,14 @@ import org.checkerframework.dataflow.cfg.node.GreaterThanOrEqualNode;
 import org.checkerframework.dataflow.cfg.node.IntegerLiteralNode;
 import org.checkerframework.dataflow.cfg.node.LessThanNode;
 import org.checkerframework.dataflow.cfg.node.LessThanOrEqualNode;
+import org.checkerframework.dataflow.cfg.node.MethodAccessNode;
+import org.checkerframework.dataflow.cfg.node.MethodInvocationNode;
 import org.checkerframework.dataflow.cfg.node.Node;
 import org.checkerframework.dataflow.cfg.node.NotEqualNode;
 import org.checkerframework.dataflow.cfg.node.NumericalAdditionNode;
 import org.checkerframework.framework.flow.CFAbstractTransfer;
 import org.checkerframework.framework.type.AnnotatedTypeMirror;
+import org.checkerframework.javacutil.TreeUtils;
 
 import com.sun.source.tree.LiteralTree;
 import com.sun.source.tree.Tree;
@@ -42,11 +47,17 @@ import com.sun.source.tree.Tree;
 public class IndexTransfer extends CFAbstractTransfer<IndexValue, IndexStore, IndexTransfer> {
 	protected IndexAnalysis analysis;
 	protected static IndexAnnotatedTypeFactory atypeFactory;
-
+	protected final ExecutableElement listSize;
+	protected final ExecutableElement strLength;
+	protected final ProcessingEnvironment env;
+	
 	public IndexTransfer(IndexAnalysis analysis) {
 		super(analysis);
 		this.analysis = analysis;
 		atypeFactory = (IndexAnnotatedTypeFactory) analysis.getTypeFactory();
+		this.env = IndexAnnotatedTypeFactory.env;
+		listSize = TreeUtils.getMethod("java.util.List", "size", 0, env);
+		strLength = TreeUtils.getMethod("java.lang.String", "length", 0, env);
 	}
 	
 	// if we see a minLen arr in the store make literals == arr.length indexOrHigh for it and < length > -1 IndexFor it
@@ -195,9 +206,24 @@ public class IndexTransfer extends CFAbstractTransfer<IndexValue, IndexStore, In
 					int val = (int)((LiteralTree)right.getTree()).getValue();
 					// if it already has a minlen use the higher of the two
 					if (atypeFactory.getAnnotatedType(FANode.getReceiver().getTree()).hasAnnotation(MinLen.class)) {
-						val = Math.max(val, IndexUtils.getMinLen(atypeFactory.getAnnotatedType(FANode.getReceiver().getTree()).getAnnotation(MinLen.class)));
+						val = Math.max(val + 1, IndexUtils.getMinLen(atypeFactory.getAnnotatedType(FANode.getReceiver().getTree()).getAnnotation(MinLen.class)));
 					}
-					thenStore.insertValue(rec, IndexAnnotatedTypeFactory.createMinLen(val + 1));
+					thenStore.insertValue(rec, IndexAnnotatedTypeFactory.createMinLen(val));
+				}
+			}
+		}
+		if (left instanceof MethodInvocationNode) {
+			MethodInvocationNode MINode = (MethodInvocationNode) left;
+			Node list = MINode.getTarget().getReceiver();
+			if (TreeUtils.isMethodInvocation(MINode.getTree(), listSize, env)||TreeUtils.isMethodInvocation(MINode.getTree(),strLength, env)) {
+				Receiver rec = FlowExpressions.internalReprOf(analysis.getTypeFactory(), list);
+				if (right.getTree().getKind().equals(Tree.Kind.INT_LITERAL)) {
+					int val = (int)((LiteralTree)right.getTree()).getValue();
+					// if it already has a minlen use the higher of the two
+					if (atypeFactory.getAnnotatedType(list.getTree()).hasAnnotation(MinLen.class)) {
+						val = Math.max(val + 1, IndexUtils.getMinLen(atypeFactory.getAnnotatedType(list.getTree()).getAnnotation(MinLen.class)));
+					}
+					thenStore.insertValue(rec, IndexAnnotatedTypeFactory.createMinLen(val));
 				}
 			}
 		}
@@ -263,6 +289,21 @@ public class IndexTransfer extends CFAbstractTransfer<IndexValue, IndexStore, In
 				}
 			}
 		}
+		if (left instanceof MethodInvocationNode) {
+			MethodInvocationNode MINode = (MethodInvocationNode) left;
+			Node list = MINode.getTarget().getReceiver();
+			if (TreeUtils.isMethodInvocation(MINode.getTree(), listSize, env)||TreeUtils.isMethodInvocation(MINode.getTree(),strLength, env)) {
+				Receiver rec = FlowExpressions.internalReprOf(analysis.getTypeFactory(), list);
+				if (right.getTree().getKind().equals(Tree.Kind.INT_LITERAL)) {
+					int val = (int)((LiteralTree)right.getTree()).getValue();
+					// if it already has a minlen use the higher of the two
+					if (atypeFactory.getAnnotatedType(list.getTree()).hasAnnotation(MinLen.class)) {
+						val = Math.max(val, IndexUtils.getMinLen(atypeFactory.getAnnotatedType(list.getTree()).getAnnotation(MinLen.class)));
+					}
+					thenStore.insertValue(rec, IndexAnnotatedTypeFactory.createMinLen(val));
+				}
+			}
+		}
 		if (leftType.hasAnnotation(UnknownIndex.class)) {
 			UnknownGreaterThan(leftRec, right, thenStore, true);
 		}
@@ -311,6 +352,7 @@ public class IndexTransfer extends CFAbstractTransfer<IndexValue, IndexStore, In
 	public void NotEqualHelper(Node left, Node right,IndexStore thenStore) {
 		Receiver leftRec = FlowExpressions.internalReprOf(analysis.getTypeFactory(), left);
 		AnnotatedTypeMirror leftType = atypeFactory.getAnnotatedType(left.getTree());
+		// if left is arr.length list.size stirng.length and right is 0 add minlen(1) to left
 		if (left instanceof FieldAccessNode) {
 			FieldAccessNode FANode = (FieldAccessNode) left;
 			if (FANode.getFieldName().equals("length")) {
@@ -318,12 +360,35 @@ public class IndexTransfer extends CFAbstractTransfer<IndexValue, IndexStore, In
 				if (right.getTree().getKind().equals(Tree.Kind.INT_LITERAL)) {
 					int val = (int)((LiteralTree)right.getTree()).getValue();
 					if (val == 0) {
-						thenStore.insertValue(rec, IndexAnnotatedTypeFactory.createMinLen(1));
+						val = 1;
+						if (atypeFactory.getAnnotatedType(FANode.getReceiver().getTree()).hasAnnotation(MinLen.class)) {
+							val = Math.max(val, IndexUtils.getMinLen(atypeFactory.getAnnotatedType(FANode.getReceiver().getTree()).getAnnotation(MinLen.class)));
+						}
+						thenStore.insertValue(rec, IndexAnnotatedTypeFactory.createMinLen(val));
 					}
 				}
 			}
 		}
-
+		if (left instanceof MethodInvocationNode) {
+			MethodInvocationNode MINode = (MethodInvocationNode) left;
+			Node list = MINode.getTarget().getReceiver();
+			if (TreeUtils.isMethodInvocation(MINode.getTree(), listSize, env)||TreeUtils.isMethodInvocation(MINode.getTree(),strLength, env)) {
+				Receiver rec = FlowExpressions.internalReprOf(analysis.getTypeFactory(), MINode.getTarget().getReceiver());
+				if (right.getTree().getKind().equals(Tree.Kind.INT_LITERAL)) {
+					int val = (int)((LiteralTree)right.getTree()).getValue();
+					// if it already has a minlen use the higher of the two
+					if (val == 0) {
+						val = 1;
+						if (atypeFactory.getAnnotatedType(list.getTree()).hasAnnotation(MinLen.class)) {
+							val = Math.max(val, IndexUtils.getMinLen(atypeFactory.getAnnotatedType(list.getTree()).getAnnotation(MinLen.class)));
+						}
+						AnnotationMirror minlen = IndexAnnotatedTypeFactory.createMinLen(val);
+						thenStore.insertValue(rec, minlen);
+					}
+				}
+			}
+		}
+		// if IOH is != length its indexFor
 		if (leftType.hasAnnotation(IndexOrHigh.class)) {
 			if (right instanceof FieldAccessNode) {
 				FieldAccessNode FANode = (FieldAccessNode) right;
@@ -495,6 +560,21 @@ public class IndexTransfer extends CFAbstractTransfer<IndexValue, IndexStore, In
 						val = Math.max(val, IndexUtils.getMinLen(atypeFactory.getAnnotatedType(FANode.getReceiver().getTree()).getAnnotation(MinLen.class)));
 					}
 					thenStore.insertValue(rec, IndexAnnotatedTypeFactory.createMinLen(val));
+				}
+			}
+		}
+		if (left instanceof MethodInvocationNode) {
+			MethodInvocationNode MINode = (MethodInvocationNode) left;
+			Node list = MINode.getTarget().getReceiver();
+			if (TreeUtils.isMethodInvocation(MINode.getTree(), listSize, env)||TreeUtils.isMethodInvocation(MINode.getTree(),strLength, env)) {
+				Receiver rec = FlowExpressions.internalReprOf(analysis.getTypeFactory(), list);
+				if (right.getTree().getKind().equals(Tree.Kind.INT_LITERAL)) {
+					int val = (int)((LiteralTree)right.getTree()).getValue();
+					// if it already has a minlen use the higher of the two
+						if (atypeFactory.getAnnotatedType(list.getTree()).hasAnnotation(MinLen.class)) {
+							val = Math.max(val, IndexUtils.getMinLen(atypeFactory.getAnnotatedType(list.getTree()).getAnnotation(MinLen.class)));
+						}
+						thenStore.insertValue(rec, IndexAnnotatedTypeFactory.createMinLen(val));
 				}
 			}
 		}

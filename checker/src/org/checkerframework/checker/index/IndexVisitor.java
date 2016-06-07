@@ -17,8 +17,10 @@ import org.checkerframework.framework.type.AnnotatedTypeMirror;
 import org.checkerframework.javacutil.TreeUtils;
 
 import com.sun.source.tree.ArrayAccessTree;
+import com.sun.source.tree.BinaryTree;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.LiteralTree;
+import com.sun.source.tree.MemberSelectTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.Tree;
 
@@ -66,6 +68,22 @@ public class IndexVisitor extends BaseTypeVisitor<IndexAnnotatedTypeFactory> {
 		AnnotatedTypeMirror indexType = atypeFactory.getAnnotatedType(index);
 		AnnotatedTypeMirror arrType = atypeFactory.getAnnotatedType(tree.getExpression());
 		if (arrType.hasAnnotation(MinLen.class)) {
+			if (IndexUtils.getMinLen(arrType.getAnnotation(MinLen.class)) > 0) {
+				if (tree.getIndex().getKind().equals(Tree.Kind.MINUS)) {
+					BinaryTree minTree = (BinaryTree) tree.getIndex();
+					ExpressionTree left = minTree.getLeftOperand();
+					if (left instanceof MemberSelectTree) {
+						MemberSelectTree MST = (MemberSelectTree) left;
+						if (MST.getIdentifier().toString().equals("length") && MST.getExpression().toString().equals(arrName)) {;
+						if (minTree.getRightOperand().getKind().equals(Tree.Kind.INT_LITERAL)) {
+							if ((int)((LiteralTree)minTree.getRightOperand()).getValue() == 1) {
+								return super.visitArrayAccess(tree, type);
+							}
+						}
+						}
+					}
+				}
+			}
 			if (tree.getIndex().getKind().equals(Tree.Kind.INT_LITERAL)) {
 				int val = (int)((LiteralTree)tree.getIndex()).getValue();
 				int minLen = IndexUtils.getMinLen(arrType.getAnnotation(MinLen.class));
@@ -98,6 +116,10 @@ public class IndexVisitor extends BaseTypeVisitor<IndexAnnotatedTypeFactory> {
 	public Void visitMethodInvocation(MethodInvocationTree tree, Void type) {
 		String name = tree.getMethodSelect().toString();
 		AnnotatedTypeMirror listType = atypeFactory.getAnnotatedType(tree.getMethodSelect());
+		if (tree.getMethodSelect().getKind() == Tree.Kind.MEMBER_SELECT) {
+			MemberSelectTree MSTree = (MemberSelectTree) tree.getMethodSelect();
+			listType = atypeFactory.getAnnotatedType(MSTree.getExpression());
+		}
 		if (TreeUtils.isMethodInvocation(tree, listGet, env)) {
 			ExpressionTree index = tree.getArguments().get(0);
 			// method is list.get, split to get name of list
