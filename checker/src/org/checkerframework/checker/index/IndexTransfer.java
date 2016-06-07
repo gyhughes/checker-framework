@@ -561,6 +561,20 @@ public class IndexTransfer extends CFAbstractTransfer<IndexValue, IndexStore, In
 					}
 					thenStore.insertValue(rec, IndexAnnotatedTypeFactory.createMinLen(val));
 				}
+				else if (right instanceof FieldAccessNode) {
+					FieldAccessNode FANodeRight = (FieldAccessNode) right;
+					if (FANodeRight.getFieldName().equals("length")) {
+						AnnotationMirror rightLen = atypeFactory.getAnnotatedType(FANodeRight.getReceiver().getTree()).getAnnotation(MinLen.class);
+						if (rightLen != null) {
+							int val = IndexUtils.getMinLen(rightLen);
+							AnnotationMirror leftLen = atypeFactory.getAnnotatedType(FANode.getReceiver().getTree()).getAnnotation(MinLen.class);
+							if (leftLen != null) {
+								val = Math.max(val, IndexUtils.getMinLen(leftLen));
+							}
+							thenStore.insertValue(rec, IndexAnnotatedTypeFactory.createMinLen(val));
+						}
+					}
+				}
 			}
 		}
 		if (left instanceof MethodInvocationNode) {
