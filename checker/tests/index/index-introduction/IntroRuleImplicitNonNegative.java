@@ -8,7 +8,7 @@ class IntroRuleImplicitNonNegative {
 		
 		// int v1 = 0; This case is to be discusses. Unsure whether 0 should be IndexOrHigh or NonNegative.
 		int v1 = 1;
-		// Integer.Max_Value cannot be used here as it is only known at run-time
+		// Integer.MAX_VALUE cannot be used here as it is only known at run-time
 		int v2 = 10000;
 		
 		// Idea: prove type of variable v by assigning it to a variable of type t and assigning a variable of type t to v
