@@ -1,90 +1,48 @@
 %\htmlhr
-\chapter{Index Checker\label{index-checker}}
+\chapter{Index Checker for array and list bounds checking\label{index-checker}}
 
-%Runtime exceptions can cause a lot of problems in code. They can crash entire systems
-%and lose important data. One of these exceptions is an IndexOutOfBoundsException.
-Accessing an array or List may cause and IndexOutOfBoundsException to be thrown, as the index
-being passed in may not be valid for the given array/List. Strings are also checked, as they
-are represented through an array of characters.
-The Index Checker shows you, at compile time, what lines of code may throw an these exceptions.
-%You run the Index Checker as a plugin to javac, and javac issues warnings
-%about code that could throw an IndexOutOfBoundsException. This allows developers to
-%detect and fix bugs early, which is cheaper and prevents run-time failures.
+Accessing an array, list, or string causes an IndexOutOfBoundsException
+if the index is out of bounds (negative or too large).
+The Index Checker warns you, at compile time, about possible
+IndexOutOfBoundsExceptions.
 
-\section{Installation\label{index-install}}
 
-As we are not completely integrated into the checker framework, special steps must be taken to
-install and use our checker. To install:
+\section{Running the Index Checker\label{index-running}}
 
-\begin{enumerate}
-\item Download the distribution (one of the ones under downloads) at
-https://github.com/gyhughes/checker-framework/releases
-\item Extract the files
-\item Configure your IDE, build system, or command shell to include the
-Checker Framework on the classpath via instructions below:
-\begin{enumerate}
-\item For javac:
-\begin{enumerate}
-\item If you are using the bash shell, one possible setup is to add the following
-to your $\sim$/.profile (or alternatively $\sim$/.bash\_profile or $\sim$/.bashrc) file:
-(or just run in terminal for temporary use)
-
-\begin{Verbatim}
-// Note: you must put the path to the index checker in for PATH TO
-export CHECKERFRAMEWORK=// PATH TO\ /index-checker-\IndexReleaseVersion\ HERE //
-export PATH=\${CHECKERFRAMEWORK}/checker/bin:\${PATH}
-\end{Verbatim}
-
-\end{enumerate}
-\item For other compilers/IDEs, check the installation section
-(Section~\ref{installation}) keeping in mind the
-Index Checker's seperate distribution.
-\end{enumerate}
-\end{enumerate}
-
-We highly recommend installing for javac, as it is the only installation we
-have tested our release on. We also lightly recommend taking the first option
-for setting up javac (moving to front of path), as the rest of this manual
-is written assuming that this option was taken. The commands can be altered
-easily if you prefer a different setup for javac.
-
-The rest of this manual assumes that you will be using javac and that the Index
-Checker's javac has been moved to the front of the path. If you have decided to
-install the tool in a different manner, please do not copy the commands listed
-below verbatim.
-
-\section{Running the Checker\label{index-running}}
-
-To run the IndexChecker, run the command
+To run the Index Checker, run the command
 
 \begin{Verbatim}
 javac -processor IndexChecker <JavaFileName>.java
 \end{Verbatim}
 
-For troubleshooting, see the \href
-{http://types.cs.washington.edu/checker-framework/current/checker-framework-manual.html#troubleshooting}
-{Checker Framework manual's trouble shooting section}.
 
-\section{Index Annotations\label{index-annotations}}
+\section{Index annotations\label{index-annotations}}
 
 \begin{description}
-\item[\refqualclass{checker/index/qual}{IndexFor(String name)}]
-	indicates an int type that is within the bounds of the array with the given
-	name (i >= 0 \&\& i < arr.length).
-\item[\refqualclass{checker/index/qual}{IndexOrHigh(String name)}]
-	indicates an int type that is possibly one over the bounds of the array with
-	the given name (i >= 0 \&\& i < arr.length + 1).
-\item[\refqualclass{checker/index/qual}{IndexOrLow(String name)}]
-	indicates an int type that is possibly one under bounds of the array with the
-	given name (i >= -1 \&\& i < arr.length).
-\item[\refqualclass{checker/index/qual}{LTLength(String name)}]
-	indicates an int type that is below the max bound of the array with the given
-	name (i >= 0).
+\item[\refqualclass{checker/index/qual}{IndexFor}(String name)]
+	the value is within the bounds of the array with the given
+	name (i $\ge$ 0 \&\& i < arr.length).
+\item[\refqualclass{checker/index/qual}{IndexOrHigh}(String name)]
+	the value is possibly one beyond the bounds of the array with
+	the given name (i $\ge$ 0 \&\& i < arr.length + 1).
+\item[\refqualclass{checker/index/qual}{IndexOrLow}(String name)]
+	the value is possibly one before the bounds of the array with the
+	given name (i $\ge$ -1 \&\& i < arr.length).
+\item[\refqualclass{checker/index/qual}{LTLength}(String name)]
+	the value is less than the upper bound of the array with the given
+	name (i < arr.length).
 \item[\refqualclass{checker/index/qual}{NonNegative}]
-	indicates an int type that is at least zero, which corresponds to being over
-	the min bound of any array (i < arr.length).
-\item[\refqualclass{checker/index/qual}{MinLen(int len)}]
-	indicates an array type that is at least of length len.
+	the value is at least zero (i $\ge$ 0).
+\item[\refqualclass{checker/index/qual}{MinLen}(int len)]
+	indicates an array type whose length is at least len.
+\item[\refqualclass{checker/index/qual}{UnknownIndex}]
+        no information is known about the upper and lower bounds of the value.
+        This annotation is used internally by the type system but should never
+        be written by a programmer.
+\item[\refqualclass{checker/index/qual}{IndexBottom}]
+        the value is null.
+        This annotation is used internally by the type system but should never
+        be written by a programmer.
 \end{description}
 
 \begin{figure}
@@ -102,21 +60,13 @@ The types that are grayed out should not be written by the user.}
 \end{figure}
 
 \section{What the Index Checker checks\label{index-checks}}
-In order to get code to type check using the Index Checker, indices must have been
-compared against the low and high bounds of an array before accessing it. In terms
-of the annotation types, an index must gain the annotated type @IndexFor("arr") to access some
-arr/list. The Index Checker will issue a warning if any of the following rules are violated:
+
+The Index Checker will issue a warning if any of the following rules are violated:
 \begin{itemize}
 \item Only an @IndexFor("arr") int i can be used access arr[i]
 \item Only an @IndexFor("lst") int i can be used to call lst.get(i) on some List lst
 \item Only an @IndexFor("msg") int i can be used to call msg.charAt(i) on some String msg
 \end{itemize}
-
-This is accomplished through comparing an index the bounds of an array through if block
-comparisons. These are primarily against <array>.length, <array>.length-1, and int literals
-(or variables initiallized with them). See figure \ref{fig-index-hierarchy} for an example
-
-\textbf{NOTE}: Currently, we only refine the type of the left hand side of the comparison.
 
 \begin{figure}
 \begin{Verbatim}
@@ -137,9 +87,11 @@ if (j >= 0 && j < arr.length) {
 \label{fig-index-hierarchy}
 \end{figure}
 
-\section{Side Effecting Lists\label{index-side-effects}}
-As indicies are tied to specific arrays/Lists, side-effecting a list will change type annotations
-in order to maintain as much information as possible. In particular:
+
+\section{Side effects\label{index-side-effects}}
+
+If a list is mutated (side-effected), then the Index Checker revises its
+estimates of which indices are in bounds for which arrays. In particular:
 \begin{itemize}
 \item When a variable gets re-assigned, all annotated type with that variable's name as its value
 get changed to either @Unknown or @NonNegative depending on what we already know about the type.
@@ -170,12 +122,3 @@ i gains either @RefinedType("a") or @RefinedType("b") depending on the exact com
 Generally, the Index Checker will choose the annotation to which it knows most about. This may generate
 false warnings.
 \end{itemize}
-
-\section{Bug Reports\label{index-bug-reports}}
-As the Index Checker still lives on a seperate fork the the Checker Framework,
-please log bugs on our \href{https://github.com/gyhughes/checker-framework/issues}
-{repository's issue tracker}.
-More info can be found on the \href
-{https://guides.github.com/features/issues/}{github features page}.
-In bug reports, please include information detailed by reporting bugs section
-(Section~\ref{reporting-bugs}).
