@@ -37,11 +37,11 @@ javac -processor IndexChecker <JavaFileName>.java
 	indicates an array type whose length is at least len.
 \item[\refqualclass{checker/index/qual}{UnknownIndex}]
         no information is known about the upper and lower bounds of the value.
-        This annotation is used internally by the type system but should never
+        This annotation is used internally by the type system but should rarely
         be written by a programmer.
 \item[\refqualclass{checker/index/qual}{IndexBottom}]
         the value is null.
-        This annotation is used internally by the type system but should never
+        This annotation is used internally by the type system but should rarely
         be written by a programmer.
 \end{description}
 
@@ -63,7 +63,7 @@ The types that are grayed out should not be written by the user.}
 
 \section{What the Index Checker checks\label{index-checks}}
 
-The Index Checker will issue a warning if any of the following rules are violated:
+The Index Checker issues a warning if any of the following rules are violated:
 \begin{itemize}
 \item Only an @IndexFor("arr") int i can be used access arr[i]
 \item Only an @IndexFor("lst") int i can be used to call lst.get(i) on some List lst
