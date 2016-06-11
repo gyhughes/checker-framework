@@ -28,7 +28,7 @@ import com.sun.source.tree.Tree;
 //a visitor that enforces the type rules for our system
 //**************************************************************************//
 public class IndexVisitor extends BaseTypeVisitor<IndexAnnotatedTypeFactory> {
-    
+
     protected final ExecutableElement indexValueElement;
     protected final ExecutableElement listGet;
     protected final ExecutableElement charAt;
@@ -59,7 +59,7 @@ public class IndexVisitor extends BaseTypeVisitor<IndexAnnotatedTypeFactory> {
         listGet = TreeUtils.getMethod("java.util.List", "get", 1, env);
         charAt = TreeUtils.getMethod("java.lang.String", "charAt", 1, env);
     }
-    
+
     // if we aren't using an IndexFor the right array, give a warning
     @Override
     public Void visitArrayAccess(ArrayAccessTree tree, Void type) {
@@ -110,7 +110,7 @@ public class IndexVisitor extends BaseTypeVisitor<IndexAnnotatedTypeFactory> {
         }
         return super.visitArrayAccess(tree, type);
     }
-    
+
     // if you try a list.get(i) it warns if i isn't IndexFor(list)
     @Override
     public Void visitMethodInvocation(MethodInvocationTree tree, Void type) {

@@ -76,16 +76,16 @@ public class IndexUtils {
         }
         return false;
     }
-    
+
     public static boolean hasValueMethod(AnnotationMirror anno) {
         boolean InF = AnnotationUtils.areSameByClass(anno, IndexFor.class);
         boolean IOH = AnnotationUtils.areSameByClass(anno, IndexOrHigh.class);
         boolean IOL = AnnotationUtils.areSameByClass(anno, IndexOrLow.class);
         boolean LTL = AnnotationUtils.areSameByClass(anno, LTLength.class);
         return (InF || IOH || IOL || LTL);
-        
+
     }
-    
+
     public static int getMinLen(AnnotationMirror annotation) {
         ExecutableElement valueMethod = TreeUtils.getMethod("org.checkerframework.checker.index.qual.MinLen", "value", 0, IndexAnnotatedTypeFactory.env);
         return (int) AnnotationUtils.getElementValuesWithDefaults(annotation).get(valueMethod).getValue();

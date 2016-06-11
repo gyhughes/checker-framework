@@ -15,14 +15,14 @@ import org.checkerframework.javacutil.Pair;
 
 public class IndexAnalysis extends CFAbstractAnalysis<IndexValue, IndexStore, IndexTransfer> {
     IndexAnnotatedTypeFactory atypeFactory;
-    
+
     public IndexAnalysis(BaseTypeChecker checker,
             IndexAnnotatedTypeFactory factory,
             List<Pair<VariableElement, IndexValue>> fieldValues) {
         super(checker, factory, fieldValues);
         this.atypeFactory = (IndexAnnotatedTypeFactory)super.atypeFactory;
     }
-    
+
     //overrides the superclass method to return our transfers
     @Override
     public IndexTransfer createTransferFunction() {
@@ -38,17 +38,17 @@ public class IndexAnalysis extends CFAbstractAnalysis<IndexValue, IndexStore, In
         }
         return new IndexValue(this, type);
     }
-    
+
     @Override
     public IndexStore createCopiedStore(IndexStore s) {
         return new IndexStore(s);
     }
-    
+
     @Override
     public IndexStore createEmptyStore(boolean sequentialSemantics) {
         return new IndexStore(this, sequentialSemantics);
     }
 
 
-    
+
 }

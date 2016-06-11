@@ -50,7 +50,7 @@ public class IndexTransfer extends CFAbstractTransfer<IndexValue, IndexStore, In
     protected final ExecutableElement listSize;
     protected final ExecutableElement strLength;
     protected final ProcessingEnvironment env;
-    
+
     public IndexTransfer(IndexAnalysis analysis) {
         super(analysis);
         this.analysis = analysis;
@@ -59,7 +59,7 @@ public class IndexTransfer extends CFAbstractTransfer<IndexValue, IndexStore, In
         listSize = TreeUtils.getMethod("java.util.List", "size", 0, env);
         strLength = TreeUtils.getMethod("java.lang.String", "length", 0, env);
     }
-    
+
     // if we see a minLen arr in the store make literals == arr.length indexOrHigh for it and < length > -1 IndexFor it
     // TODO: if we implement multiple array support we could make it indexOrHigh for all previously declared arrays of higher length
     @Override
@@ -117,7 +117,7 @@ public class IndexTransfer extends CFAbstractTransfer<IndexValue, IndexStore, In
         }
         return result;
     }
-    
+
     /**
      * if the dimension of an array a is a var + 1
      * @param dim the dimension Node
@@ -155,11 +155,11 @@ public class IndexTransfer extends CFAbstractTransfer<IndexValue, IndexStore, In
 
         return result;
     }
-    
+
     //******************************************************//
     // these are methods that handle refining on comparisons//
     //******************************************************//
-    
+
     //********************************************************************************//
     // these are methods for GreaterThan Nodes   //
     //********************************************************************************//
@@ -260,7 +260,7 @@ public class IndexTransfer extends CFAbstractTransfer<IndexValue, IndexStore, In
         greaterThanOrEqualHelper(right, left, elseStore);
         return newResult;
     }
-    
+
     /**
      *
      * @param left
@@ -337,7 +337,7 @@ public class IndexTransfer extends CFAbstractTransfer<IndexValue, IndexStore, In
         equalsToHelper(right, left, elseStore);
         return newResult;
     }
-    
+
     /**
      *
      * @param left
@@ -507,7 +507,7 @@ public class IndexTransfer extends CFAbstractTransfer<IndexValue, IndexStore, In
         }
 
     }
-    
+
     //********************************************************************************//
     // these are methods for EqualsTo Nodes   //
     //********************************************************************************//
@@ -603,7 +603,7 @@ public class IndexTransfer extends CFAbstractTransfer<IndexValue, IndexStore, In
     //********************************************************************************//
     // these are methods for equalsTo Nodes once left hand annotation is known        //
     //********************************************************************************//
-    
+
     /**
      * once we know that the left node is IndexOrLow, we go here to refine.
      */
@@ -626,7 +626,7 @@ public class IndexTransfer extends CFAbstractTransfer<IndexValue, IndexStore, In
             thenStore.insertValue(leftRec, IndexAnnotatedTypeFactory.createIndexOrLowAnnotation(leftName));
         }
     }
-    
+
     /**
      * once we know that the left node is NonNegative, we go here to refine.
      */
@@ -663,9 +663,9 @@ public class IndexTransfer extends CFAbstractTransfer<IndexValue, IndexStore, In
             String aValue = IndexUtils.getValue(rightType.getAnnotationInHierarchy(IndexAnnotatedTypeFactory.indexFor));
             AnnotationMirror anno = IndexAnnotatedTypeFactory.createLTLengthAnnotation(aValue);
             thenStore.insertValue(rec, anno);
-        }    
+        }
     }
-    
+
     /**
      * once we know that the left node is IndexOrHigh, we go here to refine.
      */
@@ -692,7 +692,7 @@ public class IndexTransfer extends CFAbstractTransfer<IndexValue, IndexStore, In
     //********************************************************************************//
     // these are methods for GreaterThan Nodes once left operand Annotation is known  //
     //********************************************************************************//
-    
+
     // this returns a transfer result for @Unknown > x
     //Unknown > IndexOrLow, NonNegative, IndexOrHigh, IndexFor -> NonNegative
     /**
@@ -710,7 +710,7 @@ public class IndexTransfer extends CFAbstractTransfer<IndexValue, IndexStore, In
             AnnotationMirror anno = IndexAnnotatedTypeFactory.createNonNegAnnotation();
             thenStore.insertValue(rec, anno);
         }
-        
+
     }
     //IndexOrLow(a) > IndexOrLow, Nonnegative, IndexOrHigh, IndexFor -> IndexFor(a)
     /**

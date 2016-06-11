@@ -9,5 +9,5 @@ public class IndexValue extends CFAbstractValue<IndexValue> {
     public IndexValue(CFAbstractAnalysis<IndexValue, ?, ?> analysis, AnnotatedTypeMirror type) {
         super(analysis, type);
     }
-    
+
 }

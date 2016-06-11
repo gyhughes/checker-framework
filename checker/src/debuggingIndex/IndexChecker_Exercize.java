@@ -33,7 +33,7 @@ public class IndexChecker_Exercize {
             }
         }
         System.out.println(num + " occurs " + count + " times");
-        
+
     }
 
     //print the index of the first occurance of num in arr
@@ -43,7 +43,7 @@ public class IndexChecker_Exercize {
                 System.out.println("First Occurence of " + num + " is at " + i);
                 return;
             }
-        }        
+        }
     }
 
     //print the index of the last occurance of num in arr
@@ -63,6 +63,6 @@ public class IndexChecker_Exercize {
 
         for (int i = 0; i < 10; i++) {
             System.out.println("arr[" + i + "] == " + arr[i]);
-        }        
+        }
     }
 }

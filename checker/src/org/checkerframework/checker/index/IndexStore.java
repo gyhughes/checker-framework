@@ -34,7 +34,7 @@ public class IndexStore extends CFAbstractStore<IndexValue, IndexStore> {
     public IndexStore(CFAbstractAnalysis<IndexValue, IndexStore, ?> analysis, boolean sequentialSemantics) {
         super(analysis, sequentialSemantics);
     }
-    
+
     // changes values similar to ++ if we remove from a list
     // if we clear a list anything NonNegatvie goes to NonNeg else becomes unknown
     @Override
@@ -63,7 +63,7 @@ public class IndexStore extends CFAbstractStore<IndexValue, IndexStore> {
         for (Receiver rec: replace.keySet()) {
             replaceValue(rec, replace.get(rec));
         }
-        
+
         super.updateForMethodCall(n, atypeFactory, val);
     }
     // takes a map to store rec for change -> the new value (if we just replace it breaks iterator)
@@ -98,7 +98,7 @@ public class IndexStore extends CFAbstractStore<IndexValue, IndexStore> {
                 replace.put(rec, val);
             }
         }
-        
+
     }
     @Override
     public void updateForAssignment(Node n ,IndexValue val) {
@@ -120,7 +120,7 @@ public class IndexStore extends CFAbstractStore<IndexValue, IndexStore> {
             replaceValue(rec, replace.get(rec));
         }
     }
-    
+
     // get a type receiver the map that holds the changes we want to make, and the name of the target
     // we want to change any annotations that are connected to what we are reassign
     private void applyAssign(Receiver rec, Map<Receiver, IndexValue> replace, String name) {
@@ -144,7 +144,7 @@ public class IndexStore extends CFAbstractStore<IndexValue, IndexStore> {
      *
      * @return a map of all receivers with MinLen annotations to the MinLen annotation
      */
-    
+
     public Map<LocalVariable, AnnotationMirror> getMinLens() {
         Map<LocalVariable, AnnotationMirror> map= new HashMap<>();
         for (LocalVariable k: this.localVariableValues.keySet()) {

@@ -74,7 +74,7 @@ extends GenericAnnotatedTypeFactory<IndexValue, IndexStore, IndexTransfer, Index
         unknown = AnnotationUtils.fromClass(elements, UnknownIndex.class);
         minLen = AnnotationUtils.fromClass(elements, MinLen.class);
 
-        
+
         env = checker.getProcessingEnvironment();
         this.postInit();
     }
@@ -127,7 +127,7 @@ extends GenericAnnotatedTypeFactory<IndexValue, IndexStore, IndexTransfer, Index
 
             return super.visitNewArray(tree, type);
         }
-        
+
         @Override
         public Void visitLiteral(LiteralTree tree, AnnotatedTypeMirror type) {
             // if this is an Integer specifically
@@ -145,7 +145,7 @@ extends GenericAnnotatedTypeFactory<IndexValue, IndexStore, IndexTransfer, Index
             ExecutableElement ListSize = TreeUtils.getMethod("java.util.List", "size", 0, env);
             ExecutableElement StrLen = TreeUtils.getMethod("java.lang.String", "length", 0, env);
             ExecutableElement min = TreeUtils.getMethod("java.lang.Math", "min", 2, env);
-            
+
             String name = tree.getMethodSelect().toString();
             if (TreeUtils.isMethodInvocation(tree, ListSize, env) || TreeUtils.isMethodInvocation(tree, StrLen, env)) {
                 String listName = name.split("\\.")[0];
@@ -166,7 +166,7 @@ extends GenericAnnotatedTypeFactory<IndexValue, IndexStore, IndexTransfer, Index
             }
             return super.visitMethodInvocation(tree, type);
         }
-        
+
         // returns the type found from refining a math.min call
         private AnnotationMirror minHelper(ExpressionTree left, ExpressionTree right) {
             AnnotatedTypeMirror leftType = getAnnotatedType(left);
@@ -219,7 +219,7 @@ extends GenericAnnotatedTypeFactory<IndexValue, IndexStore, IndexTransfer, Index
          *TODO: when method overloading of TreeUtils.getMethod is resolved this should be
          *        updated to look for specific methods not the name.
          */
-        
+
         private boolean isIndexOfMethod(MethodInvocationTree tree) {
 //            ExecutableElement strIndexOf = TreeUtils.getMethod("java.lang.String", "indexOf", 1, env);
 //            ExecutableElement listIndexOf = TreeUtils.getMethod("java.util.List", "indexOf",1 , env);
@@ -285,7 +285,7 @@ extends GenericAnnotatedTypeFactory<IndexValue, IndexStore, IndexTransfer, Index
                 if (val == 1) {
                     if (hierarchy.isSubtypeRelaxed(leftAnno, indexOrLow)) {
                         String value = IndexUtils.getValue(leftType.getAnnotationInHierarchy(indexOrLow));
-                        type.addAnnotation(createIndexOrHighAnnotation(value));                        
+                        type.addAnnotation(createIndexOrHighAnnotation(value));
                     }
                     else if (hierarchy.isSubtypeRelaxed(leftAnno, nonNegative)) {
                         type.addAnnotation(createNonNegAnnotation());
@@ -320,12 +320,12 @@ extends GenericAnnotatedTypeFactory<IndexValue, IndexStore, IndexTransfer, Index
                     // if left sub IOH it becomes IOL
                     if (hierarchy.isSubtypeRelaxed(leftAnno, indexOrHigh)) {
                         String value = IndexUtils.getIndexValue(leftAnno, IndexUtils.getValueMethod(leftAnno));
-                        type.addAnnotation(createIndexOrLowAnnotation(value));                        
+                        type.addAnnotation(createIndexOrLowAnnotation(value));
                     }
                     // if left subtype LTLength
                     else if (hierarchy.isSubtypeRelaxed(leftAnno, lTLength)) {
                         String value = IndexUtils.getIndexValue(leftAnno, IndexUtils.getValueMethod(leftAnno));
-                        type.addAnnotation(createLTLengthAnnotation(value));    
+                        type.addAnnotation(createLTLengthAnnotation(value));
                     }
                     return;
                 }
@@ -377,7 +377,7 @@ extends GenericAnnotatedTypeFactory<IndexValue, IndexStore, IndexTransfer, Index
             AnnotationMirror anno = atm.getAnnotationInHierarchy(indexFor);
             if (hierarchy.isSubtypeRelaxed(anno, indexOrLow)) {
                 String value = IndexUtils.getValue(anno);
-                type.addAnnotation(createIndexOrHighAnnotation(value));                        
+                type.addAnnotation(createIndexOrHighAnnotation(value));
             }
             else if (hierarchy.isSubtypeRelaxed(anno, nonNegative)) {
                 type.addAnnotation(createNonNegAnnotation());
@@ -393,7 +393,7 @@ extends GenericAnnotatedTypeFactory<IndexValue, IndexStore, IndexTransfer, Index
             AnnotationMirror anno = atm.getAnnotationInHierarchy(indexFor);
             if (hierarchy.isSubtypeRelaxed(anno, indexOrHigh)) {
                 String value = IndexUtils.getValue(anno);
-                type.addAnnotation(createIndexOrLowAnnotation(value));                        
+                type.addAnnotation(createIndexOrLowAnnotation(value));
             }
             else if (hierarchy.isSubtypeRelaxed(anno, lTLength)) {
                 String value = IndexUtils.getValue(anno);
@@ -414,13 +414,13 @@ extends GenericAnnotatedTypeFactory<IndexValue, IndexStore, IndexTransfer, Index
 
     //********************************************************************************//
     // This is the class that handles the subtyping for our qualifiers                //
-    //********************************************************************************//    
+    //********************************************************************************//
     private final class IndexQualifierHierarchy extends GraphQualifierHierarchy {
 
         public IndexQualifierHierarchy(MultiGraphFactory f, AnnotationMirror bottom) {
             super(f, bottom);
         }
-        
+
         @Override
         public AnnotationMirror greatestLowerBound(AnnotationMirror anno1, AnnotationMirror anno2) {
             if (isSubtype(anno1, anno2)) {
@@ -441,7 +441,7 @@ extends GenericAnnotatedTypeFactory<IndexValue, IndexStore, IndexTransfer, Index
             }
             return indexBottom;
         }
-        
+
         // return if the types are on opposite sides of the hierarchy
         // and also if they have the same values if they both have them
         private boolean oppositeSides(AnnotationMirror anno1, AnnotationMirror anno2) {
@@ -490,7 +490,7 @@ extends GenericAnnotatedTypeFactory<IndexValue, IndexStore, IndexTransfer, Index
             if (IndexUtils.isMinLen(rhs) && IndexUtils.isMinLen(lhs)) {
                 int valueRight = IndexUtils.getMinLen(rhs);
                 int valueLeft = IndexUtils.getMinLen(lhs);
-                return (valueRight >= valueLeft);    
+                return (valueRight >= valueLeft);
             }
             if (IndexUtils.hasValueMethod(lhs) && IndexUtils.hasValueMethod(rhs)) {
                 String valueRight = IndexUtils.getValue(rhs);
@@ -535,7 +535,7 @@ extends GenericAnnotatedTypeFactory<IndexValue, IndexStore, IndexTransfer, Index
 
     //********************************************************************************//
     // These are the methods that build the annotations we apply using this factory   //
-    //********************************************************************************//    
+    //********************************************************************************//
 
     //returns a new @NonNegative annotation
     static AnnotationMirror createNonNegAnnotation() {
