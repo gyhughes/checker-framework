@@ -14,6 +14,6 @@ import org.checkerframework.framework.qual.SubtypeOf;
 @SubtypeOf({UnknownIndex.class, LTLength.class})
 @Target({ElementType.TYPE_USE, ElementType.TYPE_PARAMETER})
 public @interface IndexOrLow {
-	/** The array for which this value is an index (or the value is -1). */
-	String value() default "";
+    /** The array for which this value is an index (or the value is -1). */
+    String value() default "";
 }

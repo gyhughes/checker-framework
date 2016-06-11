@@ -14,6 +14,6 @@ import org.checkerframework.framework.qual.SubtypeOf;
 @SubtypeOf(UnknownIndex.class)
 @Target({ElementType.TYPE_USE, ElementType.TYPE_PARAMETER})
 public @interface LTLength {
-	/** The array for which this value is within the upper bound. */
-	String value() default "";
+    /** The array for which this value is within the upper bound. */
+    String value() default "";
 }
