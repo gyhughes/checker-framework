@@ -16,5 +16,5 @@ import org.checkerframework.framework.qual.SubtypeOf;
 @Target({ElementType.TYPE_USE, ElementType.TYPE_PARAMETER})
 public @interface IndexFor {
     /** The array for which this value is an index. */
-    String value() default "";
+    String value();
 }

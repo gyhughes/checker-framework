@@ -17,5 +17,5 @@ import org.checkerframework.framework.qual.SubtypeOf;
 public @interface IndexOrHigh {
     /** The array for which this value is an index
      * (or the value is the array's upper bound). */
-    String value() default "";
+    String value();
 }
