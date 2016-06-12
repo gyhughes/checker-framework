@@ -53,7 +53,7 @@ class TransferSubNonNegative {
 		// Show result is of type NonNegative
 		@NonNegative int nn1 = i - 0;
 		//:: error: (assignment.type.incompatible)
-		@IndexOrHigh int indexOrHigh = i - 0;
+		@IndexOrHigh("a") int indexOrHigh = i - 0;
 	}
 	
 	void subLTLength(@LTLength("arr") int v) {

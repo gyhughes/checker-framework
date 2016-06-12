@@ -34,7 +34,7 @@ class TransferAdd0 {
 		// Show result is of type NonNegative
 		@NonNegative int nn1 = 0 + 1;
 		//:: error: (assignment.type.incompatible)
-		@IndexOrHigh int indexOrHigh = 0 + 1;
+		@IndexOrHigh("a") int indexOrHigh = 0 + 1;
 	}
 	
 	void add0() {
@@ -57,7 +57,7 @@ class TransferAdd0 {
 		// Show result is of type NonNegative
 		@NonNegative int nn1 = 0 + v;
 		//:: error: (assignment.type.incompatible)
-		@IndexOrHigh int indexOrHigh = 0 + v;
+		@IndexOrHigh("a") int indexOrHigh = 0 + v;
 	}
 
 	void addUnknownIndex(@UnknownIndex int v) {

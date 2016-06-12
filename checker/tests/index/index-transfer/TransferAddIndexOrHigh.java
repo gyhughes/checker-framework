@@ -19,7 +19,7 @@ class TransferAddIndexOrHigh {
 		// Show result is of type NonNegative
 				@NonNegative int nn1 = v + i;
 				//:: error: (assignment.type.incompatible)
-				@IndexOrHigh int indexOrHigh = v + i;
+				@IndexOrHigh("a") int indexOrHigh = v + i;
 	}
 
 	void addIndexOrLow(@IndexOrLow("arr") int v) {
@@ -35,14 +35,14 @@ class TransferAddIndexOrHigh {
 		// Show result is of type NonNegative
 				@NonNegative int nn1 = v + i;
 				//:: error: (assignment.type.incompatible)
-				@IndexOrHigh int indexOrHigh = v + i;
+				@IndexOrHigh("a") int indexOrHigh = v + i;
 	}
 	
 	void add1() {
 		// Show result is of type NonNegative
 				@NonNegative int nn1 = 1 + i;
 				//:: error: (assignment.type.incompatible)
-				@IndexOrHigh int indexOrHigh = 1 + i;
+				@IndexOrHigh("a") int indexOrHigh = 1 + i;
 	}
 	
 	void add0() {
@@ -65,7 +65,7 @@ class TransferAddIndexOrHigh {
 		// Show result is of type NonNegative
 				@NonNegative int nn1 = v + i;
 				//:: error: (assignment.type.incompatible)
-				@IndexOrHigh int indexOrHigh = v + i;
+				@IndexOrHigh("a") int indexOrHigh = v + i;
 	}
 
 	void addUnknownIndex(@UnknownIndex int v) {
@@ -81,7 +81,7 @@ class TransferAddIndexOrHigh {
 		// Show result is of type NonNegative
 				@NonNegative int nn1 = v + i;
 				//:: error: (assignment.type.incompatible)
-				@IndexOrHigh int indexOrHigh = v + i;
+				@IndexOrHigh("a") int indexOrHigh = v + i;
 	}
 	
 	void addIndexOrLowB(@IndexOrLow("arrB") int v) {
@@ -97,7 +97,7 @@ class TransferAddIndexOrHigh {
 		// Show result is of type NonNegative
 				@NonNegative int nn1 = v + i;
 				//:: error: (assignment.type.incompatible)
-				@IndexOrHigh int indexOrHigh = v + i;
+				@IndexOrHigh("a") int indexOrHigh = v + i;
 	}
 
 	void addLTLengthB(@LTLength("arrB") int v) {
