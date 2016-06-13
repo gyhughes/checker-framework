@@ -14,5 +14,5 @@ import org.checkerframework.framework.qual.SubtypeOf;
 @Target({ElementType.TYPE_USE, ElementType.TYPE_PARAMETER})
 public @interface MinLen {
     /** The minimum number of elements in this array. */
-    int value() default 0;
+    int value();
 }
