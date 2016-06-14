@@ -23,15 +23,17 @@ public class GENegativeOne {
 
       ii++;
 
-      // Two options:
-      //   (a)  ii is @NonNegative
-      //   (b)  ii is ">= 1"
+      // Two options, depending on whether the type system supports
+      // @Positive and/or @GENegOne:
+      //   (a)  [if @GENegOne is supported]  ii is @NonNegative
+      //   (b)  [if @Positive is supported]  ii is @Positive: ">= 1"
 
       ii--;
 
-      // Two options:
-      //   (a)  ii is ">= -1"
-      //   (b)  ii is @NonNegative
+      // Two options, depending on whether the type system supports
+      // @Positive and/or @GENegOne:
+      //   (a)  [if @GENegOne is supported]  ii is @GENegOne ">= -1"
+      //   (b)  [if @Positive is supported]  ii is @NonNegative
     }
   }
 
