@@ -12,7 +12,7 @@ import org.checkerframework.framework.qual.SubtypeOf;
  *
  * @checker_framework.manual #index-checker Index Checker
  */
-@SubtypeOf({NonNegative.class, IndexOrHigh.class, IndexOrLow.class, LTLength.class})
+@SubtypeOf({IndexOrHigh.class, IndexOrLow.class})
 @Target({ElementType.TYPE_USE, ElementType.TYPE_PARAMETER})
 public @interface IndexFor {
     /** The array for which this value is an index. */
