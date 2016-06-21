@@ -11,7 +11,7 @@ import org.checkerframework.framework.qual.SubtypeOf;
  *
  * @checker_framework.manual #index-checker Index Checker
  */
-@SubtypeOf({UnknownIndex.class, LTLength.class})
+@SubtypeOf(LTLength.class)
 @Target({ElementType.TYPE_USE, ElementType.TYPE_PARAMETER})
 public @interface IndexOrLow {
     /** The array for which this value is an index (or the value is -1). */
