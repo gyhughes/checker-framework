@@ -514,19 +514,19 @@ extends GenericAnnotatedTypeFactory<IndexValue, IndexStore, IndexTransfer, Index
             if (AnnotationUtils.areSameIgnoringValues(type, minLen)) {
                 return minLen;
             }
-            else if (AnnotationUtils.areSameIgnoringValues(type, lTLength)) {
+            if (AnnotationUtils.areSameIgnoringValues(type, lTLength)) {
                 return lTLength;
             }
-            else if (AnnotationUtils.areSameIgnoringValues(type, indexFor)) {
+            if (AnnotationUtils.areSameIgnoringValues(type, indexFor)) {
                 return indexFor;
             }
-            else if (AnnotationUtils.areSameIgnoringValues(type, indexOrHigh)) {
+            if (AnnotationUtils.areSameIgnoringValues(type, indexOrHigh)) {
                 return indexOrHigh;
             }
-            else if (AnnotationUtils.areSameIgnoringValues(type, indexOrLow)) {
+            if (AnnotationUtils.areSameIgnoringValues(type, indexOrLow)) {
                 return indexOrLow;
             }
-            else if (AnnotationUtils.areSame(type, indexBottom)) {
+            if (AnnotationUtils.areSame(type, indexBottom)) {
                 return indexBottom;
             }
             return unknown;
