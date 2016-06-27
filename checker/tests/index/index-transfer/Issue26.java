@@ -13,9 +13,9 @@ class Issue26 {
     Object @MinLen(10) [] a1 = arg.toArray();
     String @MinLen(10) [] a2 = arg.toArray(new String[0]);
   }
-    
+
   void a2l(String @MinLen(10) [] arg) {
     @MinLen(10) List<String> lst = Arrays.asList(arg);
   }
-    
+
 }
